@@ -1,0 +1,362 @@
+From 4d1de252d9a4f3b7277d0ce3f0709e5992e97632 Mon Sep 17 00:00:00 2001
+From: Renesas Electronics Corporation <someone@renesas.com>
+Date: Thu, 20 Jan 2022 11:21:44 +0700
+Subject: [PATCH 2/8] Linux Guest: Add DT for S4 Spider board for QNX Hyp
+
+Change-Id: Ia305da816f3c2b9f0ba68fba980c5c62127f0a4e
+---
+ arch/arm64/boot/dts/renesas/Makefile          |   2 +-
+ .../dts/renesas/qnxhyp-r8a779f0-spider.dts    | 325 ++++++++++++++++++
+ 2 files changed, 326 insertions(+), 1 deletion(-)
+ mode change 100644 => 100755 arch/arm64/boot/dts/renesas/Makefile
+ create mode 100755 arch/arm64/boot/dts/renesas/qnxhyp-r8a779f0-spider.dts
+
+diff --git a/arch/arm64/boot/dts/renesas/Makefile b/arch/arm64/boot/dts/renesas/Makefile
+old mode 100644
+new mode 100755
+index 24c1ce4ea72e..de881be8dfa2
+--- a/arch/arm64/boot/dts/renesas/Makefile
++++ b/arch/arm64/boot/dts/renesas/Makefile
+@@ -72,7 +72,7 @@ dtb-$(CONFIG_ARCH_R8A77995) += r8a77995-draak.dtb
+ dtb-$(CONFIG_ARCH_R8A779A0) += r8a779a0-falcon.dtb
+ 
+ dtb-$(CONFIG_ARCH_R8A779F0) += r8a779f0-spider.dtb
+-
++dtb-$(CONFIG_ARCH_R8A779F0) += qnxhyp-r8a779f0-spider.dtb
+ dtb-$(CONFIG_ARCH_R8A77970) += r8a77970-eagle-function.dtb
+ dtb-$(CONFIG_ARCH_R8A77970) += r8a77970-es1-eagle.dtb r8a77970-es1-eagle-function.dtb
+ dtb-$(CONFIG_ARCH_R8A77970) += r8a77970-es1-v3msk.dtb
+diff --git a/arch/arm64/boot/dts/renesas/qnxhyp-r8a779f0-spider.dts b/arch/arm64/boot/dts/renesas/qnxhyp-r8a779f0-spider.dts
+new file mode 100755
+index 000000000000..5ed5c08cfd4d
+--- /dev/null
++++ b/arch/arm64/boot/dts/renesas/qnxhyp-r8a779f0-spider.dts
+@@ -0,0 +1,325 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Device Tree Source for the Spider CPU and Breakout boards
++ * Linux guest OS on QNX Hypervisor specific extensions
++ *
++ * Copyright (C) 2021 Renesas Electronics Corp.
++ */
++
++/dts-v1/;
++#include "r8a779f0-spider-cpu.dtsi"
++#include "r8a779f0-spider-ethernet.dtsi"
++
++// #define NATIVE
++// #define RSWITCH_TSN0
++// #define RSWITCH_TSN1
++// #define RSWITCH_TSN2
++// #define MMC
++// #define UFS3
++
++/ {
++	model = "Renesas Spider CPU and Breakout boards based on r8a779f0";
++	compatible = "renesas,spider-breakout", "renesas,spider-cpu", "renesas,r8a779f0";
++
++	aliases {
++#ifndef NATIVE
++		/delete-property/ serial0;
++		/delete-property/ serial1;
++#endif
++		/delete-property/ i2c0;
++		/delete-property/ i2c1;
++		/delete-property/ i2c2;
++		/delete-property/ i2c3;
++		/delete-property/ i2c4;
++		/delete-property/ i2c5;
++	};
++
++/************************ SYSTEM MEMORY ************************/
++#ifndef NATIVE
++	/delete-node/ memory@48000000;
++	/* /delete-node/ memory@480000000; */
++#endif
++/************************ CPU CORES ************************/
++#ifndef NATIVE
++	/delete-node/ cpus;
++	/delete-node/ pmu_a76;
++	/delete-node/ timer;
++#endif
++
++
++};
++
++#ifndef NATIVE
++/delete-node/ &gic;
++#endif
++
++/************************ WDT ************************/
++/delete-node/ &rwdt;
++&soc {
++#ifdef NATIVE
++	interrupt-parent = <&gic>;
++#else
++	interrupt-parent = <0x40000001>;
++    /*
++	/delete-property/ msiof0;
++	/delete-property/ msiof1;
++	/delete-property/ msiof2;
++	/delete-property/ msiof3;
++	/delete-property/ rswitch;
++	/delete-property/ mmc0;
++    */
++#endif
++};
++
++&pfc {
++    /*
++	tsn0_pins: tsn0 {
++		mux {
++			groups = "tsn0_link", "tsn0_mdio";
++			function = "tsn0";
++			drive-strength = <12>;
++		};
++
++		pins_mdio {
++			groups = "tsn0_mdio";
++			drive-strength = <12>;
++		};
++	};
++    */
++	pcie0_pins: pcie0 {
++		groups = "pcie0_clkreq_n";
++		function = "pcie";
++	};
++
++	pcie1_pins: pcie1 {
++		groups = "pcie1_clkreq_n";
++		function = "pcie";
++	};
++};
++
++&i2c4 {
++#ifndef NATIVE
++    /delete-property/ power-domains;
++#endif
++	eeprom@51 {
++		compatible = "rohm,br24g01", "atmel,24c01";
++		label = "breakout-board";
++		reg = <0x51>;
++		pagesize = <8>;
++	};
++};
++
++&pcie_bus_clk {
++	clock-frequency = <100000000>;
++};
++
++&pciec0 {
++	status = "disabled";
++	pinctrl-0 = <&pcie0_pins>;
++	pinctrl-names = "default";
++#ifndef NATIVE
++    /delete-property/ interrupt-map;
++    /delete-property/ power-domains;
++#endif
++};
++
++&pciec0_ep {
++	status = "disabled";
++	pinctrl-0 = <&pcie0_pins>;
++	pinctrl-names = "default";
++#ifndef NATIVE
++    /delete-property/ interrupt-map;
++    /delete-property/ power-domains;
++#endif
++};
++
++&pciec1 {
++	status = "disabled";
++	pinctrl-0 = <&pcie1_pins>;
++	pinctrl-names = "default";
++#ifndef NATIVE
++    /delete-property/ interrupt-map;
++    /delete-property/ power-domains;
++#endif
++};
++
++
++
++
++/************************ GPIO ************************/
++/delete-node/ &gpio0;
++/delete-node/ &gpio1;
++/delete-node/ &gpio2;
++/delete-node/ &gpio3;
++
++/************************ PCIe ************************/
++/delete-node/ &pciec0;
++/delete-node/ &pciec1;
++
++/************************ I2C ************************/
++/delete-node/ &i2c0;
++/delete-node/ &i2c1;
++/delete-node/ &i2c2;
++/delete-node/ &i2c3;
++/delete-node/ &i2c4;
++/delete-node/ &i2c5;
++
++/************************ SERIAL ************************/
++&scif3{
++#ifndef NATIVE
++	/delete-property/ power-domains;
++#endif
++};
++&scif0{
++#ifndef NATIVE
++	/delete-property/ power-domains;
++#endif
++};
++/delete-node/ &hscif0;
++/delete-node/ &hscif1;
++/delete-node/ &hscif2;
++/delete-node/ &hscif3;
++/delete-node/ &scif1;
++// /delete-node/ &scif2;
++/delete-node/ &scif4;
++#ifndef NATIVE
++/delete-node/ &scif0;
++/delete-node/ &scif3;
++#endif
++
++/************************ DMAC ************************/
++&dmac1 {
++	status = "disabled";
++#ifndef NATIVE
++	/delete-property/ power-domains;
++#endif
++};
++&dmac2 {
++	status = "disabled";
++#ifndef NATIVE
++	/delete-property/ power-domains;
++#endif
++};
++
++/************************ RT-DMAC ************************/
++&rt_dmac0 {
++	status = "disabled";
++#ifndef NATIVE
++	/delete-property/ power-domains;
++#endif
++};
++&rt_dmac1 {
++	status = "disabled";
++#ifndef NATIVE
++	/delete-property/ power-domains;
++#endif
++};
++&rt_dmac2 {
++	status = "disabled";
++#ifndef NATIVE
++	/delete-property/ power-domains;
++#endif
++};
++&rt_dmac3 {
++	status = "disabled";
++#ifndef NATIVE
++	/delete-property/ power-domains;
++#endif
++};
++
++/************************ IPMMU ************************/
++&ipmmu_mm {
++	status = "disabled";
++#ifndef NATIVE
++	/delete-property/ power-domains;
++#endif
++};
++&ipmmu_rt0 {
++	status = "disabled";
++#ifndef NATIVE
++	/delete-property/ power-domains;
++#endif
++};
++&ipmmu_ds0 {
++	status = "disabled";
++#ifndef NATIVE
++	/delete-property/ power-domains;
++#endif
++};
++&ipmmu_hc {
++	status = "disabled";
++#ifndef NATIVE
++	/delete-property/ power-domains;
++#endif
++};
++
++/************************ PWM ************************/
++&tau_pwm0 {
++	status = "disabled";
++#ifndef NATIVE
++	/delete-property/ power-domains;
++#endif
++};
++&tau_pwm1 {
++	status = "disabled";
++#ifndef NATIVE
++	/delete-property/ power-domains;
++#endif
++};
++
++/************************ ICCOM ************************/
++&iccom00 {
++#ifndef NATIVE
++	/delete-property/ power-domains;
++#endif
++};
++
++/************************ CAN ************************/
++
++
++/************************ MSIOF ************************/
++&msiof0 {
++	status = "disabled";
++#ifndef NATIVE
++	/delete-property/ power-domains;
++#endif
++};
++&msiof1 {
++	status = "disabled";
++#ifndef NATIVE
++	/delete-property/ power-domains;
++#endif
++};
++&msiof2 {
++	status = "disabled";
++#ifndef NATIVE
++	/delete-property/ power-domains;
++#endif
++};
++&msiof3 {
++	status = "disabled";
++#ifndef NATIVE
++	/delete-property/ power-domains;
++#endif
++};
++
++/************************ MMC ************************/
++
++&mmc0 {
++#ifndef MMC
++	status = "disabled";
++#else
++    status = "okay";
++#endif
++#ifndef NATIVE
++	/delete-property/ power-domains;
++#endif
++};
++
++/************************ ETHERNET ************************/
++#ifndef NATIVE
++/delete-node/ &rswitch;
++#endif
++
++/************************ THERMAL ************************/
++
+-- 
+2.26.0
+

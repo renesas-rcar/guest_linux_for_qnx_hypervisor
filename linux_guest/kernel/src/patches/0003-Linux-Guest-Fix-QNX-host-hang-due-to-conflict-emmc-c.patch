@@ -1,0 +1,31 @@
+From dee195f309fd9004e4e6b12df62e74b773d735d2 Mon Sep 17 00:00:00 2001
+From: Renesas Electronics Corporation <someone@renesas.com>
+Date: Thu, 20 Jan 2022 11:01:21 +0700
+Subject: [PATCH 3/8] Linux Guest: Fix QNX host hang due to conflict emmc clock
+ setting
+
+Change-Id: I9bf83ac31d7629e9cbb1b1a29c183bcd58cf9463
+---
+ drivers/clk/renesas/rcar-gen4-cpg.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/clk/renesas/rcar-gen4-cpg.c b/drivers/clk/renesas/rcar-gen4-cpg.c
+index a7c0d7b8245d..c95cd685c8b8 100644
+--- a/drivers/clk/renesas/rcar-gen4-cpg.c
++++ b/drivers/clk/renesas/rcar-gen4-cpg.c
+@@ -212,9 +212,9 @@ struct clk * __init rcar_gen4_cpg_clk_register(struct device *dev,
+ 					      __clk_get_name(parent));
+ 
+ 	case CLK_TYPE_GEN4_SD:
+-		return cpg_sd_clk_register(core->name, base, core->offset,
+-					   __clk_get_name(parent), notifiers,
+-					   0, 0);
++//		return cpg_sd_clk_register(core->name, base, core->offset,
++//					   __clk_get_name(parent), notifiers,
++//					   0, 0);
+ 
+ 	default:
+ 		return ERR_PTR(-EINVAL);
+-- 
+2.26.0
+

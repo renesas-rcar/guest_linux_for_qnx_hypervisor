@@ -1,0 +1,111 @@
+From 1022f890ec5ecedb0fc1334666f7ee55b0a58e74 Mon Sep 17 00:00:00 2001
+From: Renesas Electronics Corporation <someone@renesas.com>
+Date: Thu, 20 Jan 2022 11:13:01 +0700
+Subject: [PATCH 4/8] Linux Guest: Fix boot hang because qvm seem does not
+ support ARMv8.2a
+
+[    0.000000] ------------[ cut here ]------------
+[    0.000000] kernel BUG at arch/arm64/kernel/traps.c:407!
+[    0.000000] Internal error: Oops - BUG: 0 [#1] PREEMPT SMP
+[    0.000000] Modules linked in:
+[    0.000000] CPU: 0 PID: 0 Comm: swapper Not tainted 5.10.41-00076-g962ec82e28d7-dirty #2
+[    0.000000] Hardware name: Renesas Spider CPU and Breakout boards based on r8a779f0 (DT)
+[    0.000000] pstate: 00000085 (nzcv daIf -PAN -UAO -TCO BTYPE=--)
+[    0.000000] pc : do_undefinstr+0x2f4/0x318
+[    0.000000] lr : do_undefinstr+0x300/0x318
+[    0.000000] sp : ffff800011cf3d60
+[    0.000000] x29: ffff800011cf3d60 x28: ffff800011d03380
+[    0.000000] x27: 0000000000000000 x26: 0000000000000000
+[    0.000000] x25: ffff8000117b0008 x24: ffff00004de61100
+[    0.000000] x23: 0000000060000085 x22: ffff800010020f40
+[    0.000000] x21: ffff800011cf3f40 x20: ffff800011d03380
+[    0.000000] x19: ffff800011cf3df0 x18: 0000000000000011
+[    0.000000] x17: 0000000000017000 x16: 0000000000000000
+[    0.000000] x15: ffff800011d03380 x14: 0000001000000000
+[    0.000000] x13: 0000000000000085 x12: 000000008de611c0
+[    0.000000] x11: 0000001000000000 x10: 0000000000005685
+[    0.000000] x9 : 000000008de5bb00 x8 : 0000001000000000
+[    0.000000] x7 : 000000000018e000 x6 : ffff800011cf3db8
+[    0.000000] x5 : ffff800011cf3db8 x4 : ffff800011d05850
+[    0.000000] x3 : ffff800011fb60f0 x2 : 0000000000000000
+[    0.000000] x1 : ffff800011d03380 x0 : 0000000060000085
+[    0.000000] Call trace:
+[    0.000000]  do_undefinstr+0x2f4/0x318
+[    0.000000]  el1_undef+0x30/0x50
+[    0.000000]  el1_sync_handler+0x8c/0xc8
+[    0.000000]  el1_sync+0x88/0x140
+[    0.000000]  __cpuinfo_store_cpu+0xf0/0x230
+[    0.000000]  cpuinfo_store_boot_cpu+0x2c/0x5c
+[    0.000000]  smp_prepare_boot_cpu+0x30/0x40
+[    0.000000]  start_kernel+0x180/0x4ec
+[    0.000000] Code: f9401bf7 17ffff7b a9025bf5 f9001bf7 (d4210000)
+[    0.000000] random: get_random_bytes called from print_oops_end_marker+0x2c/0x68 with crng_init=0
+[    0.000000] ---[ end trace 0000000000000000 ]---
+[    0.000000] Kernel panic - not syncing: Attempted to kill the idle task!
+[    0.000000] ---[ end Kernel panic - not syncing: Attempted to kill the idle task! ]---
+
+Change-Id: I9b7bda7536f5c0a5f4f4243159e0a0ddfdf0036c
+---
+ arch/arm64/kernel/cpuinfo.c | 12 +++++-------
+ 1 file changed, 5 insertions(+), 7 deletions(-)
+ mode change 100644 => 100755 arch/arm64/kernel/cpuinfo.c
+
+diff --git a/arch/arm64/kernel/cpuinfo.c b/arch/arm64/kernel/cpuinfo.c
+old mode 100644
+new mode 100755
+index 77605aec25fe..1a1870ae79f5
+--- a/arch/arm64/kernel/cpuinfo.c
++++ b/arch/arm64/kernel/cpuinfo.c
+@@ -347,6 +347,7 @@ static void cpuinfo_detect_icache_policy(struct cpuinfo_arm64 *info)
+ static void __cpuinfo_store_cpu(struct cpuinfo_arm64 *info)
+ {
+ 	info->reg_cntfrq = arch_timer_get_cntfrq();
++
+ 	/*
+ 	 * Use the effective value of the CTR_EL0 than the raw value
+ 	 * exposed by the CPU. CTR_EL0.IDC field value must be interpreted
+@@ -355,11 +356,11 @@ static void __cpuinfo_store_cpu(struct cpuinfo_arm64 *info)
+ 	 * effective value of the CTR_EL0 in our internal records for
+ 	 * acurate sanity check and feature enablement.
+ 	 */
++
+ 	info->reg_ctr = read_cpuid_effective_cachetype();
+ 	info->reg_dczid = read_cpuid(DCZID_EL0);
+ 	info->reg_midr = read_cpuid_id();
+ 	info->reg_revidr = read_cpuid(REVIDR_EL1);
+-
+ 	info->reg_id_aa64dfr0 = read_cpuid(ID_AA64DFR0_EL1);
+ 	info->reg_id_aa64dfr1 = read_cpuid(ID_AA64DFR1_EL1);
+ 	info->reg_id_aa64isar0 = read_cpuid(ID_AA64ISAR0_EL1);
+@@ -381,7 +382,7 @@ static void __cpuinfo_store_cpu(struct cpuinfo_arm64 *info)
+ 		info->reg_id_isar3 = read_cpuid(ID_ISAR3_EL1);
+ 		info->reg_id_isar4 = read_cpuid(ID_ISAR4_EL1);
+ 		info->reg_id_isar5 = read_cpuid(ID_ISAR5_EL1);
+-		info->reg_id_isar6 = read_cpuid(ID_ISAR6_EL1);
++		//info->reg_id_isar6 = read_cpuid(ID_ISAR6_EL1);
+ 		info->reg_id_mmfr0 = read_cpuid(ID_MMFR0_EL1);
+ 		info->reg_id_mmfr1 = read_cpuid(ID_MMFR1_EL1);
+ 		info->reg_id_mmfr2 = read_cpuid(ID_MMFR2_EL1);
+@@ -390,17 +391,14 @@ static void __cpuinfo_store_cpu(struct cpuinfo_arm64 *info)
+ 		info->reg_id_mmfr5 = read_cpuid(ID_MMFR5_EL1);
+ 		info->reg_id_pfr0 = read_cpuid(ID_PFR0_EL1);
+ 		info->reg_id_pfr1 = read_cpuid(ID_PFR1_EL1);
+-		info->reg_id_pfr2 = read_cpuid(ID_PFR2_EL1);
+-
++		//info->reg_id_pfr2 = read_cpuid(ID_PFR2_EL1);
+ 		info->reg_mvfr0 = read_cpuid(MVFR0_EL1);
+ 		info->reg_mvfr1 = read_cpuid(MVFR1_EL1);
+ 		info->reg_mvfr2 = read_cpuid(MVFR2_EL1);
+ 	}
+-
+ 	if (IS_ENABLED(CONFIG_ARM64_SVE) &&
+ 	    id_aa64pfr0_sve(info->reg_id_aa64pfr0))
+-		info->reg_zcr = read_zcr_features();
+-
++            info->reg_zcr = read_zcr_features();
+ 	cpuinfo_detect_icache_policy(info);
+ }
+ 
+-- 
+2.26.0
+

@@ -1,0 +1,170 @@
+From 5f86138a17fec577bb83d2a3f579902ae508344f Mon Sep 17 00:00:00 2001
+From: Renesas Electronics Corporation <someone@renesas.com>
+Date: Thu, 20 Jan 2022 11:51:57 +0700
+Subject: [PATCH 6/8] Linux Guest: Fix generic timer clock frequency issue
+
+[    0.000000] arch_timer: frequency not available
+[    0.000000] ------------[ cut here ]------------
+[    0.000000] WARNING: CPU: 0 PID: 0 at kernel/time/clockevents.c:38 cev_delta2ns.isra.0+0x78/0x98
+[    0.000000] Modules linked in:
+[    0.000000] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.10.41-00078-g6ef616d1246c-dirty #15
+[    0.000000] Hardware name: Renesas Spider CPU and Breakout boards based on r8a779f0 (DT)
+[    0.000000] pstate: 60000085 (nZCv daIf -PAN -UAO -TCO BTYPE=--)
+[    0.000000] pc : cev_delta2ns.isra.0+0x78/0x98
+[    0.000000] lr : clockevents_config.part.0+0x74/0xa8
+[    0.000000] sp : ffff800011493cf0
+[    0.000000] x29: ffff800011493cf0 x28: 0000000000000075
+[    0.000000] x27: 0000000000000000 x26: 0000000000000000
+[    0.000000] x25: ffff8000114aae10 x24: ffff8000114ab030
+[    0.000000] x23: ffff8000112bca28 x22: ffff800011590410
+[    0.000000] x21: ffff000027edd334 x20: ffff000027edd330
+[    0.000000] x19: ffff000027edd300 x18: 0000000000000010
+[    0.000000] x17: 0000000000000000 x16: 00000000a90eb5c2
+[    0.000000] x15: ffff8000114a31b8 x14: 0000000000000000
+[    0.000000] x13: 00000000000000c0 x12: ffff8000114a2d40
+[    0.000000] x11: 0000000000000040 x10: ffff8000115220d0
+[    0.000000] x9 : 0000000000000001 x8 : 000000003b9aca00
+[    0.000000] x7 : 0000000000000000 x6 : 0000000000000020
+[    0.000000] x5 : 0000000000000000 x4 : 0000000f00000000
+[    0.000000] x3 : 0000000000000000 x2 : ffff000027edd334
+[    0.000000] x1 : ffff000027edd330 x0 : 000000000000000f
+[    0.000000] Call trace:
+[    0.000000]  cev_delta2ns.isra.0+0x78/0x98
+[    0.000000]  clockevents_config_and_register+0x20/0x38
+[    0.000000]  arch_timer_starting_cpu+0x118/0x330
+[    0.000000]  cpuhp_invoke_callback+0x84/0x200
+[    0.000000]  cpuhp_issue_call+0xe4/0x138
+[    0.000000]  __cpuhp_setup_state_cpuslocked+0x10c/0x2e0
+[    0.000000]  __cpuhp_setup_state+0xcc/0x218
+[    0.000000]  arch_timer_register+0x160/0x1cc
+[    0.000000]  arch_timer_of_init+0xfc/0x12c
+[    0.000000]  timer_probe+0x74/0x114
+[    0.000000]  time_init+0x14/0x48
+[    0.000000]  start_kernel+0x344/0x4a4
+[    0.000000] ---[ end trace 6d201d23ba63b237 ]---
+[    0.000000] arch_timer: cp15 timer(s) running at 0.00MHz (virt).
+[    0.000000] clocksource: arch_sys_counter: mask: 0xffffffffffffff max_cycles: 0x0, max_idle_ns: 0 ns
+[    0.000000] sched_clock: 56 bits at 0 Hz, resolution 0ns, wraps every 0ns
+[    0.000000] Kernel panic - not syncing: Unable to initialise architected timer.
+
+Change-Id: I99bc74dc708bf015c8557d09dd46b7295f50e3a8
+---
+ .../dts/renesas/qnxhyp-r8a779f0-spider.dts    | 42 ++++++++++++-------
+ 1 file changed, 27 insertions(+), 15 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/renesas/qnxhyp-r8a779f0-spider.dts b/arch/arm64/boot/dts/renesas/qnxhyp-r8a779f0-spider.dts
+index 5ed5c08cfd4d..d6b535655d59 100755
+--- a/arch/arm64/boot/dts/renesas/qnxhyp-r8a779f0-spider.dts
++++ b/arch/arm64/boot/dts/renesas/qnxhyp-r8a779f0-spider.dts
+@@ -44,9 +44,21 @@ aliases {
+ 	/delete-node/ cpus;
+ 	/delete-node/ pmu_a76;
+ 	/delete-node/ timer;
+-#endif
+-
+ 
++	vgic: vgic@0 {
++		qvm,vdev = "gic";
++	};
++	vdevs {
++		timer {
++			compatible = "arm,armv8-timer";
++			clock-frequency = <16666666>;
++			interrupts-extended = <&vgic GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(1) | IRQ_TYPE_LEVEL_LOW)>,
++						<&vgic GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(1) | IRQ_TYPE_LEVEL_LOW)>,
++						<&vgic GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(1) | IRQ_TYPE_LEVEL_LOW)>,
++						<&vgic GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(1) | IRQ_TYPE_LEVEL_LOW)>;
++		};
++	};
++#endif
+ };
+ 
+ #ifndef NATIVE
+@@ -59,20 +71,20 @@ &soc {
+ #ifdef NATIVE
+ 	interrupt-parent = <&gic>;
+ #else
+-	interrupt-parent = <0x40000001>;
+-    /*
++	interrupt-parent = <&vgic>;
++	/*
+ 	/delete-property/ msiof0;
+ 	/delete-property/ msiof1;
+ 	/delete-property/ msiof2;
+ 	/delete-property/ msiof3;
+ 	/delete-property/ rswitch;
+ 	/delete-property/ mmc0;
+-    */
++	*/
+ #endif
+ };
+ 
+ &pfc {
+-    /*
++	/*
+ 	tsn0_pins: tsn0 {
+ 		mux {
+ 			groups = "tsn0_link", "tsn0_mdio";
+@@ -85,7 +97,7 @@ pins_mdio {
+ 			drive-strength = <12>;
+ 		};
+ 	};
+-    */
++	*/
+ 	pcie0_pins: pcie0 {
+ 		groups = "pcie0_clkreq_n";
+ 		function = "pcie";
+@@ -99,7 +111,7 @@ pcie1_pins: pcie1 {
+ 
+ &i2c4 {
+ #ifndef NATIVE
+-    /delete-property/ power-domains;
++	/delete-property/ power-domains;
+ #endif
+ 	eeprom@51 {
+ 		compatible = "rohm,br24g01", "atmel,24c01";
+@@ -118,8 +130,8 @@ &pciec0 {
+ 	pinctrl-0 = <&pcie0_pins>;
+ 	pinctrl-names = "default";
+ #ifndef NATIVE
+-    /delete-property/ interrupt-map;
+-    /delete-property/ power-domains;
++	/delete-property/ interrupt-map;
++	/delete-property/ power-domains;
+ #endif
+ };
+ 
+@@ -128,8 +140,8 @@ &pciec0_ep {
+ 	pinctrl-0 = <&pcie0_pins>;
+ 	pinctrl-names = "default";
+ #ifndef NATIVE
+-    /delete-property/ interrupt-map;
+-    /delete-property/ power-domains;
++	/delete-property/ interrupt-map;
++	/delete-property/ power-domains;
+ #endif
+ };
+ 
+@@ -138,8 +150,8 @@ &pciec1 {
+ 	pinctrl-0 = <&pcie1_pins>;
+ 	pinctrl-names = "default";
+ #ifndef NATIVE
+-    /delete-property/ interrupt-map;
+-    /delete-property/ power-domains;
++	/delete-property/ interrupt-map;
++	/delete-property/ power-domains;
+ #endif
+ };
+ 
+@@ -309,7 +321,7 @@ &mmc0 {
+ #ifndef MMC
+ 	status = "disabled";
+ #else
+-    status = "okay";
++	status = "okay";
+ #endif
+ #ifndef NATIVE
+ 	/delete-property/ power-domains;
+-- 
+2.26.0
+

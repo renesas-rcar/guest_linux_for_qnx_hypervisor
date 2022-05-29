@@ -1,0 +1,58 @@
+From 3b5ee6fe0101219ead927efd406d0841296287ed Mon Sep 17 00:00:00 2001
+From: Renesas Electronics Corporation <someone@renesas.com>
+Date: Thu, 20 Jan 2022 10:53:35 +0700
+Subject: [PATCH 1/8] Linux Guest: remove the unnecessary kernel configurations
+
+Change-Id: Id0b5888b1bee34ff5d7cbcb74ef4edfe44bbac18
+---
+ arch/arm64/configs/defconfig | 33 ---------------------------------
+ 1 file changed, 33 deletions(-)
+
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index 6a53c43b38de..f4c69510049a 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -27,40 +27,7 @@ CONFIG_BLK_DEV_INITRD=y
+ CONFIG_KALLSYMS_ALL=y
+ # CONFIG_COMPAT_BRK is not set
+ CONFIG_PROFILING=y
+-CONFIG_ARCH_ACTIONS=y
+-CONFIG_ARCH_AGILEX=y
+-CONFIG_ARCH_SUNXI=y
+-CONFIG_ARCH_ALPINE=y
+-CONFIG_ARCH_BCM2835=y
+-CONFIG_ARCH_BCM_IPROC=y
+-CONFIG_ARCH_BERLIN=y
+-CONFIG_ARCH_BRCMSTB=y
+-CONFIG_ARCH_EXYNOS=y
+-CONFIG_ARCH_K3=y
+-CONFIG_ARCH_LAYERSCAPE=y
+-CONFIG_ARCH_LG1K=y
+-CONFIG_ARCH_HISI=y
+-CONFIG_ARCH_MEDIATEK=y
+-CONFIG_ARCH_MESON=y
+-CONFIG_ARCH_MVEBU=y
+-CONFIG_ARCH_MXC=y
+-CONFIG_ARCH_QCOM=y
+ CONFIG_ARCH_RENESAS=y
+-CONFIG_ARCH_ROCKCHIP=y
+-CONFIG_ARCH_S32=y
+-CONFIG_ARCH_SEATTLE=y
+-CONFIG_ARCH_STRATIX10=y
+-CONFIG_ARCH_SYNQUACER=y
+-CONFIG_ARCH_TEGRA=y
+-CONFIG_ARCH_SPRD=y
+-CONFIG_ARCH_THUNDER=y
+-CONFIG_ARCH_THUNDER2=y
+-CONFIG_ARCH_UNIPHIER=y
+-CONFIG_ARCH_VEXPRESS=y
+-CONFIG_ARCH_VISCONTI=y
+-CONFIG_ARCH_XGENE=y
+-CONFIG_ARCH_ZX=y
+-CONFIG_ARCH_ZYNQMP=y
+ CONFIG_ARM64_VA_BITS_48=y
+ CONFIG_SCHED_MC=y
+ CONFIG_SCHED_SMT=y
+-- 
+2.26.0
+
