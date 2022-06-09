@@ -1,0 +1,96 @@
+From c01845135fc2a8ca846563a78953bf7a5271b0fc Mon Sep 17 00:00:00 2001
+From: Renesas Electronics Corporation <someone@renesas.com>
+Date: Thu, 3 Mar 2022 17:18:39 +0700
+Subject: [PATCH 2/2] bl31: setup IPMMU registers
+
+Enable non-secure access
+---
+ .../arm-trusted-firmware_git.bb               |  1 +
+ .../0002-bl31-setup-IPMMU-registers.patch     | 63 +++++++++++++++++++
+ 2 files changed, 64 insertions(+)
+ create mode 100755 meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/files/0002-bl31-setup-IPMMU-registers.patch
+
+diff --git a/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/arm-trusted-firmware_git.bb b/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/arm-trusted-firmware_git.bb
+index 87f63ef..829a24a 100755
+--- a/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/arm-trusted-firmware_git.bb
++++ b/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/arm-trusted-firmware_git.bb
+@@ -15,6 +15,7 @@ SRCREV = "7f2208b61948c9824ede3b9ae0e9d2cc2125e987"
+ 
+ SRC_URI_append = "\
+     file://0001-bl31-transfer-control-to-BL33-at-EL2.patch \
++    file://0002-bl31-setup-IPMMU-registers.patch \
+ "
+ 
+ PV = "v2.5+renesas+git${SRCPV}"
+diff --git a/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/files/0002-bl31-setup-IPMMU-registers.patch b/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/files/0002-bl31-setup-IPMMU-registers.patch
+new file mode 100755
+index 0000000..447bf69
+--- /dev/null
++++ b/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/files/0002-bl31-setup-IPMMU-registers.patch
+@@ -0,0 +1,63 @@
++From cbab8a6c3847154c529d1e8879f2cdb5cac7dc88 Mon Sep 17 00:00:00 2001
++From: Renesas Electronics Corporation <someone@renesas.com>
++Date: Thu, 3 Mar 2022 16:35:18 +0700
++Subject: [PATCH 2/2] bl31: setup IPMMU registers
++
++Enable non-secure access
++---
++ plat/renesas/rcar_gen4/bl31_plat_setup.c  | 11 +++++++++++
++ plat/renesas/rcar_gen4/include/rcar_def.h | 11 +++++++++++
++ 2 files changed, 22 insertions(+)
++
++diff --git a/plat/renesas/rcar_gen4/bl31_plat_setup.c b/plat/renesas/rcar_gen4/bl31_plat_setup.c
++index 35eb76872..75150ceec 100644
++--- a/plat/renesas/rcar_gen4/bl31_plat_setup.c
+++++ b/plat/renesas/rcar_gen4/bl31_plat_setup.c
++@@ -104,6 +104,16 @@ void bl31_plat_arch_setup(void)
++ 	    );
++ }
++ 
+++static void rcar_ipmmu_setup(void)
+++{
+++	mmio_write_32(IPMMU_MM_BASE + IMSAUXCTLR, 0x01000000);
+++	mmio_write_32(IPMMU_MM_BASE + IMSCTLR, 0xC0000000);
+++	mmio_write_32(IPMMU_BASE + IPMMU_DOMAIN_0 + IMSCTLR, 0xC0000000);
+++	mmio_write_32(IPMMU_BASE + IPMMU_DOMAIN_1 + IMSCTLR, 0xC0000000);
+++	mmio_write_32(IPMMU_BASE + IPMMU_DOMAIN_2 + IMSCTLR, 0xC0000000);
+++	mmio_write_32(IPMMU_BASE + IPMMU_DOMAIN_4 + IMSCTLR, 0xC0000000);
+++}
+++
++ void bl31_platform_setup(void)
++ {
++ 	plat_rcar_gic_driver_init();
++@@ -120,6 +130,7 @@ void bl31_platform_setup(void)
++ 			CNTCR_FCREQ((uint32_t)(0)) | CNTCR_EN);
++ 
++ 	rcar_pwrc_setup();
+++    rcar_ipmmu_setup();
++ 
++ 	/*
++ 	 * mask should match the kernel's MPIDR_HWID_BITMASK so the core can be
++diff --git a/plat/renesas/rcar_gen4/include/rcar_def.h b/plat/renesas/rcar_gen4/include/rcar_def.h
++index 07b1617dd..01f8b5b78 100644
++--- a/plat/renesas/rcar_gen4/include/rcar_def.h
+++++ b/plat/renesas/rcar_gen4/include/rcar_def.h
++@@ -106,4 +106,15 @@
++ /* CPUPWRCTLR */
++ #define CPUPWRCTLR_PWDN			U(0x00000001)
++ 
+++/* IPMMU registers */
+++#define IPMMU_BASE              U(0xEE000000)
+++#define IPMMU_MM_BASE           U(0xEEFC0000)
+++#define IPMMU_DOMAIN_0          U(0x480000)
+++#define IPMMU_DOMAIN_1          U(0x4C0000)
+++#define IPMMU_DOMAIN_2          U(0xD00000)
+++#define IPMMU_DOMAIN_3          U(0xE00000)
+++#define IPMMU_DOMAIN_4          U(0xD40000)
+++#define IMSCTLR                 U(0x1500)
+++#define IMSAUXCTLR              U(0x1504)
+++
++ #endif /* RCAR_DEF_H */
++-- 
++2.32.0
++
+-- 
+2.32.0
+
