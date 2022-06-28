@@ -1,7 +1,7 @@
-From 5f86138a17fec577bb83d2a3f579902ae508344f Mon Sep 17 00:00:00 2001
+From fdee014f1198f87fef92c9a4d68b46cf68a1b9f5 Mon Sep 17 00:00:00 2001
 From: Renesas Electronics Corporation <someone@renesas.com>
 Date: Thu, 20 Jan 2022 11:51:57 +0700
-Subject: [PATCH 6/8] Linux Guest: Fix generic timer clock frequency issue
+Subject: [PATCH 6/9] Linux Guest: Fix generic timer clock frequency issue
 
 [    0.000000] arch_timer: frequency not available
 [    0.000000] ------------[ cut here ]------------
@@ -47,7 +47,7 @@ Subject: [PATCH 6/8] Linux Guest: Fix generic timer clock frequency issue
 [    0.000000] sched_clock: 56 bits at 0 Hz, resolution 0ns, wraps every 0ns
 [    0.000000] Kernel panic - not syncing: Unable to initialise architected timer.
 
-Change-Id: I99bc74dc708bf015c8557d09dd46b7295f50e3a8
+Change-Id: I99bc74dc708bf015c8557d09dd46b7295f5043aa
 ---
  .../dts/renesas/qnxhyp-r8a779f0-spider.dts    | 42 ++++++++++++-------
  1 file changed, 27 insertions(+), 15 deletions(-)

@@ -1,10 +1,9 @@
-From 68e5a07602f874eb60301dab7f94ebf46182b95c Mon Sep 17 00:00:00 2001
+From 65c2f9486cd92249dcc9b7ed9fa80ca60d9ad94b Mon Sep 17 00:00:00 2001
 From: Renesas Electronics Corporation <someone@renesas.com>
 Date: Fri, 21 Jan 2022 17:58:10 +0700
-Subject: [PATCH 7/8] Linux Guest: fix build error on v5.10.41/rcar-5.1.3.rc8
- branch by removing emmc node in DT
+Subject: [PATCH 7/9] Linux Guest: fix build error by removing emmc node in DT
 
-Change-Id: I4d14cdef1e32defd25deab18a885efa358d7f7a0
+Change-Id: I4d14cdef1e32defd25deab18a885efa358d77f0a
 ---
  .../arm64/boot/dts/renesas/qnxhyp-r8a779f0-spider.dts | 11 ++---------
  1 file changed, 2 insertions(+), 9 deletions(-)

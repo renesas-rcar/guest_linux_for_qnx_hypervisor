@@ -1,31 +1,33 @@
-From dee195f309fd9004e4e6b12df62e74b773d735d2 Mon Sep 17 00:00:00 2001
+From f125835fdba4ded6bae04de9b6d9e0aca6ab7337 Mon Sep 17 00:00:00 2001
 From: Renesas Electronics Corporation <someone@renesas.com>
-Date: Thu, 20 Jan 2022 11:01:21 +0700
-Subject: [PATCH 3/8] Linux Guest: Fix QNX host hang due to conflict emmc clock
- setting
+Date: Thu, 16 Jun 2022 15:16:09 +0700
+Subject: [PATCH 3/9] Linux Guest: Fix QNX host hang due to conflict emmc clock
 
-Change-Id: I9bf83ac31d7629e9cbb1b1a29c183bcd58cf9463
+Change-Id: I2b54ac00eaa6b46617e794af3277972344382b88
 ---
  drivers/clk/renesas/rcar-gen4-cpg.c | 6 +++---
  1 file changed, 3 insertions(+), 3 deletions(-)
+ mode change 100644 => 100755 drivers/clk/renesas/rcar-gen4-cpg.c
 
 diff --git a/drivers/clk/renesas/rcar-gen4-cpg.c b/drivers/clk/renesas/rcar-gen4-cpg.c
-index a7c0d7b8245d..c95cd685c8b8 100644
+old mode 100644
+new mode 100755
+index 75ea58279035..6dc16b1f7218
 --- a/drivers/clk/renesas/rcar-gen4-cpg.c
 +++ b/drivers/clk/renesas/rcar-gen4-cpg.c
-@@ -212,9 +212,9 @@ struct clk * __init rcar_gen4_cpg_clk_register(struct device *dev,
- 					      __clk_get_name(parent));
+@@ -244,9 +244,9 @@ struct clk * __init rcar_gen4_cpg_clk_register(struct device *dev,
+ 		break;
  
  	case CLK_TYPE_GEN4_SD:
 -		return cpg_sd_clk_register(core->name, base, core->offset,
 -					   __clk_get_name(parent), notifiers,
--					   0, 0);
-+//		return cpg_sd_clk_register(core->name, base, core->offset,
-+//					   __clk_get_name(parent), notifiers,
-+//					   0, 0);
+-					   false, false);
++		//return cpg_sd_clk_register(core->name, base, core->offset,
++		//			   __clk_get_name(parent), notifiers,
++		//			   false, false);
  
- 	default:
- 		return ERR_PTR(-EINVAL);
+ 	case CLK_TYPE_GEN4_MDSEL:
+ 		/*
 -- 
 2.26.0
 

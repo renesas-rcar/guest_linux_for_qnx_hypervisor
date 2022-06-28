@@ -1,49 +1,32 @@
-From 3dd9748ea72f2914ca10a166a654e455f1d1036d Mon Sep 17 00:00:00 2001
+From 58b36ae0a8e50d581622bfeaf455ba2bebdf61d0 Mon Sep 17 00:00:00 2001
 From: Renesas Electronics Corporation <someone@renesas.com>
-Date: Thu, 3 Mar 2022 17:16:50 +0700
+Date: Tue, 21 Jun 2022 15:18:37 +0700
 Subject: [PATCH 1/2] atf: bl31: transfer control to bl33 at EL2
 
 ---
- .../arm-trusted-firmware_git.bb               |  4 +++
  ...bl31-transfer-control-to-BL33-at-EL2.patch | 32 +++++++++++++++++++
- 2 files changed, 36 insertions(+)
+ .../arm-trusted-firmware_git.bb               |  1 +
+ 2 files changed, 33 insertions(+)
+ create mode 100755 meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/arm-trusted-firmware/0001-bl31-transfer-control-to-BL33-at-EL2.patch
  mode change 100644 => 100755 meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/arm-trusted-firmware_git.bb
- create mode 100755 meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/files/0001-bl31-transfer-control-to-BL33-at-EL2.patch
 
-diff --git a/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/arm-trusted-firmware_git.bb b/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/arm-trusted-firmware_git.bb
-old mode 100644
-new mode 100755
-index b1768a5..87f63ef
---- a/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/arm-trusted-firmware_git.bb
-+++ b/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/arm-trusted-firmware_git.bb
-@@ -13,6 +13,10 @@ BRANCH = "rcar-s4_v2.5"
- SRC_URI = "git://github.com/renesas-rcar/arm-trusted-firmware.git;branch=${BRANCH}"
- SRCREV = "7f2208b61948c9824ede3b9ae0e9d2cc2125e987"
- 
-+SRC_URI_append = "\
-+    file://0001-bl31-transfer-control-to-BL33-at-EL2.patch \
-+"
-+
- PV = "v2.5+renesas+git${SRCPV}"
- 
- COMPATIBLE_MACHINE = "(spider)"
-diff --git a/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/files/0001-bl31-transfer-control-to-BL33-at-EL2.patch b/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/files/0001-bl31-transfer-control-to-BL33-at-EL2.patch
+diff --git a/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/arm-trusted-firmware/0001-bl31-transfer-control-to-BL33-at-EL2.patch b/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/arm-trusted-firmware/0001-bl31-transfer-control-to-BL33-at-EL2.patch
 new file mode 100755
-index 0000000..64089e0
+index 00000000..25de20b9
 --- /dev/null
-+++ b/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/files/0001-bl31-transfer-control-to-BL33-at-EL2.patch
++++ b/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/arm-trusted-firmware/0001-bl31-transfer-control-to-BL33-at-EL2.patch
 @@ -0,0 +1,32 @@
-+From 5d92ca7741a55df0d0220716c571c7839056740e Mon Sep 17 00:00:00 2001
++From 26c4688d3d214ade84d1b29fabafb56a2db37e97 Mon Sep 17 00:00:00 2001
 +From: Renesas Electronics Corporation <someone@renesas.com>
-+Date: Thu, 3 Mar 2022 14:51:17 +0700
-+Subject: [PATCH 1/2] bl31: transfer control to BL33 at EL2
++Date: Tue, 21 Jun 2022 15:15:29 +0700
++Subject: [PATCH] bl31: transfer control to BL33 at EL2
 +
 +---
 + plat/renesas/rcar_gen4/bl31_plat_setup.c | 9 +++++++++
 + 1 file changed, 9 insertions(+)
 +
 +diff --git a/plat/renesas/rcar_gen4/bl31_plat_setup.c b/plat/renesas/rcar_gen4/bl31_plat_setup.c
-+index 3eb62cf2d..35eb76872 100644
++index 10698c83f..1b92f63a8 100644
 +--- a/plat/renesas/rcar_gen4/bl31_plat_setup.c
 ++++ b/plat/renesas/rcar_gen4/bl31_plat_setup.c
 +@@ -62,6 +62,15 @@ struct entry_point_info *bl31_plat_get_next_image_ep_info(uint32_t type)
@@ -63,8 +46,22 @@ index 0000000..64089e0
 + }
 + 
 +-- 
-+2.32.0
++2.35.1
 +
+diff --git a/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/arm-trusted-firmware_git.bb b/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/arm-trusted-firmware_git.bb
+old mode 100644
+new mode 100755
+index cb45e522..96b62751
+--- a/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/arm-trusted-firmware_git.bb
++++ b/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/arm-trusted-firmware_git.bb
+@@ -16,6 +16,7 @@ SRCREV = "5b0edfa45acfd8e14618cd324b62e49e33dcc40b"
+ SRC_URI_append = "\
+         file://0001-drivers-gicv3-Fix-setting-E-PPI-SGI-priorities.patch \
+         file://0002-rcar_gen4-plat-BL31-Set-the-interrupt-priority-unifo.patch \
++        file://0001-bl31-transfer-control-to-BL33-at-EL2.patch \
+ "
+ 
+ PV = "v2.5+renesas+git${SRCPV}"
 -- 
-2.32.0
+2.35.1
 

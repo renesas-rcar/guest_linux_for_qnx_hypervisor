@@ -1,9 +1,9 @@
-From 4d1de252d9a4f3b7277d0ce3f0709e5992e97632 Mon Sep 17 00:00:00 2001
+From 2d9e437f48bc05d68ccd419e0618bc50cf40d437 Mon Sep 17 00:00:00 2001
 From: Renesas Electronics Corporation <someone@renesas.com>
-Date: Thu, 20 Jan 2022 11:21:44 +0700
-Subject: [PATCH 2/8] Linux Guest: Add DT for S4 Spider board for QNX Hyp
+Date: Thu, 16 Jun 2022 15:03:34 +0700
+Subject: [PATCH 2/9] Linux Guest: Add DT for S4 Spider board for QNX Hyp
 
-Change-Id: Ia305da816f3c2b9f0ba68fba980c5c62127f0a4e
+Change-Id: I181f9a5c4336324e577df58be303e2fbe326f095
 ---
  arch/arm64/boot/dts/renesas/Makefile          |   2 +-
  .../dts/renesas/qnxhyp-r8a779f0-spider.dts    | 325 ++++++++++++++++++
@@ -14,11 +14,11 @@ Change-Id: Ia305da816f3c2b9f0ba68fba980c5c62127f0a4e
 diff --git a/arch/arm64/boot/dts/renesas/Makefile b/arch/arm64/boot/dts/renesas/Makefile
 old mode 100644
 new mode 100755
-index 24c1ce4ea72e..de881be8dfa2
+index 1499361d6ecf..3254022b575d
 --- a/arch/arm64/boot/dts/renesas/Makefile
 +++ b/arch/arm64/boot/dts/renesas/Makefile
-@@ -72,7 +72,7 @@ dtb-$(CONFIG_ARCH_R8A77995) += r8a77995-draak.dtb
- dtb-$(CONFIG_ARCH_R8A779A0) += r8a779a0-falcon.dtb
+@@ -74,7 +74,7 @@ dtb-$(CONFIG_ARCH_R8A779A0) += r8a779a0-falcon.dtb
+ dtb-$(CONFIG_ARCH_R8A779G0) += r8a779g0-whitehawk.dtb
  
  dtb-$(CONFIG_ARCH_R8A779F0) += r8a779f0-spider.dtb
 -

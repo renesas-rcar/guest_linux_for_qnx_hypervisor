@@ -1,50 +1,36 @@
-From c01845135fc2a8ca846563a78953bf7a5271b0fc Mon Sep 17 00:00:00 2001
+From 658b2fcbd9fc833663cf9be85fa3e4d96ba79a08 Mon Sep 17 00:00:00 2001
 From: Renesas Electronics Corporation <someone@renesas.com>
-Date: Thu, 3 Mar 2022 17:18:39 +0700
+Date: Tue, 21 Jun 2022 15:37:52 +0700
 Subject: [PATCH 2/2] bl31: setup IPMMU registers
 
-Enable non-secure access
 ---
+ .../0002-bl31-setup-IPMMU-registers.patch     | 62 +++++++++++++++++++
  .../arm-trusted-firmware_git.bb               |  1 +
- .../0002-bl31-setup-IPMMU-registers.patch     | 63 +++++++++++++++++++
- 2 files changed, 64 insertions(+)
- create mode 100755 meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/files/0002-bl31-setup-IPMMU-registers.patch
+ 2 files changed, 63 insertions(+)
+ create mode 100755 meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/arm-trusted-firmware/0002-bl31-setup-IPMMU-registers.patch
 
-diff --git a/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/arm-trusted-firmware_git.bb b/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/arm-trusted-firmware_git.bb
-index 87f63ef..829a24a 100755
---- a/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/arm-trusted-firmware_git.bb
-+++ b/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/arm-trusted-firmware_git.bb
-@@ -15,6 +15,7 @@ SRCREV = "7f2208b61948c9824ede3b9ae0e9d2cc2125e987"
- 
- SRC_URI_append = "\
-     file://0001-bl31-transfer-control-to-BL33-at-EL2.patch \
-+    file://0002-bl31-setup-IPMMU-registers.patch \
- "
- 
- PV = "v2.5+renesas+git${SRCPV}"
-diff --git a/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/files/0002-bl31-setup-IPMMU-registers.patch b/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/files/0002-bl31-setup-IPMMU-registers.patch
+diff --git a/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/arm-trusted-firmware/0002-bl31-setup-IPMMU-registers.patch b/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/arm-trusted-firmware/0002-bl31-setup-IPMMU-registers.patch
 new file mode 100755
-index 0000000..447bf69
+index 00000000..f661cef6
 --- /dev/null
-+++ b/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/files/0002-bl31-setup-IPMMU-registers.patch
-@@ -0,0 +1,63 @@
-+From cbab8a6c3847154c529d1e8879f2cdb5cac7dc88 Mon Sep 17 00:00:00 2001
++++ b/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/arm-trusted-firmware/0002-bl31-setup-IPMMU-registers.patch
+@@ -0,0 +1,62 @@
++From 24fef79fba0778a3436878c09a007505f18b81dd Mon Sep 17 00:00:00 2001
 +From: Renesas Electronics Corporation <someone@renesas.com>
-+Date: Thu, 3 Mar 2022 16:35:18 +0700
++Date: Tue, 21 Jun 2022 15:35:35 +0700
 +Subject: [PATCH 2/2] bl31: setup IPMMU registers
 +
-+Enable non-secure access
 +---
 + plat/renesas/rcar_gen4/bl31_plat_setup.c  | 11 +++++++++++
 + plat/renesas/rcar_gen4/include/rcar_def.h | 11 +++++++++++
 + 2 files changed, 22 insertions(+)
 +
 +diff --git a/plat/renesas/rcar_gen4/bl31_plat_setup.c b/plat/renesas/rcar_gen4/bl31_plat_setup.c
-+index 35eb76872..75150ceec 100644
++index 1b92f63a8..7001b1a02 100644
 +--- a/plat/renesas/rcar_gen4/bl31_plat_setup.c
 ++++ b/plat/renesas/rcar_gen4/bl31_plat_setup.c
-+@@ -104,6 +104,16 @@ void bl31_plat_arch_setup(void)
-+ 	    );
++@@ -95,6 +95,16 @@ void bl31_plat_arch_setup(void)
++ 			       BL31_RO_BASE, BL31_RO_LIMIT);
 + }
 + 
 ++static void rcar_ipmmu_setup(void)
@@ -60,7 +46,7 @@ index 0000000..447bf69
 + void bl31_platform_setup(void)
 + {
 + 	plat_rcar_gic_driver_init();
-+@@ -120,6 +130,7 @@ void bl31_platform_setup(void)
++@@ -111,6 +121,7 @@ void bl31_platform_setup(void)
 + 			CNTCR_FCREQ((uint32_t)(0)) | CNTCR_EN);
 + 
 + 	rcar_pwrc_setup();
@@ -69,10 +55,10 @@ index 0000000..447bf69
 + 	/*
 + 	 * mask should match the kernel's MPIDR_HWID_BITMASK so the core can be
 +diff --git a/plat/renesas/rcar_gen4/include/rcar_def.h b/plat/renesas/rcar_gen4/include/rcar_def.h
-+index 07b1617dd..01f8b5b78 100644
++index 974b1a7f8..c328cebd9 100644
 +--- a/plat/renesas/rcar_gen4/include/rcar_def.h
 ++++ b/plat/renesas/rcar_gen4/include/rcar_def.h
-+@@ -106,4 +106,15 @@
++@@ -102,4 +102,15 @@
 + /* CPUPWRCTLR */
 + #define CPUPWRCTLR_PWDN			U(0x00000001)
 + 
@@ -89,8 +75,20 @@ index 0000000..447bf69
 ++
 + #endif /* RCAR_DEF_H */
 +-- 
-+2.32.0
++2.35.1
 +
+diff --git a/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/arm-trusted-firmware_git.bb b/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/arm-trusted-firmware_git.bb
+index 96b62751..67392c08 100755
+--- a/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/arm-trusted-firmware_git.bb
++++ b/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/arm-trusted-firmware_git.bb
+@@ -17,6 +17,7 @@ SRC_URI_append = "\
+         file://0001-drivers-gicv3-Fix-setting-E-PPI-SGI-priorities.patch \
+         file://0002-rcar_gen4-plat-BL31-Set-the-interrupt-priority-unifo.patch \
+         file://0001-bl31-transfer-control-to-BL33-at-EL2.patch \
++        file://0002-bl31-setup-IPMMU-registers.patch \
+ "
+ 
+ PV = "v2.5+renesas+git${SRCPV}"
 -- 
-2.32.0
+2.35.1
 

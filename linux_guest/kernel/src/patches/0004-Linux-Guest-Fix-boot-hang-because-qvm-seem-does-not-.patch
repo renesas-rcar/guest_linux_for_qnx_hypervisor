@@ -1,7 +1,7 @@
-From 1022f890ec5ecedb0fc1334666f7ee55b0a58e74 Mon Sep 17 00:00:00 2001
+From f8c289b141656c8ad9cd607a617ab4a8440b4c19 Mon Sep 17 00:00:00 2001
 From: Renesas Electronics Corporation <someone@renesas.com>
 Date: Thu, 20 Jan 2022 11:13:01 +0700
-Subject: [PATCH 4/8] Linux Guest: Fix boot hang because qvm seem does not
+Subject: [PATCH 4/9] Linux Guest: Fix boot hang because qvm seem does not
  support ARMv8.2a
 
 [    0.000000] ------------[ cut here ]------------
@@ -44,7 +44,7 @@ Subject: [PATCH 4/8] Linux Guest: Fix boot hang because qvm seem does not
 [    0.000000] Kernel panic - not syncing: Attempted to kill the idle task!
 [    0.000000] ---[ end Kernel panic - not syncing: Attempted to kill the idle task! ]---
 
-Change-Id: I9b7bda7536f5c0a5f4f4243159e0a0ddfdf0036c
+Change-Id: I9b7bda7536f5c0a5f4f4243159e0a0ddfdf0038c
 ---
  arch/arm64/kernel/cpuinfo.c | 12 +++++-------
  1 file changed, 5 insertions(+), 7 deletions(-)
