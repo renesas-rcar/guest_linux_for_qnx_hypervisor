@@ -1,0 +1,26 @@
+From 06bcca7da44983b0a9b9fd761ccb8692714a2cae Mon Sep 17 00:00:00 2001
+From: Renesas Electronics Corporation <someone@renesas.com>
+Date: Tue, 19 Jul 2022 16:27:18 +0700
+Subject: [PATCH 13/13] Linux Guest: add CONFIG_LOCALVERSION="-yocto-standard"
+
+Change-Id: I2975e5176e11f6352bb842cadb47b45c416c81c8
+---
+ arch/arm64/configs/defconfig | 2 ++
+ 1 file changed, 2 insertions(+)
+ mode change 100644 => 100755 arch/arm64/configs/defconfig
+
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+old mode 100644
+new mode 100755
+index 2122de454b70..612b1112e430
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -1097,3 +1097,5 @@ CONFIG_DEBUG_KERNEL=y
+ # CONFIG_DEBUG_PREEMPT is not set
+ # CONFIG_FTRACE is not set
+ CONFIG_MEMTEST=y
++# CONFIG_LOCALVERSION_AUTO is not set
++CONFIG_LOCALVERSION="-yocto-standard"
+--
+2.26.0
+

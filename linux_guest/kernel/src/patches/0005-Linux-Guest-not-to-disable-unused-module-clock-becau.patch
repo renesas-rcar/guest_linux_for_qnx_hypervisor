@@ -1,7 +1,7 @@
 From 4ee31984ab8a4d936bbc8965b0f900b214140e2b Mon Sep 17 00:00:00 2001
 From: Renesas Electronics Corporation <someone@renesas.com>
 Date: Thu, 20 Jan 2022 11:19:32 +0700
-Subject: [PATCH 5/9] Linux Guest: not to disable unused module clock because
+Subject: [PATCH 05/13] Linux Guest: not to disable unused module clock because
  it can be used by HOST or other Guest
 
 Change-Id: Ia3d0ba6a3c2cc10e802321cb1644fab18aa088ac
@@ -14,7 +14,7 @@ index 5632620cc36c..34b6f97588a4 100644
 --- a/drivers/clk/renesas/renesas-cpg-mssr.c
 +++ b/drivers/clk/renesas/renesas-cpg-mssr.c
 @@ -445,7 +445,7 @@ static void __init cpg_mssr_register_mod_clk(const struct mssr_mod_clk *mod,
- 
+
  	init.name = mod->name;
  	init.ops = &cpg_mstp_clock_ops;
 -	init.flags = CLK_SET_RATE_PARENT;
@@ -22,6 +22,6 @@ index 5632620cc36c..34b6f97588a4 100644
  	parent_name = __clk_get_name(parent);
  	init.parent_names = &parent_name;
  	init.num_parents = 1;
--- 
+--
 2.26.0
 

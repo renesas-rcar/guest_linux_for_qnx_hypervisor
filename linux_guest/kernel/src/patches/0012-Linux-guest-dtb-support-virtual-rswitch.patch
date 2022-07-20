@@ -1,0 +1,57 @@
+From 339da28d28af25cc7322353900cf374b423859ef Mon Sep 17 00:00:00 2001
+From: Renesas Electronics Corporation <someone@renesas.com>
+Date: Mon, 18 Jul 2022 15:52:46 +0700
+Subject: [PATCH 12/13] Linux guest: dtb: support virtual rswitch
+
+Change-Id: Ic1b86481136fddaa64a1bdbd44e07916cc2f2d2b
+---
+ .../dts/renesas/qnxhyp-r8a779f0-spider.dts    | 25 +++++++++++++------
+ 1 file changed, 17 insertions(+), 8 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/renesas/qnxhyp-r8a779f0-spider.dts b/arch/arm64/boot/dts/renesas/qnxhyp-r8a779f0-spider.dts
+index 78c2136db557..1a9cff5ec256 100755
+--- a/arch/arm64/boot/dts/renesas/qnxhyp-r8a779f0-spider.dts
++++ b/arch/arm64/boot/dts/renesas/qnxhyp-r8a779f0-spider.dts
+@@ -11,6 +11,7 @@
+ #include "r8a779f0-spider-ethernet.dtsi"
+
+ // #define NATIVE
++#define VIRTUAL_RSWITCH
+ // #define RSWITCH_TSN0
+ // #define RSWITCH_TSN1
+ // #define RSWITCH_TSN2
+@@ -62,15 +63,23 @@ &soc {
+ 	interrupt-parent = <&gic>;
+ #else
+ 	interrupt-parent = <&vgic>;
+-	/*
+-	/delete-property/ msiof0;
+-	/delete-property/ msiof1;
+-	/delete-property/ msiof2;
+-	/delete-property/ msiof3;
+-	/delete-property/ rswitch;
+-	/delete-property/ mmc0;
+-	*/
+ #endif
++
++#ifdef VIRTUAL_RSWITCH
++	vswitch: vswitch@0 {
++		qvm,vdev = "vswitch";
++	};
++
++	rswitchsharing: ethernet@b0000000 {
++		compatible = "renesas,virtual_rswitch";
++		reg = <0 0xe68d0000 0 0x02000>, /* gwca0 base address */
++			<0 0xe68d2000 0 0x02000>, /* gwca1 base address */
++			<0 0xe68d8000 0 0x02000>; /* gptp base address */
++
++		vswitch = <&vswitch>;
++		status = "okay";
++	};
++ #endif
+ };
+
+ &pfc {
+--
+2.26.0
+

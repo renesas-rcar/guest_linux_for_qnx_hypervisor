@@ -1,7 +1,7 @@
 From 0a363a05948f9a34de0d9e55264654e3a1ce25de Mon Sep 17 00:00:00 2001
 From: Renesas Electronics Corporation <someone@renesas.com>
 Date: Fri, 17 Jun 2022 16:14:21 +0700
-Subject: [PATCH 9/9] Linux Guest: fix build error on v5.10.41/rcar-5.1.6rc3
+Subject: [PATCH 09/13] Linux Guest: fix build error on v5.10.41/rcar-5.1.6rc3
  branch by changing DMA
 
 Change-Id: I33d231e887f767a9f2cd21d9296f9d6e2fb81e44
@@ -15,7 +15,7 @@ index 317e66b21fdf..ac85c80dfdd0 100755
 +++ b/arch/arm64/boot/dts/renesas/qnxhyp-r8a779f0-spider.dts
 @@ -200,13 +200,13 @@ &scif0{
  #endif
- 
+
  /************************ DMAC ************************/
 -&dmac1 {
 +&dmac0 {
@@ -29,6 +29,6 @@ index 317e66b21fdf..ac85c80dfdd0 100755
  	status = "disabled";
  #ifndef NATIVE
  	/delete-property/ power-domains;
--- 
+--
 2.26.0
 

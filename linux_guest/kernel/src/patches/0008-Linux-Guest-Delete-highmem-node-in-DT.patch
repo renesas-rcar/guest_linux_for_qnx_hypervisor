@@ -1,7 +1,7 @@
 From 5982336a09d6cbbba78b88c6c36ab9421d69c0cb Mon Sep 17 00:00:00 2001
 From: Renesas Electronics Corporation <someone@renesas.com>
 Date: Fri, 21 Jan 2022 18:12:15 +0700
-Subject: [PATCH 8/9] Linux Guest: Delete highmem node in DT
+Subject: [PATCH 08/13] Linux Guest: Delete highmem node in DT
 
 Change-Id: I2c38ac8522ad50d1a66747aff8a403e004d8447c
 ---
@@ -21,6 +21,6 @@ index c843e382827e..317e66b21fdf 100755
  #endif
  /************************ CPU CORES ************************/
  #ifndef NATIVE
--- 
+--
 2.26.0
 

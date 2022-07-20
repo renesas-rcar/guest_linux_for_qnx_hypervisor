@@ -1,7 +1,8 @@
 From 65c2f9486cd92249dcc9b7ed9fa80ca60d9ad94b Mon Sep 17 00:00:00 2001
 From: Renesas Electronics Corporation <someone@renesas.com>
 Date: Fri, 21 Jan 2022 17:58:10 +0700
-Subject: [PATCH 7/9] Linux Guest: fix build error by removing emmc node in DT
+Subject: [PATCH 07/13] Linux Guest: fix build error by removing emmc node in
+ DT
 
 Change-Id: I4d14cdef1e32defd25deab18a885efa358d77f0a
 ---
@@ -14,7 +15,7 @@ index d6b535655d59..c843e382827e 100755
 +++ b/arch/arm64/boot/dts/renesas/qnxhyp-r8a779f0-spider.dts
 @@ -316,17 +316,10 @@ &msiof3 {
  };
- 
+
  /************************ MMC ************************/
 -
 -&mmc0 {
@@ -29,9 +30,9 @@ index d6b535655d59..c843e382827e 100755
 +/delete-node/ &vcc_sdhi;
  #endif
 -};
- 
+
  /************************ ETHERNET ************************/
  #ifndef NATIVE
--- 
+--
 2.26.0
 

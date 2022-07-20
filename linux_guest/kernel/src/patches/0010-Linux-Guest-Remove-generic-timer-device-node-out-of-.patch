@@ -1,0 +1,35 @@
+From 2ca2cce9db81492057d9ce9326aa2430ffb32873 Mon Sep 17 00:00:00 2001
+From: Renesas Electronics Corporation <someone@renesas.com>
+Date: Fri, 1 Jul 2022 15:38:22 +0700
+Subject: [PATCH 10/13] Linux Guest: Remove generic timer device node out of
+ dts. Because the clock frequency can be read from CNTFRQ_EL0 since IPL v3.0.0
+
+Change-Id: If904a736213445372acc796a49d3d29550a42d81
+---
+ arch/arm64/boot/dts/renesas/qnxhyp-r8a779f0-spider.dts | 10 ----------
+ 1 file changed, 10 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/renesas/qnxhyp-r8a779f0-spider.dts b/arch/arm64/boot/dts/renesas/qnxhyp-r8a779f0-spider.dts
+index ac85c80dfdd0..78c2136db557 100755
+--- a/arch/arm64/boot/dts/renesas/qnxhyp-r8a779f0-spider.dts
++++ b/arch/arm64/boot/dts/renesas/qnxhyp-r8a779f0-spider.dts
+@@ -48,16 +48,6 @@ aliases {
+ 	vgic: vgic@0 {
+ 		qvm,vdev = "gic";
+ 	};
+-	vdevs {
+-		timer {
+-			compatible = "arm,armv8-timer";
+-			clock-frequency = <16666666>;
+-			interrupts-extended = <&vgic GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(1) | IRQ_TYPE_LEVEL_LOW)>,
+-						<&vgic GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(1) | IRQ_TYPE_LEVEL_LOW)>,
+-						<&vgic GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(1) | IRQ_TYPE_LEVEL_LOW)>,
+-						<&vgic GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(1) | IRQ_TYPE_LEVEL_LOW)>;
+-		};
+-	};
+ #endif
+ };
+
+--
+2.26.0
+
