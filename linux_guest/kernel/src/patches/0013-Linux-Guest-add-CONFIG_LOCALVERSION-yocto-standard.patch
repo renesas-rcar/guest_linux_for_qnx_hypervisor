@@ -1,26 +1,23 @@
-From 06bcca7da44983b0a9b9fd761ccb8692714a2cae Mon Sep 17 00:00:00 2001
+From ba1941d1a58b2f68d5b30ca9894a4e04a38be51f Mon Sep 17 00:00:00 2001
 From: Renesas Electronics Corporation <someone@renesas.com>
-Date: Tue, 19 Jul 2022 16:27:18 +0700
-Subject: [PATCH 13/13] Linux Guest: add CONFIG_LOCALVERSION="-yocto-standard"
+Date: Tue, 2 Aug 2022 16:26:15 +0700
+Subject: [PATCH 13/14] Linux Guest: add CONFIG_LOCALVERSION="-yocto-standard"
 
-Change-Id: I2975e5176e11f6352bb842cadb47b45c416c81c8
+Change-Id: I6e5c22db8ec9c0c141d7a84c0693955588f10ebd
 ---
- arch/arm64/configs/defconfig | 2 ++
- 1 file changed, 2 insertions(+)
- mode change 100644 => 100755 arch/arm64/configs/defconfig
+ arch/arm64/configs/defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-old mode 100644
-new mode 100755
-index 2122de454b70..612b1112e430
+index 9233e46f9a1f..9a478ad903ab 100644
 --- a/arch/arm64/configs/defconfig
 +++ b/arch/arm64/configs/defconfig
-@@ -1097,3 +1097,5 @@ CONFIG_DEBUG_KERNEL=y
- # CONFIG_DEBUG_PREEMPT is not set
+@@ -1103,3 +1103,4 @@ CONFIG_DEBUG_KERNEL=y
  # CONFIG_FTRACE is not set
  CONFIG_MEMTEST=y
-+# CONFIG_LOCALVERSION_AUTO is not set
+ # CONFIG_LOCALVERSION_AUTO is not set
 +CONFIG_LOCALVERSION="-yocto-standard"
+\ No newline at end of file
 --
 2.26.0
 

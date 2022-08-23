@@ -1,7 +1,7 @@
-From 2ca2cce9db81492057d9ce9326aa2430ffb32873 Mon Sep 17 00:00:00 2001
+From 4c4cdc23a1b6ebe191f6c332105ab0bcf702c4c7 Mon Sep 17 00:00:00 2001
 From: Renesas Electronics Corporation <someone@renesas.com>
 Date: Fri, 1 Jul 2022 15:38:22 +0700
-Subject: [PATCH 10/13] Linux Guest: Remove generic timer device node out of
+Subject: [PATCH 10/14] Linux Guest: Remove generic timer device node out of
  dts. Because the clock frequency can be read from CNTFRQ_EL0 since IPL v3.0.0
 
 Change-Id: If904a736213445372acc796a49d3d29550a42d81

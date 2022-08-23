@@ -1,7 +1,7 @@
-From 9c4b4094b6e492cd6339611817a5d6224a7e3713 Mon Sep 17 00:00:00 2001
+From f24a1b5be470262ec507c4c715288c0f78cffe19 Mon Sep 17 00:00:00 2001
 From: Renesas Electronics Corporation <someone@renesas.com>
 Date: Tue, 21 Jun 2022 10:54:19 +0700
-Subject: [PATCH 01/13] Linux Guest: remove the unnecessary kernel
+Subject: [PATCH 01/14] Linux Guest: remove the unnecessary kernel
  configurations
 
 Change-Id: I384b4f8ac404334b5a4782fa2ce551c300565700
@@ -10,7 +10,7 @@ Change-Id: I384b4f8ac404334b5a4782fa2ce551c300565700
  1 file changed, 33 deletions(-)
 
 diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 208665f99c4a..2122de454b70 100644
+index 5a5a39a64389..9233e46f9a1f 100644
 --- a/arch/arm64/configs/defconfig
 +++ b/arch/arm64/configs/defconfig
 @@ -27,40 +27,7 @@ CONFIG_BLK_DEV_INITRD=y

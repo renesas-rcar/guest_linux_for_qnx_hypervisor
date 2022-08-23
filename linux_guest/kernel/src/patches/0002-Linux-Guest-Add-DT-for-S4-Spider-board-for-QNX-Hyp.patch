@@ -1,7 +1,7 @@
-From 2d9e437f48bc05d68ccd419e0618bc50cf40d437 Mon Sep 17 00:00:00 2001
+From da3f58a6b9a7422dadf5a4f44c4bd0eb03420eb8 Mon Sep 17 00:00:00 2001
 From: Renesas Electronics Corporation <someone@renesas.com>
 Date: Thu, 16 Jun 2022 15:03:34 +0700
-Subject: [PATCH 02/13] Linux Guest: Add DT for S4 Spider board for QNX Hyp
+Subject: [PATCH 02/14] Linux Guest: Add DT for S4 Spider board for QNX Hyp
 
 Change-Id: I181f9a5c4336324e577df58be303e2fbe326f095
 ---

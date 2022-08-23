@@ -1,7 +1,7 @@
-From f8c289b141656c8ad9cd607a617ab4a8440b4c19 Mon Sep 17 00:00:00 2001
+From 6cb59c245e6cee2864a948a7e9eeeb9ccfd96c7e Mon Sep 17 00:00:00 2001
 From: Renesas Electronics Corporation <someone@renesas.com>
 Date: Thu, 20 Jan 2022 11:13:01 +0700
-Subject: [PATCH 04/13] Linux Guest: Fix boot hang because qvm seem does not
+Subject: [PATCH 04/14] Linux Guest: Fix boot hang because qvm seem does not
  support ARMv8.2a
 
 [    0.000000] ------------[ cut here ]------------

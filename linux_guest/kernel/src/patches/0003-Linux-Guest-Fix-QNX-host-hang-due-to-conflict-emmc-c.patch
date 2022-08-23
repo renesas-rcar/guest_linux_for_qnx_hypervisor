@@ -1,7 +1,7 @@
-From f125835fdba4ded6bae04de9b6d9e0aca6ab7337 Mon Sep 17 00:00:00 2001
+From af1bcda1792a961efe0aaae8a295ce36531727cc Mon Sep 17 00:00:00 2001
 From: Renesas Electronics Corporation <someone@renesas.com>
 Date: Thu, 16 Jun 2022 15:16:09 +0700
-Subject: [PATCH 03/13] Linux Guest: Fix QNX host hang due to conflict emmc
+Subject: [PATCH 03/14] Linux Guest: Fix QNX host hang due to conflict emmc
  clock
 
 Change-Id: I2b54ac00eaa6b46617e794af3277972344382b88
