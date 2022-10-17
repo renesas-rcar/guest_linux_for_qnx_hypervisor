@@ -1,4 +1,4 @@
-From 875f4a7e4bcee82dbbc0ac50c43f4ddf4aa5d0f4 Mon Sep 17 00:00:00 2001
+From fd8576992dd04bc0d0fe316b6d0d531dde78179e Mon Sep 17 00:00:00 2001
 From: Renesas Electronics Corporation <someone@renesas.com>
 Date: Wed, 13 Jul 2022 11:12:36 +0700
 Subject: [PATCH 2/2] bl31: setup IPMMU registers
@@ -32,7 +32,7 @@ index 00000000..f661cef6
 +@@ -95,6 +95,16 @@ void bl31_plat_arch_setup(void)
 + 			       BL31_RO_BASE, BL31_RO_LIMIT);
 + }
-+ 
++
 ++static void rcar_ipmmu_setup(void)
 ++{
 ++	mmio_write_32(IPMMU_MM_BASE + IMSAUXCTLR, 0x01000000);
@@ -48,10 +48,10 @@ index 00000000..f661cef6
 + 	plat_rcar_gic_driver_init();
 +@@ -111,6 +121,7 @@ void bl31_platform_setup(void)
 + 			CNTCR_FCREQ((uint32_t)(0)) | CNTCR_EN);
-+ 
++
 + 	rcar_pwrc_setup();
 ++    rcar_ipmmu_setup();
-+ 
++
 + 	/*
 + 	 * mask should match the kernel's MPIDR_HWID_BITMASK so the core can be
 +diff --git a/plat/renesas/rcar_gen4/include/rcar_def.h b/plat/renesas/rcar_gen4/include/rcar_def.h
@@ -61,7 +61,7 @@ index 00000000..f661cef6
 +@@ -102,4 +102,15 @@
 + /* CPUPWRCTLR */
 + #define CPUPWRCTLR_PWDN			U(0x00000001)
-+ 
++
 ++/* IPMMU registers */
 ++#define IPMMU_BASE              U(0xEE000000)
 ++#define IPMMU_MM_BASE           U(0xEEFC0000)
@@ -74,7 +74,7 @@ index 00000000..f661cef6
 ++#define IMSAUXCTLR              U(0x1504)
 ++
 + #endif /* RCAR_DEF_H */
-+-- 
++--
 +2.35.1
 +
 diff --git a/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/arm-trusted-firmware_git.bb b/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/arm-trusted-firmware_git.bb
@@ -82,13 +82,13 @@ index 05b34a57..750028b7 100755
 --- a/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/arm-trusted-firmware_git.bb
 +++ b/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/arm-trusted-firmware_git.bb
 @@ -15,6 +15,7 @@ SRCREV = "2f7dcfa8c06c8da803320543518941c5d47d573b"
- 
+
  SRC_URI_append = "\
          file://0001-bl31-transfer-control-to-BL33-at-EL2.patch \
 +        file://0002-bl31-setup-IPMMU-registers.patch \
  "
- 
+
  PV = "v2.5+renesas+git${SRCPV}"
--- 
+--
 2.35.1
 

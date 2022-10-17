@@ -1,4 +1,4 @@
-From c08f5c450d9ba650bd87fa9091df6fdd48d70cca Mon Sep 17 00:00:00 2001
+From 37075783b2201b191dcc9e3f985e2c38e1ddae81 Mon Sep 17 00:00:00 2001
 From: Renesas Electronics Corporation <someone@renesas.com>
 Date: Thu, 20 Jan 2022 11:51:57 +0700
 Subject: [PATCH 06/14] Linux Guest: Fix generic timer clock frequency issue

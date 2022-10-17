@@ -1,4 +1,4 @@
-From 08f371d69f4a2a6446db8bf1a430c7ba71e8ae9f Mon Sep 17 00:00:00 2001
+From 0aff755422d6ac1d22bc28266cff20125b43293a Mon Sep 17 00:00:00 2001
 From: Renesas Electronics Corporation <someone@renesas.com>
 Date: Wed, 13 Jul 2022 11:06:10 +0700
 Subject: [PATCH 1/2] atf: bl31: transfer control to bl33 at EL2
@@ -32,9 +32,9 @@ index 00000000..25de20b9
 +@@ -62,6 +62,15 @@ struct entry_point_info *bl31_plat_get_next_image_ep_info(uint32_t type)
 + 	next_image_info = (type == NON_SECURE) ?
 + 		&from_bl2->bl33_ep_info : &from_bl2->bl32_ep_info;
-+ 
++
 ++	INFO("bl31_plat_get_next_image_ep_info(%s)\n \
-++		  BL31: Original: SPSR = 0x%x \n", 
+++		  BL31: Original: SPSR = 0x%x \n",
 ++			(type == NON_SECURE) ? "NON_SECURE" : "SECURE",
 ++			next_image_info->spsr);
 ++
@@ -44,8 +44,8 @@ index 00000000..25de20b9
 ++
 + 	return (next_image_info->pc != 0U) ? next_image_info : NULL;
 + }
-+ 
-+-- 
++
++--
 +2.35.1
 +
 diff --git a/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/arm-trusted-firmware_git.bb b/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/arm-trusted-firmware_git.bb
@@ -57,14 +57,14 @@ index 497931a4..05b34a57
 @@ -13,6 +13,10 @@ BRANCH = "rcar-s4_v2.5"
  SRC_URI = "git://github.com/renesas-rcar/arm-trusted-firmware.git;branch=${BRANCH}"
  SRCREV = "2f7dcfa8c06c8da803320543518941c5d47d573b"
- 
+
 +SRC_URI_append = "\
 +        file://0001-bl31-transfer-control-to-BL33-at-EL2.patch \
 +"
 +
  PV = "v2.5+renesas+git${SRCPV}"
- 
+
  COMPATIBLE_MACHINE = "(spider)"
--- 
+--
 2.35.1
 
