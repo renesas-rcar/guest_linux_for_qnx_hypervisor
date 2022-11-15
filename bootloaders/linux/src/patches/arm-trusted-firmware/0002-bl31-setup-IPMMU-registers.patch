@@ -1,23 +1,23 @@
-From fd8576992dd04bc0d0fe316b6d0d531dde78179e Mon Sep 17 00:00:00 2001
+From 29593f161033396bc1c3b0e466a73faff47110d9 Mon Sep 17 00:00:00 2001
 From: Renesas Electronics Corporation <someone@renesas.com>
-Date: Wed, 13 Jul 2022 11:12:36 +0700
+Date: Mon, 7 Nov 2022 11:21:08 +0700
 Subject: [PATCH 2/2] bl31: setup IPMMU registers
 
 ---
- .../0002-bl31-setup-IPMMU-registers.patch     | 62 +++++++++++++++++++
+ .../0002-bl31-setup-IPMMU-registers.patch     | 64 +++++++++++++++++++
  .../arm-trusted-firmware_git.bb               |  1 +
- 2 files changed, 63 insertions(+)
+ 2 files changed, 65 insertions(+)
  create mode 100755 meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/arm-trusted-firmware/0002-bl31-setup-IPMMU-registers.patch
 
 diff --git a/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/arm-trusted-firmware/0002-bl31-setup-IPMMU-registers.patch b/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/arm-trusted-firmware/0002-bl31-setup-IPMMU-registers.patch
 new file mode 100755
-index 00000000..f661cef6
+index 00000000..b4eb0e2c
 --- /dev/null
 +++ b/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/arm-trusted-firmware/0002-bl31-setup-IPMMU-registers.patch
-@@ -0,0 +1,62 @@
-+From 24fef79fba0778a3436878c09a007505f18b81dd Mon Sep 17 00:00:00 2001
+@@ -0,0 +1,64 @@
++From ecc8ef0453466e7187b9b520f060fb0ce5386948 Mon Sep 17 00:00:00 2001
 +From: Renesas Electronics Corporation <someone@renesas.com>
-+Date: Tue, 21 Jun 2022 15:35:35 +0700
++Date: Mon, 7 Nov 2022 11:06:20 +0700
 +Subject: [PATCH 2/2] bl31: setup IPMMU registers
 +
 +---
@@ -26,11 +26,11 @@ index 00000000..f661cef6
 + 2 files changed, 22 insertions(+)
 +
 +diff --git a/plat/renesas/rcar_gen4/bl31_plat_setup.c b/plat/renesas/rcar_gen4/bl31_plat_setup.c
-+index 1b92f63a8..7001b1a02 100644
++index eff71864c..f777cdbdb 100644
 +--- a/plat/renesas/rcar_gen4/bl31_plat_setup.c
 ++++ b/plat/renesas/rcar_gen4/bl31_plat_setup.c
-+@@ -95,6 +95,16 @@ void bl31_plat_arch_setup(void)
-+ 			       BL31_RO_BASE, BL31_RO_LIMIT);
++@@ -97,6 +97,16 @@ void bl31_plat_arch_setup(void)
++ 	rcar_pwrc_code_copy_to_system_ram();
 + }
 +
 ++static void rcar_ipmmu_setup(void)
@@ -46,19 +46,19 @@ index 00000000..f661cef6
 + void bl31_platform_setup(void)
 + {
 + 	plat_rcar_gic_driver_init();
-+@@ -111,6 +121,7 @@ void bl31_platform_setup(void)
-+ 			CNTCR_FCREQ((uint32_t)(0)) | CNTCR_EN);
++@@ -114,6 +124,7 @@ void bl31_platform_setup(void)
 +
++ 	plat_rcar_scmi_setup();
 + 	rcar_pwrc_setup();
-++    rcar_ipmmu_setup();
+++	rcar_ipmmu_setup();
 +
 + 	/*
 + 	 * mask should match the kernel's MPIDR_HWID_BITMASK so the core can be
 +diff --git a/plat/renesas/rcar_gen4/include/rcar_def.h b/plat/renesas/rcar_gen4/include/rcar_def.h
-+index 974b1a7f8..c328cebd9 100644
++index a644c400b..1ecf85a1e 100644
 +--- a/plat/renesas/rcar_gen4/include/rcar_def.h
 ++++ b/plat/renesas/rcar_gen4/include/rcar_def.h
-+@@ -102,4 +102,15 @@
++@@ -119,6 +119,17 @@
 + /* CPUPWRCTLR */
 + #define CPUPWRCTLR_PWDN			U(0x00000001)
 +
@@ -73,15 +73,17 @@ index 00000000..f661cef6
 ++#define IMSCTLR                 U(0x1500)
 ++#define IMSAUXCTLR              U(0x1504)
 ++
-+ #endif /* RCAR_DEF_H */
++ /* For DDR self refresh */
++ #define DBSC4_REG_BASE				UL(0xE6790000)
++ #define DBSC4_REG_DBSYSCNT0			(DBSC4_REG_BASE + UL(0x0100))
 +--
 +2.35.1
 +
 diff --git a/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/arm-trusted-firmware_git.bb b/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/arm-trusted-firmware_git.bb
-index 05b34a57..750028b7 100755
+index f08e0b0a..26ae64bb 100755
 --- a/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/arm-trusted-firmware_git.bb
 +++ b/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/arm-trusted-firmware_git.bb
-@@ -15,6 +15,7 @@ SRCREV = "2f7dcfa8c06c8da803320543518941c5d47d573b"
+@@ -15,6 +15,7 @@ SRCREV = "3a6d7ddd5d90ecf2107c5fc627f0be069191d6e5"
 
  SRC_URI_append = "\
          file://0001-bl31-transfer-control-to-BL33-at-EL2.patch \
