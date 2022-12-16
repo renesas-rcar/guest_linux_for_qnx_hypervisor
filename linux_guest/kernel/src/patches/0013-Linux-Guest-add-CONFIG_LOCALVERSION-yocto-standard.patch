@@ -1,4 +1,4 @@
-From 2abad7be80e75c53f123a43172957733ee312f7d Mon Sep 17 00:00:00 2001
+From 51cb7ff60e40efaedfa88c0153415e9e3cd55cfc Mon Sep 17 00:00:00 2001
 From: Renesas Electronics Corporation <someone@renesas.com>
 Date: Tue, 2 Aug 2022 16:26:15 +0700
 Subject: [PATCH 13/14] Linux Guest: add CONFIG_LOCALVERSION="-yocto-standard"

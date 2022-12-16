@@ -1,4 +1,4 @@
-From f1809edc4dbcaed8c6db86c7692c35c9ad2042f7 Mon Sep 17 00:00:00 2001
+From 782ba60d1b5de6fb961e7642e4488dcd00213978 Mon Sep 17 00:00:00 2001
 From: Renesas Electronics Corporation <someone@renesas.com>
 Date: Mon, 7 Nov 2022 11:19:09 +0700
 Subject: [PATCH 1/2] atf: bl31: transfer control to bl33 at EL2
@@ -66,5 +66,5 @@ index d49d02c3..f08e0b0a
 
  COMPATIBLE_MACHINE = "(spider)"
 --
-2.35.1
+2.25.1
 

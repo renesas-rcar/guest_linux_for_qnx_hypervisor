@@ -1,4 +1,4 @@
-From 29593f161033396bc1c3b0e466a73faff47110d9 Mon Sep 17 00:00:00 2001
+From fc518938a11c758ec5a2eff2b87b121edfc9ecfb Mon Sep 17 00:00:00 2001
 From: Renesas Electronics Corporation <someone@renesas.com>
 Date: Mon, 7 Nov 2022 11:21:08 +0700
 Subject: [PATCH 2/2] bl31: setup IPMMU registers
@@ -92,5 +92,5 @@ index f08e0b0a..26ae64bb 100755
 
  PV = "v2.5+renesas+git${SRCPV}"
 --
-2.35.1
+2.25.1
 
