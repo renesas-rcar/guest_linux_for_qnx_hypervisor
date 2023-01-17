@@ -1,24 +1,23 @@
-From 782ba60d1b5de6fb961e7642e4488dcd00213978 Mon Sep 17 00:00:00 2001
+From 05ec18e79b699bafbe7b2fa4d2f028fc88e9efe0 Mon Sep 17 00:00:00 2001
 From: Renesas Electronics Corporation <someone@renesas.com>
-Date: Mon, 7 Nov 2022 11:19:09 +0700
+Date: Wed, 11 Jan 2023 16:25:53 +0700
 Subject: [PATCH 1/2] atf: bl31: transfer control to bl33 at EL2
 
 ---
- ...bl31-transfer-control-to-BL33-at-EL2.patch | 32 +++++++++++++++++++
+ ...bl31-transfer-control-to-BL33-at-EL2.patch | 31 +++++++++++++++++++
  .../arm-trusted-firmware_git.bb               |  4 +++
- 2 files changed, 36 insertions(+)
+ 2 files changed, 35 insertions(+)
  create mode 100755 meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/arm-trusted-firmware/0001-bl31-transfer-control-to-BL33-at-EL2.patch
- mode change 100644 => 100755 meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/arm-trusted-firmware_git.bb
 
 diff --git a/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/arm-trusted-firmware/0001-bl31-transfer-control-to-BL33-at-EL2.patch b/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/arm-trusted-firmware/0001-bl31-transfer-control-to-BL33-at-EL2.patch
 new file mode 100755
-index 00000000..885510b7
+index 00000000..f8aec339
 --- /dev/null
 +++ b/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/arm-trusted-firmware/0001-bl31-transfer-control-to-BL33-at-EL2.patch
-@@ -0,0 +1,32 @@
-+From e51934cfd0fd0b661aca4343d2a19e8311491928 Mon Sep 17 00:00:00 2001
+@@ -0,0 +1,31 @@
++From 1149e373681193ee51a5dc01221cbf4616477033 Mon Sep 17 00:00:00 2001
 +From: Renesas Electronics Corporation <someone@renesas.com>
-+Date: Tue, 21 Jun 2022 15:15:29 +0700
++Date: Wed, 11 Jan 2023 16:16:25 +0700
 +Subject: [PATCH 1/2] bl31: transfer control to BL33 at EL2
 +
 +---
@@ -26,10 +25,10 @@ index 00000000..885510b7
 + 1 file changed, 9 insertions(+)
 +
 +diff --git a/plat/renesas/rcar_gen4/bl31_plat_setup.c b/plat/renesas/rcar_gen4/bl31_plat_setup.c
-+index 5aa478ee2..eff71864c 100644
++index 78d9c9d1c..eb208da6d 100644
 +--- a/plat/renesas/rcar_gen4/bl31_plat_setup.c
 ++++ b/plat/renesas/rcar_gen4/bl31_plat_setup.c
-+@@ -62,6 +62,15 @@ struct entry_point_info *bl31_plat_get_next_image_ep_info(uint32_t type)
++@@ -46,6 +46,15 @@ struct entry_point_info *bl31_plat_get_next_image_ep_info(uint32_t type)
 + 	next_image_info = (type == NON_SECURE) ?
 + 		&from_bl2->bl33_ep_info : &from_bl2->bl32_ep_info;
 +
@@ -46,17 +45,15 @@ index 00000000..885510b7
 + }
 +
 +--
-+2.35.1
-+
++2.25.1
+\ No newline at end of file
 diff --git a/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/arm-trusted-firmware_git.bb b/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/arm-trusted-firmware_git.bb
-old mode 100644
-new mode 100755
-index d49d02c3..f08e0b0a
+index b2356c81..4de26d87 100644
 --- a/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/arm-trusted-firmware_git.bb
 +++ b/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/arm-trusted-firmware_git.bb
 @@ -13,6 +13,10 @@ BRANCH = "rcar-s4_v2.5"
- SRC_URI = "git://github.com/renesas-rcar/arm-trusted-firmware.git;branch=${BRANCH}"
- SRCREV = "3a6d7ddd5d90ecf2107c5fc627f0be069191d6e5"
+ SRC_URI = "git://github.com/renesas-rcar/arm-trusted-firmware.git;branch=${BRANCH};protocol=https"
+ SRCREV = "036ac52ca689f1f0491f4cf5fec3d646dc4cd46c"
 
 +SRC_URI_append = "\
 +        file://0001-bl31-transfer-control-to-BL33-at-EL2.patch \

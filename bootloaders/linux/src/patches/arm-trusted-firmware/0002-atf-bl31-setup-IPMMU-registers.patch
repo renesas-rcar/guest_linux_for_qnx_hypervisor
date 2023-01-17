@@ -1,23 +1,23 @@
-From fc518938a11c758ec5a2eff2b87b121edfc9ecfb Mon Sep 17 00:00:00 2001
+From 0a16a76b0dc8bdae037cbf43e955e62625e24d16 Mon Sep 17 00:00:00 2001
 From: Renesas Electronics Corporation <someone@renesas.com>
-Date: Mon, 7 Nov 2022 11:21:08 +0700
-Subject: [PATCH 2/2] bl31: setup IPMMU registers
+Date: Wed, 11 Jan 2023 16:37:51 +0700
+Subject: [PATCH 2/2] atf: bl31: setup IPMMU registers
 
 ---
- .../0002-bl31-setup-IPMMU-registers.patch     | 64 +++++++++++++++++++
+ .../0002-bl31-setup-IPMMU-registers.patch     | 63 +++++++++++++++++++
  .../arm-trusted-firmware_git.bb               |  1 +
- 2 files changed, 65 insertions(+)
+ 2 files changed, 64 insertions(+)
  create mode 100755 meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/arm-trusted-firmware/0002-bl31-setup-IPMMU-registers.patch
 
 diff --git a/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/arm-trusted-firmware/0002-bl31-setup-IPMMU-registers.patch b/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/arm-trusted-firmware/0002-bl31-setup-IPMMU-registers.patch
 new file mode 100755
-index 00000000..b4eb0e2c
+index 00000000..606d2f48
 --- /dev/null
 +++ b/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/arm-trusted-firmware/0002-bl31-setup-IPMMU-registers.patch
-@@ -0,0 +1,64 @@
-+From ecc8ef0453466e7187b9b520f060fb0ce5386948 Mon Sep 17 00:00:00 2001
+@@ -0,0 +1,63 @@
++From 6c43e74396b0142c3eb47cc0f1f66b8901e28193 Mon Sep 17 00:00:00 2001
 +From: Renesas Electronics Corporation <someone@renesas.com>
-+Date: Mon, 7 Nov 2022 11:06:20 +0700
++Date: Wed, 11 Jan 2023 16:17:29 +0700
 +Subject: [PATCH 2/2] bl31: setup IPMMU registers
 +
 +---
@@ -26,10 +26,10 @@ index 00000000..b4eb0e2c
 + 2 files changed, 22 insertions(+)
 +
 +diff --git a/plat/renesas/rcar_gen4/bl31_plat_setup.c b/plat/renesas/rcar_gen4/bl31_plat_setup.c
-+index eff71864c..f777cdbdb 100644
++index eb208da6d..3ba75cc97 100644
 +--- a/plat/renesas/rcar_gen4/bl31_plat_setup.c
 ++++ b/plat/renesas/rcar_gen4/bl31_plat_setup.c
-+@@ -97,6 +97,16 @@ void bl31_plat_arch_setup(void)
++@@ -81,6 +81,16 @@ void bl31_plat_arch_setup(void)
 + 	rcar_pwrc_code_copy_to_system_ram();
 + }
 +
@@ -46,7 +46,7 @@ index 00000000..b4eb0e2c
 + void bl31_platform_setup(void)
 + {
 + 	plat_rcar_gic_driver_init();
-+@@ -114,6 +124,7 @@ void bl31_platform_setup(void)
++@@ -98,6 +108,7 @@ void bl31_platform_setup(void)
 +
 + 	plat_rcar_scmi_setup();
 + 	rcar_pwrc_setup();
@@ -77,13 +77,13 @@ index 00000000..b4eb0e2c
 + #define DBSC4_REG_BASE				UL(0xE6790000)
 + #define DBSC4_REG_DBSYSCNT0			(DBSC4_REG_BASE + UL(0x0100))
 +--
-+2.35.1
-+
++2.25.1
+\ No newline at end of file
 diff --git a/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/arm-trusted-firmware_git.bb b/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/arm-trusted-firmware_git.bb
-index f08e0b0a..26ae64bb 100755
+index 4de26d87..5cb222cd 100644
 --- a/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/arm-trusted-firmware_git.bb
 +++ b/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/arm-trusted-firmware_git.bb
-@@ -15,6 +15,7 @@ SRCREV = "3a6d7ddd5d90ecf2107c5fc627f0be069191d6e5"
+@@ -15,6 +15,7 @@ SRCREV = "036ac52ca689f1f0491f4cf5fec3d646dc4cd46c"
 
  SRC_URI_append = "\
          file://0001-bl31-transfer-control-to-BL33-at-EL2.patch \
