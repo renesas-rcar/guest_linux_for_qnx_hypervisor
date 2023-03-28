@@ -1,31 +1,26 @@
-From 0af1dc531549937b7dbe73cf68e6f27d21183d38 Mon Sep 17 00:00:00 2001
+From 510f9ca3108325de429be5b25135ee539738d59b Mon Sep 17 00:00:00 2001
 From: Renesas Electronics Corporation <someone@renesas.com>
-Date: Thu, 16 Jun 2022 15:03:34 +0700
+Date: Tue, 28 Mar 2023 10:47:01 +0700
 Subject: [PATCH 02/14] Linux Guest: Add DT for S4 Spider board for QNX Hyp
 
-Change-Id: I181f9a5c4336324e577df58be303e2fbe326f095
 ---
- arch/arm64/boot/dts/renesas/Makefile          |   2 +-
+ arch/arm64/boot/dts/renesas/Makefile          |   1 +
  .../dts/renesas/qnxhyp-r8a779f0-spider.dts    | 325 ++++++++++++++++++
- 2 files changed, 326 insertions(+), 1 deletion(-)
- mode change 100644 => 100755 arch/arm64/boot/dts/renesas/Makefile
+ 2 files changed, 326 insertions(+)
  create mode 100755 arch/arm64/boot/dts/renesas/qnxhyp-r8a779f0-spider.dts
 
 diff --git a/arch/arm64/boot/dts/renesas/Makefile b/arch/arm64/boot/dts/renesas/Makefile
-old mode 100644
-new mode 100755
-index 1499361d6ecf..3254022b575d
+index a2d2bb296b28..51fe71fc1c2c 100644
 --- a/arch/arm64/boot/dts/renesas/Makefile
 +++ b/arch/arm64/boot/dts/renesas/Makefile
-@@ -74,7 +74,7 @@ dtb-$(CONFIG_ARCH_R8A779A0) += r8a779a0-falcon.dtb
- dtb-$(CONFIG_ARCH_R8A779G0) += r8a779g0-whitehawk.dtb
+@@ -75,6 +75,7 @@ dtb-$(CONFIG_ARCH_R8A779G0) += r8a779g0-whitehawk.dtb
 
  dtb-$(CONFIG_ARCH_R8A779F0) += r8a779f0-spider.dtb
--
+ dtb-$(CONFIG_ARCH_R8A779F0) += r8a779f0-spider-native.dtb
 +dtb-$(CONFIG_ARCH_R8A779F0) += qnxhyp-r8a779f0-spider.dtb
+
  dtb-$(CONFIG_ARCH_R8A77970) += r8a77970-eagle-function.dtb
  dtb-$(CONFIG_ARCH_R8A77970) += r8a77970-es1-eagle.dtb r8a77970-es1-eagle-function.dtb
- dtb-$(CONFIG_ARCH_R8A77970) += r8a77970-es1-v3msk.dtb
 diff --git a/arch/arm64/boot/dts/renesas/qnxhyp-r8a779f0-spider.dts b/arch/arm64/boot/dts/renesas/qnxhyp-r8a779f0-spider.dts
 new file mode 100755
 index 000000000000..5ed5c08cfd4d
@@ -302,7 +297,7 @@ index 000000000000..5ed5c08cfd4d
 +};
 +
 +/************************ ICCOM ************************/
-+&iccom00 {
++&iccom_reg00 {
 +#ifndef NATIVE
 +	/delete-property/ power-domains;
 +#endif

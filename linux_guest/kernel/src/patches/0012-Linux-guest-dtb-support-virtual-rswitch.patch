@@ -1,4 +1,4 @@
-From 51d7145db0682516051c9eaed8ac0c3948405f0a Mon Sep 17 00:00:00 2001
+From b5dc9729965c21bf97b2a4f4f212dd251f6ab99d Mon Sep 17 00:00:00 2001
 From: Renesas Electronics Corporation <someone@renesas.com>
 Date: Mon, 18 Jul 2022 15:52:46 +0700
 Subject: [PATCH 12/14] Linux guest: dtb: support virtual rswitch
