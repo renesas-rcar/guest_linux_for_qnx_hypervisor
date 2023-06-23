@@ -1,4 +1,4 @@
-From 3c0a388f8320336f1ebca67d9cf202781d5f12b7 Mon Sep 17 00:00:00 2001
+From f0e52ca05c0784819499175d9d2bee298b8fab1d Mon Sep 17 00:00:00 2001
 From: Renesas Electronics Corporation <someone@renesas.com>
 Date: Fri, 17 Jun 2022 16:14:21 +0700
 Subject: [PATCH 09/14] Linux Guest: fix build error on v5.10.41/rcar-5.1.6rc3
@@ -10,12 +10,12 @@ Change-Id: I33d231e887f767a9f2cd21d9296f9d6e2fb81e44
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/arch/arm64/boot/dts/renesas/qnxhyp-r8a779f0-spider.dts b/arch/arm64/boot/dts/renesas/qnxhyp-r8a779f0-spider.dts
-index 317e66b21fdf..ac85c80dfdd0 100755
+index b3c4268b8242..26af03214020 100755
 --- a/arch/arm64/boot/dts/renesas/qnxhyp-r8a779f0-spider.dts
 +++ b/arch/arm64/boot/dts/renesas/qnxhyp-r8a779f0-spider.dts
 @@ -200,13 +200,13 @@ &scif0{
  #endif
-
+ 
  /************************ DMAC ************************/
 -&dmac1 {
 +&dmac0 {
@@ -29,6 +29,6 @@ index 317e66b21fdf..ac85c80dfdd0 100755
  	status = "disabled";
  #ifndef NATIVE
  	/delete-property/ power-domains;
---
+-- 
 2.26.0
 

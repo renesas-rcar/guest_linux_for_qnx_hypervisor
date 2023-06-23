@@ -1,4 +1,4 @@
-From a7f946e1f0449b6dc30679d9ab5cb8d65ab8eb88 Mon Sep 17 00:00:00 2001
+From 850b2f9535171b5a2171c2d7d06a8b498e025e4e Mon Sep 17 00:00:00 2001
 From: Renesas Electronics Corporation <someone@renesas.com>
 Date: Thu, 5 Nov 2020 17:23:38 +0700
 Subject: [PATCH 11/14] Linux Guest: inter-vm: export CMA symbols
@@ -17,20 +17,20 @@ index 7f415d7cda9f..bfbd48e113b5 100644
  	return PFN_PHYS(cma->base_pfn);
  }
 +EXPORT_SYMBOL_GPL(cma_get_base);
-
+ 
  unsigned long cma_get_size(const struct cma *cma)
  {
  	return cma->count << PAGE_SHIFT;
  }
 +EXPORT_SYMBOL_GPL(cma_get_size);
-
+ 
  const char *cma_get_name(const struct cma *cma)
  {
 @@ -541,3 +543,4 @@ int cma_for_each_area(int (*it)(struct cma *cma, void *data), void *data)
-
+ 
  	return 0;
  }
 +EXPORT_SYMBOL_GPL(cma_for_each_area);
---
+-- 
 2.26.0
 

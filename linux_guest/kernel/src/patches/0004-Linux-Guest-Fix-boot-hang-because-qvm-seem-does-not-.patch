@@ -1,4 +1,4 @@
-From 48170dfe9af174c1c4300d10d727d83fb2ebbfb2 Mon Sep 17 00:00:00 2001
+From b40852fdfb5550e664d708d892cdc691ed0c023b Mon Sep 17 00:00:00 2001
 From: Renesas Electronics Corporation <someone@renesas.com>
 Date: Thu, 20 Jan 2022 11:13:01 +0700
 Subject: [PATCH 04/14] Linux Guest: Fix boot hang because qvm seem does not
@@ -105,7 +105,7 @@ index 77605aec25fe..1a1870ae79f5
 +            info->reg_zcr = read_zcr_features();
  	cpuinfo_detect_icache_policy(info);
  }
-
---
+ 
+-- 
 2.26.0
 

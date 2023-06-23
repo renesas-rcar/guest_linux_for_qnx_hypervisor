@@ -1,4 +1,4 @@
-From 37398ad43b67f278a6cb4578ba0efb5dfb007042 Mon Sep 17 00:00:00 2001
+From d79640063d6ff81473e8739cfa8fe5e85cfc7d97 Mon Sep 17 00:00:00 2001
 From: Renesas Electronics Corporation <someone@renesas.com>
 Date: Fri, 21 Jan 2022 18:12:15 +0700
 Subject: [PATCH 08/14] Linux Guest: Delete highmem node in DT
@@ -9,7 +9,7 @@ Change-Id: I2c38ac8522ad50d1a66747aff8a403e004d8447c
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/arch/arm64/boot/dts/renesas/qnxhyp-r8a779f0-spider.dts b/arch/arm64/boot/dts/renesas/qnxhyp-r8a779f0-spider.dts
-index c843e382827e..317e66b21fdf 100755
+index 88b73322d0db..b3c4268b8242 100755
 --- a/arch/arm64/boot/dts/renesas/qnxhyp-r8a779f0-spider.dts
 +++ b/arch/arm64/boot/dts/renesas/qnxhyp-r8a779f0-spider.dts
 @@ -37,7 +37,7 @@ aliases {
@@ -21,6 +21,6 @@ index c843e382827e..317e66b21fdf 100755
  #endif
  /************************ CPU CORES ************************/
  #ifndef NATIVE
---
+-- 
 2.26.0
 

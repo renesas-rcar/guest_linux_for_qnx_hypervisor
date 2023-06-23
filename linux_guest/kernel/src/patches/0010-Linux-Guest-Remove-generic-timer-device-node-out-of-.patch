@@ -1,4 +1,4 @@
-From ea751142d4dd87b6034a0e8271d33113665dc3cf Mon Sep 17 00:00:00 2001
+From a1d66faecff033a94b435183da6e175567dabb6f Mon Sep 17 00:00:00 2001
 From: Renesas Electronics Corporation <someone@renesas.com>
 Date: Fri, 1 Jul 2022 15:38:22 +0700
 Subject: [PATCH 10/14] Linux Guest: Remove generic timer device node out of
@@ -10,7 +10,7 @@ Change-Id: If904a736213445372acc796a49d3d29550a42d81
  1 file changed, 10 deletions(-)
 
 diff --git a/arch/arm64/boot/dts/renesas/qnxhyp-r8a779f0-spider.dts b/arch/arm64/boot/dts/renesas/qnxhyp-r8a779f0-spider.dts
-index ac85c80dfdd0..78c2136db557 100755
+index 26af03214020..9e4ba388a93e 100755
 --- a/arch/arm64/boot/dts/renesas/qnxhyp-r8a779f0-spider.dts
 +++ b/arch/arm64/boot/dts/renesas/qnxhyp-r8a779f0-spider.dts
 @@ -48,16 +48,6 @@ aliases {
@@ -29,7 +29,7 @@ index ac85c80dfdd0..78c2136db557 100755
 -	};
  #endif
  };
-
---
+ 
+-- 
 2.26.0
 

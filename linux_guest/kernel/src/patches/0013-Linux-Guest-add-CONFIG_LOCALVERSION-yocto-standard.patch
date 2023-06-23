@@ -1,23 +1,23 @@
-From c5636ce57bc5f966fe488f09c3051f3b2b99ecda Mon Sep 17 00:00:00 2001
+From 17ccc731bd3b414da4e35ff5af19149f855620f3 Mon Sep 17 00:00:00 2001
 From: Renesas Electronics Corporation <someone@renesas.com>
-Date: Tue, 2 Aug 2022 16:26:15 +0700
-Subject: [PATCH 13/14] Linux Guest: add CONFIG_LOCALVERSION="-yocto-standard"
+Date: Thu, 22 Jun 2023 16:41:56 +0700
+Subject: [PATCH 13/14] Linux Guest: add CONFIG_LOCALVERSION=-yocto-standard
 
-Change-Id: I6e5c22db8ec9c0c141d7a84c0693955588f10ebd
 ---
  arch/arm64/configs/defconfig | 1 +
  1 file changed, 1 insertion(+)
 
 diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 7ae7a9ae80dd..b8c81adc9223 100644
+index 31fd802a585a..aae687f6bfad 100644
 --- a/arch/arm64/configs/defconfig
 +++ b/arch/arm64/configs/defconfig
-@@ -1105,3 +1105,4 @@ CONFIG_DEBUG_KERNEL=y
+@@ -1107,5 +1107,6 @@ CONFIG_DEBUG_KERNEL=y
  # CONFIG_FTRACE is not set
  CONFIG_MEMTEST=y
  # CONFIG_LOCALVERSION_AUTO is not set
 +CONFIG_LOCALVERSION="-yocto-standard"
-\ No newline at end of file
---
+ CONFIG_ARM_SCMI_PROTOCOL=y
+ CONFIG_RCAR_MFIS_MBOX=y
+-- 
 2.26.0
 

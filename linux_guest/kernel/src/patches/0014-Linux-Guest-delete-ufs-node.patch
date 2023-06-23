@@ -1,4 +1,4 @@
-From df9ba5b79654c664a15909de80edc73f61ff565e Mon Sep 17 00:00:00 2001
+From 7c02a45931570cb38df935c6f48bbccc3fbee9ca Mon Sep 17 00:00:00 2001
 From: Renesas Electronics Corporation <someone@renesas.com>
 Date: Thu, 4 Aug 2022 15:36:34 +0700
 Subject: [PATCH 14/14] Linux Guest: delete ufs node
@@ -9,13 +9,13 @@ Change-Id: If0c6708281318b564bcc2dc0a648d299880f4b3e
  1 file changed, 6 insertions(+), 2 deletions(-)
 
 diff --git a/arch/arm64/boot/dts/renesas/qnxhyp-r8a779f0-spider.dts b/arch/arm64/boot/dts/renesas/qnxhyp-r8a779f0-spider.dts
-index 47ce582ebd9a..ba4d1273c7ae 100755
+index 8a24514953fd..673eea788950 100755
 --- a/arch/arm64/boot/dts/renesas/qnxhyp-r8a779f0-spider.dts
 +++ b/arch/arm64/boot/dts/renesas/qnxhyp-r8a779f0-spider.dts
 @@ -320,10 +320,14 @@ &msiof3 {
  /delete-node/ &vcc_sdhi;
  #endif
-
+ 
 +/************************ UFS ************************/
 +#ifndef NATIVE
 +/delete-node/ &ufs;
@@ -25,11 +25,11 @@ index 47ce582ebd9a..ba4d1273c7ae 100755
  #ifndef NATIVE
  /delete-node/ &rswitch;
  #endif
-
+ 
 -/************************ THERMAL ************************/
 -
 +/************************ THERMAL ************************/
 \ No newline at end of file
---
+-- 
 2.26.0
 

@@ -1,4 +1,4 @@
-From 080783261be3d0c800e6984c8a42a2754c7997e0 Mon Sep 17 00:00:00 2001
+From e794d26127d153e58c29489f56e80aff3325143e Mon Sep 17 00:00:00 2001
 From: Renesas Electronics Corporation <someone@renesas.com>
 Date: Thu, 20 Jan 2022 11:51:57 +0700
 Subject: [PATCH 06/14] Linux Guest: Fix generic timer clock frequency issue
@@ -53,7 +53,7 @@ Change-Id: I99bc74dc708bf015c8557d09dd46b7295f5043aa
  1 file changed, 27 insertions(+), 15 deletions(-)
 
 diff --git a/arch/arm64/boot/dts/renesas/qnxhyp-r8a779f0-spider.dts b/arch/arm64/boot/dts/renesas/qnxhyp-r8a779f0-spider.dts
-index 5ed5c08cfd4d..d6b535655d59 100755
+index 8fa0256d3827..f841f65e09f0 100755
 --- a/arch/arm64/boot/dts/renesas/qnxhyp-r8a779f0-spider.dts
 +++ b/arch/arm64/boot/dts/renesas/qnxhyp-r8a779f0-spider.dts
 @@ -44,9 +44,21 @@ aliases {
@@ -62,7 +62,7 @@ index 5ed5c08cfd4d..d6b535655d59 100755
  	/delete-node/ timer;
 -#endif
 -
-
+ 
 +	vgic: vgic@0 {
 +		qvm,vdev = "gic";
 +	};
@@ -78,7 +78,7 @@ index 5ed5c08cfd4d..d6b535655d59 100755
 +	};
 +#endif
  };
-
+ 
  #ifndef NATIVE
 @@ -59,20 +71,20 @@ &soc {
  #ifdef NATIVE
@@ -98,7 +98,7 @@ index 5ed5c08cfd4d..d6b535655d59 100755
 +	*/
  #endif
  };
-
+ 
  &pfc {
 -    /*
 +	/*
@@ -115,7 +115,7 @@ index 5ed5c08cfd4d..d6b535655d59 100755
  		groups = "pcie0_clkreq_n";
  		function = "pcie";
 @@ -99,7 +111,7 @@ pcie1_pins: pcie1 {
-
+ 
  &i2c4 {
  #ifndef NATIVE
 -    /delete-property/ power-domains;
@@ -133,7 +133,7 @@ index 5ed5c08cfd4d..d6b535655d59 100755
 +	/delete-property/ power-domains;
  #endif
  };
-
+ 
 @@ -128,8 +140,8 @@ &pciec0_ep {
  	pinctrl-0 = <&pcie0_pins>;
  	pinctrl-names = "default";
@@ -144,7 +144,7 @@ index 5ed5c08cfd4d..d6b535655d59 100755
 +	/delete-property/ power-domains;
  #endif
  };
-
+ 
 @@ -138,8 +150,8 @@ &pciec1 {
  	pinctrl-0 = <&pcie1_pins>;
  	pinctrl-names = "default";
@@ -155,7 +155,7 @@ index 5ed5c08cfd4d..d6b535655d59 100755
 +	/delete-property/ power-domains;
  #endif
  };
-
+ 
 @@ -309,7 +321,7 @@ &mmc0 {
  #ifndef MMC
  	status = "disabled";
@@ -165,6 +165,6 @@ index 5ed5c08cfd4d..d6b535655d59 100755
  #endif
  #ifndef NATIVE
  	/delete-property/ power-domains;
---
+-- 
 2.26.0
 
