@@ -1,6 +1,6 @@
-From e794d26127d153e58c29489f56e80aff3325143e Mon Sep 17 00:00:00 2001
+From 9ce8dc98786c97dc3cfab015286e60e98e5483da Mon Sep 17 00:00:00 2001
 From: Renesas Electronics Corporation <someone@renesas.com>
-Date: Thu, 20 Jan 2022 11:51:57 +0700
+Date: Sat, 29 Jul 2023 14:30:29 +0700
 Subject: [PATCH 06/14] Linux Guest: Fix generic timer clock frequency issue
 
 [    0.000000] arch_timer: frequency not available

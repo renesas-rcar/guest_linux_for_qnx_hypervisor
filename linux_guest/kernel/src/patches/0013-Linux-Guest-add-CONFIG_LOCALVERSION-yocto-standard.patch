@@ -1,8 +1,9 @@
-From 17ccc731bd3b414da4e35ff5af19149f855620f3 Mon Sep 17 00:00:00 2001
+From 6ae55f0ebfa3a93a7905da30a23288d1f62b2f44 Mon Sep 17 00:00:00 2001
 From: Renesas Electronics Corporation <someone@renesas.com>
-Date: Thu, 22 Jun 2023 16:41:56 +0700
+Date: Sat, 29 Jul 2023 14:34:22 +0700
 Subject: [PATCH 13/14] Linux Guest: add CONFIG_LOCALVERSION=-yocto-standard
 
+Change-Id: Ib520221e67d8a73a5c0cc120e774fe37ae99dd2c
 ---
  arch/arm64/configs/defconfig | 1 +
  1 file changed, 1 insertion(+)

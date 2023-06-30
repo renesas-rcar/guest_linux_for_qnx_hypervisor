@@ -1,6 +1,6 @@
-From d9b0622e6348bf5a7bbf1d2f58fdc0dbcc64f2a6 Mon Sep 17 00:00:00 2001
+From 089c7e7c6751f706c0254174096bc6aafffe1cee Mon Sep 17 00:00:00 2001
 From: Renesas Electronics Corporation <someone@renesas.com>
-Date: Thu, 22 Jun 2023 16:12:18 +0700
+Date: Wed, 21 Jun 2023 16:18:59 +0700
 Subject: [PATCH 2/2] atf: bl31: setup IPMMU registers
 
 ---
@@ -11,7 +11,7 @@ Subject: [PATCH 2/2] atf: bl31: setup IPMMU registers
 
 diff --git a/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/arm-trusted-firmware/0002-bl31-setup-IPMMU-registers.patch b/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/arm-trusted-firmware/0002-bl31-setup-IPMMU-registers.patch
 new file mode 100755
-index 00000000..39423f76
+index 00000000..b4517b8a
 --- /dev/null
 +++ b/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/arm-trusted-firmware/0002-bl31-setup-IPMMU-registers.patch
 @@ -0,0 +1,62 @@
@@ -32,7 +32,7 @@ index 00000000..39423f76
 +@@ -81,6 +81,16 @@ void bl31_plat_arch_setup(void)
 + 	rcar_pwrc_code_copy_to_system_ram();
 + }
-+
++ 
 ++static void rcar_ipmmu_setup(void)
 ++{
 ++	mmio_write_32(IPMMU_MM_BASE + IMSAUXCTLR, 0x01000000);
@@ -47,11 +47,11 @@ index 00000000..39423f76
 + {
 + 	plat_rcar_gic_driver_init();
 +@@ -98,6 +108,7 @@ void bl31_platform_setup(void)
-+
++ 
 + 	plat_rcar_scmi_setup();
 + 	rcar_pwrc_setup();
 ++	rcar_ipmmu_setup();
-+
++ 
 + 	/*
 + 	 * mask should match the kernel's MPIDR_HWID_BITMASK so the core can be
 +diff --git a/plat/renesas/rcar_gen4/include/rcar_def.h b/plat/renesas/rcar_gen4/include/rcar_def.h
@@ -61,7 +61,7 @@ index 00000000..39423f76
 +@@ -153,5 +153,15 @@
 + #define RCAR_SCMI_MFIS_MOD_MASK		U(0x00000001)
 + #define RCAR_SCMI_MFIS_PRV_MASK		(~RCAR_SCMI_MFIS_MOD_MASK)
-+
++ 
 ++/* IPMMU registers */
 ++#define IPMMU_BASE              U(0xEE000000)
 ++#define IPMMU_MM_BASE           U(0xEEFC0000)
@@ -72,13 +72,13 @@ index 00000000..39423f76
 ++#define IPMMU_DOMAIN_4          U(0xD40000)
 ++#define IMSCTLR                 U(0x1500)
 ++#define IMSAUXCTLR              U(0x1504)
-+
++ 
 + #endif /* RCAR_DEF_H */
-+--
++-- 
 +2.26.0
 +
 diff --git a/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/arm-trusted-firmware_git.bb b/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/arm-trusted-firmware_git.bb
-index db20e73b..7262f082 100644
+index d9065fc7..510bb0f6 100644
 --- a/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/arm-trusted-firmware_git.bb
 +++ b/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/arm-trusted-firmware_git.bb
 @@ -15,6 +15,7 @@ SRCREV = "c005892fdd83a08c363a4cb83ebf7c87386029a3"

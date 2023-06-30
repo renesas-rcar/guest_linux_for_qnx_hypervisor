@@ -1,6 +1,6 @@
-From 411d254754522627e916c716f212e72f40b8214e Mon Sep 17 00:00:00 2001
+From 77f3c3c4a29496f0edaad8baf860fbe65a8f90d9 Mon Sep 17 00:00:00 2001
 From: Renesas Electronics Corporation <someone@renesas.com>
-Date: Thu, 20 Jan 2022 11:19:32 +0700
+Date: Sat, 29 Jul 2023 14:28:52 +0700
 Subject: [PATCH 05/14] Linux Guest: not to disable unused module clock because
  it can be used by HOST or other Guest
 

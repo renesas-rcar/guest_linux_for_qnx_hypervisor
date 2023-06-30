@@ -1,6 +1,6 @@
-From b40852fdfb5550e664d708d892cdc691ed0c023b Mon Sep 17 00:00:00 2001
+From dfd6f39e5763f34a1dbd7c7709d82ce859984272 Mon Sep 17 00:00:00 2001
 From: Renesas Electronics Corporation <someone@renesas.com>
-Date: Thu, 20 Jan 2022 11:13:01 +0700
+Date: Sat, 29 Jul 2023 14:27:19 +0700
 Subject: [PATCH 04/14] Linux Guest: Fix boot hang because qvm seem does not
  support ARMv8.2a
 

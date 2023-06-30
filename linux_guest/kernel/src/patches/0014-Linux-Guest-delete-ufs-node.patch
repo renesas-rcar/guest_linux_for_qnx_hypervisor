@@ -1,6 +1,6 @@
-From 7c02a45931570cb38df935c6f48bbccc3fbee9ca Mon Sep 17 00:00:00 2001
+From 9884428581238bc2151482f1dd8bd47b0338ea72 Mon Sep 17 00:00:00 2001
 From: Renesas Electronics Corporation <someone@renesas.com>
-Date: Thu, 4 Aug 2022 15:36:34 +0700
+Date: Sat, 29 Jul 2023 14:35:20 +0700
 Subject: [PATCH 14/14] Linux Guest: delete ufs node
 
 Change-Id: If0c6708281318b564bcc2dc0a648d299880f4b3e

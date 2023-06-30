@@ -1,6 +1,6 @@
-From 2ff181e3382dff7bc477d418e803fe01c718bb6c Mon Sep 17 00:00:00 2001
+From e74dc5a1af4610aa157349294654f59806fd30b7 Mon Sep 17 00:00:00 2001
 From: Renesas Electronics Corporation <someone@renesas.com>
-Date: Thu, 22 Jun 2023 16:09:59 +0700
+Date: Wed, 21 Jun 2023 16:16:44 +0700
 Subject: [PATCH 1/2] atf: bl31: transfer control to bl33 at EL2
 
 ---
@@ -11,7 +11,7 @@ Subject: [PATCH 1/2] atf: bl31: transfer control to bl33 at EL2
 
 diff --git a/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/arm-trusted-firmware/0001-bl31-transfer-control-to-BL33-at-EL2.patch b/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/arm-trusted-firmware/0001-bl31-transfer-control-to-BL33-at-EL2.patch
 new file mode 100755
-index 00000000..8637002e
+index 00000000..5d6066fd
 --- /dev/null
 +++ b/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/arm-trusted-firmware/0001-bl31-transfer-control-to-BL33-at-EL2.patch
 @@ -0,0 +1,32 @@
@@ -31,7 +31,7 @@ index 00000000..8637002e
 +@@ -46,6 +46,15 @@ struct entry_point_info *bl31_plat_get_next_image_ep_info(uint32_t type)
 + 	next_image_info = (type == NON_SECURE) ?
 + 		&from_bl2->bl33_ep_info : &from_bl2->bl32_ep_info;
-+
++ 
 ++	INFO("bl31_plat_get_next_image_ep_info(%s)\n \
 ++		  BL31: Original: SPSR = 0x%x \n",
 ++			(type == NON_SECURE) ? "NON_SECURE" : "SECURE",
@@ -43,12 +43,12 @@ index 00000000..8637002e
 ++
 + 	return (next_image_info->pc != 0U) ? next_image_info : NULL;
 + }
-+
-+--
++ 
++-- 
 +2.26.0
 +
 diff --git a/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/arm-trusted-firmware_git.bb b/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/arm-trusted-firmware_git.bb
-index 88d67cf5..db20e73b 100644
+index a3e613c3..d9065fc7 100644
 --- a/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/arm-trusted-firmware_git.bb
 +++ b/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/arm-trusted-firmware_git.bb
 @@ -13,6 +13,10 @@ BRANCH = "rcar-s4_v2.5"
@@ -61,7 +61,7 @@ index 88d67cf5..db20e73b 100644
 +
  PV = "v2.5+renesas+git${SRCPV}"
  
- COMPATIBLE_MACHINE = "(spider)"
+ COMPATIBLE_MACHINE = "(spider|s4sk)"
 -- 
 2.26.0
 

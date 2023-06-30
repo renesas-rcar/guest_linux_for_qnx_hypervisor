@@ -1,6 +1,6 @@
-From 850b2f9535171b5a2171c2d7d06a8b498e025e4e Mon Sep 17 00:00:00 2001
+From ec27610a2443cb7e48cb309be90d2aaaa1207fb9 Mon Sep 17 00:00:00 2001
 From: Renesas Electronics Corporation <someone@renesas.com>
-Date: Thu, 5 Nov 2020 17:23:38 +0700
+Date: Sat, 29 Jul 2023 14:33:40 +0700
 Subject: [PATCH 11/14] Linux Guest: inter-vm: export CMA symbols
 
 Change-Id: I5a1ef26ae7906489d7eb6c9fd5f3770ff877fc62
