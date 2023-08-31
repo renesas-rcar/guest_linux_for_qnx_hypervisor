@@ -30,9 +30,9 @@ index 00000000..b4517b8a
 +--- a/plat/renesas/rcar_gen4/bl31_plat_setup.c
 ++++ b/plat/renesas/rcar_gen4/bl31_plat_setup.c
 +@@ -81,6 +81,16 @@ void bl31_plat_arch_setup(void)
-+ 	rcar_pwrc_code_copy_to_system_ram();
++	rcar_pwrc_code_copy_to_system_ram();
 + }
-+ 
++
 ++static void rcar_ipmmu_setup(void)
 ++{
 ++	mmio_write_32(IPMMU_MM_BASE + IMSAUXCTLR, 0x01000000);
@@ -45,15 +45,15 @@ index 00000000..b4517b8a
 ++
 + void bl31_platform_setup(void)
 + {
-+ 	plat_rcar_gic_driver_init();
++	plat_rcar_gic_driver_init();
 +@@ -98,6 +108,7 @@ void bl31_platform_setup(void)
-+ 
-+ 	plat_rcar_scmi_setup();
-+ 	rcar_pwrc_setup();
++
++	plat_rcar_scmi_setup();
++	rcar_pwrc_setup();
 ++	rcar_ipmmu_setup();
-+ 
-+ 	/*
-+ 	 * mask should match the kernel's MPIDR_HWID_BITMASK so the core can be
++
++	/*
++	 * mask should match the kernel's MPIDR_HWID_BITMASK so the core can be
 +diff --git a/plat/renesas/rcar_gen4/include/rcar_def.h b/plat/renesas/rcar_gen4/include/rcar_def.h
 +index 7d423bf82..8d5190964 100644
 +--- a/plat/renesas/rcar_gen4/include/rcar_def.h
@@ -61,7 +61,7 @@ index 00000000..b4517b8a
 +@@ -153,5 +153,15 @@
 + #define RCAR_SCMI_MFIS_MOD_MASK		U(0x00000001)
 + #define RCAR_SCMI_MFIS_PRV_MASK		(~RCAR_SCMI_MFIS_MOD_MASK)
-+ 
++
 ++/* IPMMU registers */
 ++#define IPMMU_BASE              U(0xEE000000)
 ++#define IPMMU_MM_BASE           U(0xEEFC0000)
@@ -72,9 +72,9 @@ index 00000000..b4517b8a
 ++#define IPMMU_DOMAIN_4          U(0xD40000)
 ++#define IMSCTLR                 U(0x1500)
 ++#define IMSAUXCTLR              U(0x1504)
-+ 
++
 + #endif /* RCAR_DEF_H */
-+-- 
++--
 +2.26.0
 +
 diff --git a/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/arm-trusted-firmware_git.bb b/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/arm-trusted-firmware_git.bb
@@ -82,13 +82,13 @@ index d9065fc7..510bb0f6 100644
 --- a/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/arm-trusted-firmware_git.bb
 +++ b/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/arm-trusted-firmware_git.bb
 @@ -15,6 +15,7 @@ SRCREV = "c005892fdd83a08c363a4cb83ebf7c87386029a3"
- 
+
  SRC_URI_append = "\
          file://0001-bl31-transfer-control-to-BL33-at-EL2.patch \
 +        file://0002-bl31-setup-IPMMU-registers.patch \
  "
- 
+
  PV = "v2.5+renesas+git${SRCPV}"
--- 
+--
 2.26.0
 

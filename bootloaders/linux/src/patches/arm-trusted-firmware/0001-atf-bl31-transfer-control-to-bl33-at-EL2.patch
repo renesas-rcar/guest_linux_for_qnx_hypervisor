@@ -29,9 +29,9 @@ index 00000000..5d6066fd
 +--- a/plat/renesas/rcar_gen4/bl31_plat_setup.c
 ++++ b/plat/renesas/rcar_gen4/bl31_plat_setup.c
 +@@ -46,6 +46,15 @@ struct entry_point_info *bl31_plat_get_next_image_ep_info(uint32_t type)
-+ 	next_image_info = (type == NON_SECURE) ?
-+ 		&from_bl2->bl33_ep_info : &from_bl2->bl32_ep_info;
-+ 
++	next_image_info = (type == NON_SECURE) ?
++		&from_bl2->bl33_ep_info : &from_bl2->bl32_ep_info;
++
 ++	INFO("bl31_plat_get_next_image_ep_info(%s)\n \
 ++		  BL31: Original: SPSR = 0x%x \n",
 ++			(type == NON_SECURE) ? "NON_SECURE" : "SECURE",
@@ -41,10 +41,10 @@ index 00000000..5d6066fd
 ++		from_bl2->bl33_ep_info.spsr = (uint32_t)SPSR_64(MODE_EL2, MODE_SP_ELX, DISABLE_ALL_EXCEPTIONS);
 ++	}
 ++
-+ 	return (next_image_info->pc != 0U) ? next_image_info : NULL;
++	return (next_image_info->pc != 0U) ? next_image_info : NULL;
 + }
-+ 
-+-- 
++
++--
 +2.26.0
 +
 diff --git a/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/arm-trusted-firmware_git.bb b/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/arm-trusted-firmware_git.bb
@@ -54,14 +54,14 @@ index a3e613c3..d9065fc7 100644
 @@ -13,6 +13,10 @@ BRANCH = "rcar-s4_v2.5"
  SRC_URI = "git://github.com/renesas-rcar/arm-trusted-firmware.git;branch=${BRANCH};protocol=https"
  SRCREV = "c005892fdd83a08c363a4cb83ebf7c87386029a3"
- 
+
 +SRC_URI_append = "\
 +        file://0001-bl31-transfer-control-to-BL33-at-EL2.patch \
 +"
 +
  PV = "v2.5+renesas+git${SRCPV}"
- 
+
  COMPATIBLE_MACHINE = "(spider|s4sk)"
--- 
+--
 2.26.0
 
