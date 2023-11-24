@@ -1,4 +1,4 @@
-From ad229af60b73d33c7009d667a3ea6051795097af Mon Sep 17 00:00:00 2001
+From bd462a66277a46cc9c7784aed42b3b72c972caf0 Mon Sep 17 00:00:00 2001
 From: Renesas Electronics Corporation <someone@renesas.com>
 Date: Tue, 21 Jun 2022 10:54:19 +0700
 Subject: [PATCH 01/14] Linux Guest: remove the unnecessary kernel
