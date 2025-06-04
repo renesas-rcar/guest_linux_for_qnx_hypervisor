@@ -11,7 +11,7 @@ Subject: [PATCH 2/2] atf: bl31: setup IPMMU registers
 
 diff --git a/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/arm-trusted-firmware/0002-bl31-setup-IPMMU-registers.patch b/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/arm-trusted-firmware/0002-bl31-setup-IPMMU-registers.patch
 new file mode 100755
-index 00000000..b4517b8a
+index 00000000..c3c2353a
 --- /dev/null
 +++ b/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/arm-trusted-firmware/0002-bl31-setup-IPMMU-registers.patch
 @@ -0,0 +1,62 @@
@@ -78,17 +78,17 @@ index 00000000..b4517b8a
 +2.26.0
 +
 diff --git a/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/arm-trusted-firmware_git.bb b/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/arm-trusted-firmware_git.bb
-index d9065fc7..510bb0f6 100644
+index 2a29637e..ef6e8800 100644
 --- a/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/arm-trusted-firmware_git.bb
 +++ b/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/arm-trusted-firmware_git.bb
-@@ -15,6 +15,7 @@ SRCREV = "c005892fdd83a08c363a4cb83ebf7c87386029a3"
-
- SRC_URI_append = "\
+@@ -16,6 +16,7 @@ SRCREV = "c005892fdd83a08c363a4cb83ebf7c87386029a3"
+ 
+ SRC_URI += "\
          file://0001-bl31-transfer-control-to-BL33-at-EL2.patch \
 +        file://0002-bl31-setup-IPMMU-registers.patch \
  "
-
+ 
  PV = "v2.5+renesas+git${SRCPV}"
---
-2.26.0
+-- 
+2.34.1
 
