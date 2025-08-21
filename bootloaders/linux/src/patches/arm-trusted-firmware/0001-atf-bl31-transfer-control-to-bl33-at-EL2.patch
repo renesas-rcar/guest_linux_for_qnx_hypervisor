@@ -1,12 +1,13 @@
-From e74dc5a1af4610aa157349294654f59806fd30b7 Mon Sep 17 00:00:00 2001
-From: Renesas Electronics Corporation <someone@renesas.com>
-Date: Wed, 21 Jun 2023 16:16:44 +0700
+From 8e4c16a204a47ca5117ad9f44dcd532dace2a7f7 Mon Sep 17 00:00:00 2001
+From: Lam Le <lam.le.yk@renesas.com>
+Date: Sun, 10 Aug 2025 15:53:44 +0700
 Subject: [PATCH 1/2] atf: bl31: transfer control to bl33 at EL2
 
+Signed-off-by: Lam Le <lam.le.yk@renesas.com>
 ---
  ...bl31-transfer-control-to-BL33-at-EL2.patch | 32 +++++++++++++++++++
- .../arm-trusted-firmware_git.bb               |  4 +++
- 2 files changed, 36 insertions(+)
+ .../arm-trusted-firmware_git.bb               |  6 ++++
+ 2 files changed, 38 insertions(+)
  create mode 100755 meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/arm-trusted-firmware/0001-bl31-transfer-control-to-BL33-at-EL2.patch
 
 diff --git a/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/arm-trusted-firmware/0001-bl31-transfer-control-to-BL33-at-EL2.patch b/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/arm-trusted-firmware/0001-bl31-transfer-control-to-BL33-at-EL2.patch
@@ -48,18 +49,20 @@ index 00000000..f83f1a1e
 +2.26.0
 +
 diff --git a/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/arm-trusted-firmware_git.bb b/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/arm-trusted-firmware_git.bb
-index dcc892f2..2a29637e 100644
+index d7cfe1d6..951a3258 100644
 --- a/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/arm-trusted-firmware_git.bb
 +++ b/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/arm-trusted-firmware_git.bb
-@@ -14,6 +14,10 @@ SRC_URI = "git://github.com/renesas-rcar/arm-trusted-firmware.git;branch=${BRANC
- SRC_URI += " file://0001-Makefile-Disable-linker-warning.patch"
- SRCREV = "c005892fdd83a08c363a4cb83ebf7c87386029a3"
+@@ -13,6 +13,12 @@ BRANCH = "rcar-s4_v2.11"
+ SRC_URI = "git://github.com/renesas-rcar/arm-trusted-firmware.git;branch=${BRANCH};protocol=https"
+ SRCREV = "fdeaf1c00dd55b1151897d202441e5fa8797d65c"
  
 +SRC_URI += "\
 +        file://0001-bl31-transfer-control-to-BL33-at-EL2.patch \
 +"
 +
- PV = "v2.5+renesas+git${SRCPV}"
++
++
+ PV = "v2.11+renesas+git${SRCPV}"
  
  COMPATIBLE_MACHINE = "(spider|s4sk)"
 -- 
