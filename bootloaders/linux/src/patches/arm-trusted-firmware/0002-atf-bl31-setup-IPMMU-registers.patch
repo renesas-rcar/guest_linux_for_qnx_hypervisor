@@ -1,8 +1,9 @@
-From 089c7e7c6751f706c0254174096bc6aafffe1cee Mon Sep 17 00:00:00 2001
-From: Renesas Electronics Corporation <someone@renesas.com>
-Date: Wed, 21 Jun 2023 16:18:59 +0700
+From f65a40a3e454756f64db80c236cc603ae03ecb12 Mon Sep 17 00:00:00 2001
+From: Lam Le <lam.le.yk@renesas.com>
+Date: Sun, 10 Aug 2025 15:54:57 +0700
 Subject: [PATCH 2/2] atf: bl31: setup IPMMU registers
 
+Signed-off-by: Lam Le <lam.le.yk@renesas.com>
 ---
  .../0002-bl31-setup-IPMMU-registers.patch     | 62 +++++++++++++++++++
  .../arm-trusted-firmware_git.bb               |  1 +
@@ -78,17 +79,17 @@ index 00000000..c3c2353a
 +2.26.0
 +
 diff --git a/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/arm-trusted-firmware_git.bb b/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/arm-trusted-firmware_git.bb
-index 2a29637e..ef6e8800 100644
+index 951a3258..08ad7842 100644
 --- a/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/arm-trusted-firmware_git.bb
 +++ b/meta-rcar-gateway/recipes-bsp/arm-trusted-firmware/arm-trusted-firmware_git.bb
-@@ -16,6 +16,7 @@ SRCREV = "c005892fdd83a08c363a4cb83ebf7c87386029a3"
+@@ -15,6 +15,7 @@ SRCREV = "fdeaf1c00dd55b1151897d202441e5fa8797d65c"
  
  SRC_URI += "\
          file://0001-bl31-transfer-control-to-BL33-at-EL2.patch \
-+        file://0002-bl31-setup-IPMMU-registers.patch \
++	file://0002-bl31-setup-IPMMU-registers.patch \
  "
  
- PV = "v2.5+renesas+git${SRCPV}"
+ 
 -- 
 2.34.1
 
