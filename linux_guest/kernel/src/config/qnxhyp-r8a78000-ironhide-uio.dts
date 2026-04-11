@@ -1,0 +1,4906 @@
+/dts-v1/;
+/plugin/;
+
+&{/} {
+	compatible = "renesas,ironhide", "renesas,r8a78000", "renesas,r8a78000-uio";
+	#address-cells = <0x02>;
+	#size-cells = <0x02>;
+	model = "Renesas Ironhide board based on r8a78000";
+
+	audio_clk_a: audio_clk_a {
+		compatible = "fixed-clock";
+		#clock-cells = <0>;
+		clock-frequency = <0>;
+	};
+
+	audio_clk_b: audio_clk_b {
+		compatible = "fixed-clock";
+		#clock-cells = <0>;
+		clock-frequency = <0>;
+	};
+
+	audio_clk_c: audio_clk_c {
+		compatible = "fixed-clock";
+		#clock-cells = <0>;
+		clock-frequency = <0>;
+	};
+
+	dummy_clk: dummy_clk {
+		compatible = "fixed-clock";
+		clock-frequency = <0>;
+		#clock-cells = <0>;
+	};
+
+	can_clk: can {
+		compatible = "fixed-clock";
+		#clock-cells = <0>;
+		clock-frequency = <0>;
+	};
+
+	canxl_clk: canxl_clk {
+		compatible = "fixed-clock";
+		clock-frequency = <160000000>;
+		#clock-cells = <0>;
+	};
+
+	msiof_clk: msiof_clk {
+		compatible = "fixed-clock";
+		#clock-cells = <0>;
+		clock-frequency = <133333333>;
+	};
+
+	ssi_dummy_clk: ssi_dummy_clk {
+		compatible = "fixed-clock";
+		#clock-cells = <0>;
+		clock-frequency = <0>;
+		clock-output-names = "ssi";
+	};
+
+	scu_dummy_clk: scu_dummy_clk {
+		compatible = "fixed-clock";
+		#clock-cells = <0>;
+		clock-frequency = <0>;
+		clock-output-names = "scu";
+	};
+
+	extal_clk: extal {
+		compatible = "fixed-clock";
+		#clock-cells = <0>;
+		/* This value must be overridden by the board */
+		clock-frequency = <0>;
+	};
+
+	extalr_clk: extalr {
+		compatible = "fixed-clock";
+		#clock-cells = <0>;
+		/* This value must be overridden by the board */
+		clock-frequency = <0>;
+	};
+
+	firmware {
+
+		scmi {
+			compatible = "arm,scmi";
+			mbox-names = "tx","rx";
+			mboxes = <&mailbox 0 &mailbox 1>;
+			shmem = <&cpu_scp_lpri0 &cpu_scp_hpri0>;
+			#address-cells = <1>;
+			#size-cells = <0>;
+			/* This is to ensure scmi clock ops is atomic */
+			atomic-threshold-us = <0xffffffff>;
+
+			scmi_devpd: protocol@11 {
+				reg = <0x11>;
+				#power-domain-cells = <1>;
+			};
+
+			scmi_sys: protocol@12 {
+				reg = <0x12>;
+			};
+
+			scmi_clk: protocol@14 {
+				reg = <0x14>;
+				#clock-cells = <1>;
+			};
+
+			scmi_reset: protocol@16 {
+				reg = <0x16>;
+				#reset-cells = <1>;
+			};
+
+			scmi_vendor: protocol@80 {
+				reg = <0x80>;
+				#reset-cells = <1>;
+			};
+
+		};
+
+		optee {
+			compatible = "linaro,optee-tz";
+			method = "smc";
+		};
+	};
+
+	/* In the early phase, there is no clock control support,
+	 * so assume that the clocks are enabled by default.
+	 * Therefore, dummy clocks are used.
+	 */
+	dummy_clk_sgasyncd4: dummy_clk_sgasyncd4 {
+		compatible = "fixed-clock";
+		#clock-cells = <0>;
+		clock-frequency = <266660000>;
+	};
+
+	dummy_clk_wdt: dummy_clk_wdt {
+		compatible = "fixed-clock";
+		#clock-cells = <0>;
+		clock-frequency = <32800>;
+		clock-output-names = "watchdog";
+	};
+
+	dummy_clk_cmt: dummy_clk_cmt {
+		compatible = "fixed-clock";
+		#clock-cells = <0>;
+		clock-frequency = <32768>;
+	};
+
+	dummy_clk_tmu0: dummy_clk_tmu0 {
+		compatible = "fixed-clock";
+		#clock-cells = <0>;
+		clock-frequency = <16666666>;
+	};
+
+	dummy_clk_tmu: dummy_clk_tmu {
+		compatible = "fixed-clock";
+		#clock-cells = <0>;
+		clock-frequency = <133333333>;
+	};
+
+	rsw3_clk: rsw3_clk {
+		compatible = "fixed-clock";
+		#clock-cells = <0>;
+		clock-frequency = <0>;
+	};
+
+	dummy_clk_wcrc: dummy_clk_wcrc {
+		compatible = "fixed-clock";
+		#clock-cells = <0>;
+		clock-frequency = <0>;
+	};
+
+	/* External SCIF clock - to be overridden by boards that provide it */
+	scif_clk: scif {
+		compatible = "fixed-clock";
+		#clock-cells = <0>;
+		clock-frequency = <0>;
+	};
+
+	/* External PCIe clock - can be overridden by the board */
+	pcie4_bus_clk: pcie4_bus {
+		compatible = "fixed-clock";
+		#clock-cells = <0>;
+		clock-frequency = <100000000>;
+	};
+
+	pcie6_bus_clk: pcie6_bus {
+		compatible = "fixed-clock";
+		#clock-cells = <0>;
+		clock-frequency = <100000000>;
+	};
+
+	dummy_clk_sgasyncd16: dummy_clk_sgasyncd16 {
+		compatible = "fixed-clock";
+		#clock-cells = <0>;
+		clock-frequency = <66666666>;
+	};
+
+	dummy_clk_s0asyncd8: dummy_clk_s0asyncd8 {
+		compatible = "fixed-clock";
+		#clock-cells = <0>;
+		clock-frequency = <100000000>;
+	};
+
+	dummy_tcki: dummy_tcki {
+		compatible = "fixed-clock";
+		#clock-cells = <0>;
+		clock-frequency = <240000>;
+		clock-output-names = "rtcatcki";
+	};
+
+	soc {
+		compatible = "simple-bus";
+		interrupt-parent = <&qvm_vdev_gic>;
+		#address-cells = <0x02>;
+		#size-cells = <0x02>;
+		ranges;
+
+		mfis: mfis@18800000 {
+			compatible = "renesas,mfis";
+			reg = <0x0 0x18800000 0x0 0x1000>,
+			      <0x0 0x18801000 0x0 0x1000>,
+			      <0x0 0x18802000 0x0 0x1000>,
+			      <0x0 0x18803000 0x0 0x1000>,
+			      <0x0 0x18804000 0x0 0x1000>,
+			      <0x0 0x18805000 0x0 0x1000>,
+			      <0x0 0x18806000 0x0 0x1000>,
+			      <0x0 0x18807000 0x0 0x1000>,
+			      <0x0 0x189e0900 0x0 0x4>;
+			reg-names = "ch0", "ch1", "ch2", "ch3",
+				    "ch4", "ch5", "ch6", "ch7",
+				     "unlock_reg";
+			interrupts = <0x00 101 0x04>,
+				     <0x00 103 0x04>,
+				     <0x00 105 0x04>,
+				     <0x00 107 0x04>,
+				     <0x00 109 0x04>,
+				     <0x00 111 0x04>,
+				     <0x00 113 0x04>,
+				     <0x00 115 0x04>;
+			interrupt-names = "ch0", "ch1", "ch2", "ch3",
+					  "ch4", "ch5", "ch6", "ch7";
+			renesas,mfis-channels = <1>;
+			status = "okay";
+		};
+
+		mailbox: mfis_mbox@18842000 {
+			compatible = "renesas,mfis-mbox";
+			#mbox-cells = <0x01>;
+			reg = <0x00 0x18842004 0x00 0x04 0x00 0x18842000 0x00 0x04>;
+			// interrupts = <0x00 4362 0x04>;
+			interrupts = <0x00 41 0x04>;
+			status = "okay";
+		};
+
+		mfis_lock@189e0000 {
+			compatible = "renesas,mfis-lock-r8a78000\0renesas,mfis-lock-gen5";
+			reg = <0x00 0x189e0000 0x00 0x900 0x00 0x189e0900 0x00 0x04>;
+			reg-names = "io_base\0unlock_reg";
+			#hwlock-cells = <0x01>;
+		};
+
+		chipid@189e0044 {
+			compatible = "renesas,prr";
+			reg = <0x00 0x189e0044 0x00 0x04>;
+		};
+
+		pfc: pinctrl@c0400000 {
+			compatible = "renesas,pfc-r8a78000";
+			reg = <0x00 0xc1080000 0x00 0x104 0x00 0xc1080800 0x00 0x104 0x00 0xc1081000 0x00 0x104 0x00 0xc0800000 0x00 0x104 0x00 0xc0800800 0x00 0x104 0x00 0xc0400000 0x00 0x104 0x00 0xc0400800 0x00 0x104 0x00 0xc0401000 0x00 0x104 0x00 0xc0401800 0x00 0x104 0x00 0xc9b00000 0x00 0x104 0x00 0xc9b00800 0x00 0x104>;
+
+			eth25g2_pins: eth25g2 {
+				groups = "eth25g2_mdio\0eth25g2_link\0eth25g2_phyint";
+				function = "eth25g2";
+				drive-strength = <0x18>;
+			};
+
+			ethes0_pins: ethes0 {
+				groups = "ethes0_match\0ethes0_capture\0ethes0_pps";
+				function = "ethes0";
+				drive-strength = <0x18>;
+			};
+
+			hscif0_pins: hscif0 {
+				groups = "hscif0_data\0hscif0_ctrl";
+				function = "hscif0";
+			};
+
+			i2c0_pins: i2c0 {
+				groups = "i2c0";
+				function = "i2c0";
+			};
+
+			i2c1_pins: i2c1 {
+				groups = "i2c1";
+				function = "i2c1";
+			};
+
+			i2c2_pins: i2c2 {
+				groups = "i2c2";
+				function = "i2c2";
+			};
+
+			i2c3_pins: i2c3 {
+				groups = "i2c3";
+				function = "i2c3";
+			};
+
+			i2c4_pins: i2c4 {
+				groups = "i2c4";
+				function = "i2c4";
+			};
+
+			i2c5_pins: i2c5 {
+				groups = "i2c5";
+				function = "i2c5";
+			};
+
+			i2c6_pins: i2c6 {
+				groups = "i2c6";
+				function = "i2c6";
+			};
+
+			i3c0_pins: i3c0 {
+				groups = "i3c0";
+				function = "i3c0";
+			};
+
+			i3c1_pins: i3c1 {
+				groups = "i3c1";
+				function = "i3c1";
+			};
+
+			i3c2_pins: i3c2 {
+				groups = "i3c2";
+				function = "i3c2";
+			};
+
+			rsw3_pins: rsw3 {
+				groups = "rsw3_match\0rsw3_capture\0rsw3_pps";
+				function = "rsw3";
+				drive-strength = <0x18>;
+			};
+
+			pcie40_pins: pcie40 {
+				groups = "pcie40_clkreq_n";
+				function = "pcie4";
+			};
+
+			msiof0_pins: msiof0 {
+				groups = "msiof0_clk\0msiof0_sync\0msiof0_txd\0msiof0_rxd\0msiof0_ss1\0msiof0_ss2";
+				function = "msiof0";
+			};
+
+			msiof6_pins: msiof6 {
+				groups = "msiof6_clk_a\0msiof6_txd_a\0msiof6_rxd_a\0msiof6_ss1_a\0msiof6_ss2_a";
+				function = "msiof6";
+			};
+
+			usb30_pins: usb0 {
+
+				mux {
+					groups = "usb0_vbus\0usb0";
+					function = "usb0";
+				};
+
+				ovc {
+					pins = "GP_10_1";
+					bias-pull-down;
+				};
+
+				pwen {
+					pins = "GP_10_0";
+					bias-pull-up;
+				};
+
+				vbus {
+					pins = "GP_10_2";
+					bias-pull-up;
+				};
+			};
+
+			usb20_pins: usb1 {
+
+				mux {
+					groups = "usb1_vbus\0usb1";
+					function = "usb1";
+				};
+
+				ovc {
+					pins = "GP_10_4";
+					bias-pull-down;
+				};
+
+				pwen {
+					pins = "GP_10_3";
+					bias-pull-up;
+				};
+
+				vbus {
+					pins = "GP_10_5";
+					bias-pull-up;
+				};
+			};
+
+			usb31_pins: usb2 {
+
+				mux {
+					groups = "usb2_vbus\0usb2";
+					function = "usb2";
+				};
+
+				ovc {
+					pins = "GP_10_7";
+					bias-pull-down;
+				};
+
+				pwen {
+					pins = "GP_10_6";
+					bias-pull-up;
+				};
+
+				vbus {
+					pins = "GP_10_8";
+					bias-pull-up;
+				};
+			};
+
+			usb21_pins: usb3 {
+
+				mux {
+					groups = "usb3_vbus\0usb3";
+					function = "usb3";
+				};
+
+				ovc {
+					pins = "GP_10_10";
+					bias-pull-down;
+				};
+
+				pwen {
+					pins = "GP_10_9";
+					bias-pull-up;
+				};
+
+				vbus {
+					pins = "GP_10_11";
+					bias-pull-up;
+				};
+			};
+
+			rpc_pins: rpc {
+				groups = "rpc_clk2\0rpc_ctrl\0rpc_data\0rpc_reset\0rpc_int";
+				function = "rpc";
+			};
+
+			mmc0_pins: mmc0 {
+				groups = "mmc0_data8\0mmc0_ctrl\0mmc0_ds";
+				function = "mmc0";
+				drive-strength = <0x18>;
+			};
+
+			canfd0_pins: canfd0 {
+				groups = "canfd0_data";
+				function = "canfd0";
+			};
+
+			canfd1_pins: canfd1 {
+				groups = "canfd1_data";
+				function = "canfd1";
+			};
+
+			canfd2_pins: canfd2 {
+				groups = "canfd2_data";
+				function = "canfd2";
+			};
+
+			canfd3_pins: canfd3 {
+				groups = "canfd3_data";
+				function = "canfd3";
+			};
+
+			canfd4_pins: canfd4 {
+				groups = "canfd4_data";
+				function = "canfd4";
+			};
+
+			canfd5_pins: canfd5 {
+				groups = "canfd5_data";
+				function = "canfd5";
+			};
+
+			canfd6_pins: canfd6 {
+				groups = "canfd6_data";
+				function = "canfd6";
+			};
+
+			canfd7_pins: canfd7 {
+				groups = "canfd7_data";
+				function = "canfd7";
+			};
+
+			canfd8_pins: canfd8 {
+				groups = "canfd8_data";
+				function = "canfd8";
+			};
+
+			canfd9_pins: canfd9 {
+				groups = "canfd9_data";
+				function = "canfd9";
+			};
+
+			canfd10_pins: canfd10 {
+				groups = "canfd10_data";
+				function = "canfd10";
+			};
+
+			canfd11_pins: canfd11 {
+				groups = "canfd11_data";
+				function = "canfd11";
+			};
+
+			canfd12_pins: canfd12 {
+				groups = "canfd12_data_b";
+				function = "canfd12";
+			};
+
+			canfd13_pins: canfd13 {
+				groups = "canfd13_data_b";
+				function = "canfd13";
+			};
+
+			canfd14_pins: canfd14 {
+				groups = "canfd14_data_b";
+				function = "canfd14";
+			};
+
+			canfd15_pins: canfd15 {
+				groups = "canfd15_data_b";
+				function = "canfd15";
+			};
+
+			sound_pins: sound {
+				groups = "ssi5_ctrl\0ssi5_data";
+				function = "ssi5";
+			};
+
+			sound_clk_pins: sound_clk {
+				groups = "audio_clk_a_a\0audio0_clkout0";
+				function = "audio_clk";
+			};
+
+			dp0_hotplug_pins: dp0_hotplug {
+				groups = "dp0_hotplug";
+				function = "dp0_hotplug";
+			};
+
+			dp1_hotplug_pins: dp1_hotplug {
+				groups = "dp1_hotplug";
+				function = "dp1_hotplug";
+			};
+
+			dp2_hotplug_pins: dp2_hotplug {
+				groups = "dp2_hotplug";
+				function = "dp2_hotplug";
+			};
+		};
+
+		cmt0: timer@c64c0000 {
+			compatible = "renesas,rcar-gen5-cmt0";
+			reg = <0 0xc64c0000 0 0x1004>;
+			interrupts = <0x00 4088 0x04>,
+				     <0x00 4089 0x04>;
+			clocks = <&scmi_clk 515>, <&dummy_clk_cmt>;
+			clock-names = "fck", "dummy_clk";
+			resets = <&scmi_reset 515>;
+			status = "disabled";
+		};
+
+		cmt1: timer@c64d0000 {
+			compatible = "renesas,rcar-gen5-cmt1";
+			reg = <0 0xc64d0000 0 0x1004>;
+			interrupts = <0x00 4090 0x04>,
+				     <0x00 4091 0x04>,
+				     <0x00 4092 0x04>,
+				     <0x00 4093 0x04>,
+				     <0x00 4094 0x04>,
+				     <0x00 4095 0x04>,
+				     <0x00 4096 0x04>,
+				     <0x00 4097 0x04>;
+			clocks = <&scmi_clk 516>, <&dummy_clk_cmt>;
+			clock-names = "fck", "dummy_clk";
+			resets = <&scmi_reset 516>;
+			status = "disabled";
+		};
+
+		cmt2: timer@c64e0000 {
+			compatible = "renesas,rcar-gen5-cmt1";
+			reg = <0 0xc64e0000 0 0x1004>;
+			interrupts = <0x00 4098 0x04>,
+				     <0x00 4099 0x04>,
+				     <0x00 4100 0x04>,
+				     <0x00 4101 0x04>,
+				     <0x00 4102 0x04>,
+				     <0x00 4103 0x04>,
+				     <0x00 4104 0x04>,
+				     <0x00 4105 0x04>;
+			clocks = <&scmi_clk 517>, <&dummy_clk_cmt>;
+			clock-names = "fck", "dummy_clk";
+			resets = <&scmi_reset 517>;
+			status = "disabled";
+		};
+
+		cmt3: timer@c64e8000 {
+			compatible = "renesas,rcar-gen5-cmt1";
+			reg = <0 0xc64e8000 0 0x1004>;
+			interrupts = <0x00 4106 0x04>,
+				     <0x00 4107 0x04>,
+				     <0x00 4108 0x04>,
+				     <0x00 4109 0x04>,
+				     <0x00 4110 0x04>,
+				     <0x00 4111 0x04>,
+				     <0x00 4112 0x04>,
+				     <0x00 4113 0x04>;
+			clocks = <&scmi_clk 518>, <&dummy_clk_cmt>;
+			clock-names = "fck", "dummy_clk";
+			resets = <&scmi_reset 518>;
+			status = "disabled";
+		};
+
+		tmu0: timer@1c030000 {
+			compatible = "renesas,tmu";
+			reg = <0 0x1c030000 0 0x30>;
+			renesas,clk-rate-channel0;
+			interrupts = <0x00 4114 0x04>,
+				     <0x00 4115 0x04>,
+				     <0x00 4116 0x04>;
+			clocks = <&scmi_clk 386>, <&dummy_clk_tmu0>;
+			clock-names = "fck", "dummy_clk_tmu0";
+			resets = <&scmi_reset 386>;
+			status = "disabled";
+		};
+
+		tmu1: timer@c0680000 {
+			compatible = "renesas,tmu";
+			reg = <0 0xc0680000 0 0x30>;
+			interrupts = <0x00 4117 0x04>,
+				     <0x00 4118 0x04>,
+				     <0x00 4119 0x04>,
+				     <0x00 4120 0x04>;
+			clocks = <&scmi_clk 245>, <&dummy_clk_tmu>;
+			clock-names = "fck", "dummy_clk_tmu";
+			resets = <&scmi_reset 245>;
+			status = "disabled";
+		};
+
+		tmu2: timer@c0690000 {
+			compatible = "renesas,tmu";
+			reg = <0 0xc0690000 0 0x30>;
+			interrupts = <0x00 4121 0x04>,
+				     <0x00 4122 0x04>,
+				     <0x00 4123 0x04>,
+				     <0x00 4124 0x04>;
+			clocks = <&scmi_clk 246>, <&dummy_clk_tmu>;
+			clock-names = "fck", "dummy_clk_tmu";
+			resets = <&scmi_reset 246>;
+			status = "disabled";
+		};
+
+		tmu3: timer@c06a0000 {
+			compatible = "renesas,tmu";
+			reg = <0 0xc06a0000 0 0x30>;
+			interrupts = <0x00 4125 0x04>,
+				     <0x00 4126 0x04>,
+				     <0x00 4127 0x04>,
+				     <0x00 4128 0x04>;
+			clocks = <&scmi_clk 247>, <&dummy_clk_tmu>;
+			clock-names = "fck", "dummy_clk_tmu";
+			resets = <&scmi_reset 247>;
+			status = "disabled";
+		};
+
+		tmu4: timer@c06b0000 {
+			compatible = "renesas,tmu";
+			reg = <0 0xc06b0000 0 0x30>;
+			interrupts = <0x00 4129 0x04>,
+				     <0x00 4130 0x04>,
+				     <0x00 4131 0x04>,
+				     <0x00 4132 0x04>;
+			clocks = <&scmi_clk 248>, <&dummy_clk_tmu>;
+			clock-names = "fck", "dummy_clk_tmu";
+			resets = <&scmi_reset 248>;
+			status = "disabled";
+		};
+
+		i2c0: i2c@c11d0000 {
+			compatible = "renesas,i2c-r8a78000","renesas,rcar-gen5-i2c";
+			reg = <0 0xc11d0000 0 0x40>;
+			// interrupts = <0x00 4807 0x04>;
+			interrupts = <0x00 44 0x04>;
+			i2c-scl-internal-delay-ns = <110>;
+			clocks = <&scmi_clk 0x30c>;
+			dmas = <&scp_dmac0 0x31>, <&scp_dmac0 0x30>,
+			       <&scp_dmac1 0x31>, <&scp_dmac1 0x30>;
+			dma-names = "tx", "rx", "tx", "rx";
+			#address-cells = <1>;
+			#size-cells = <0>;
+			status = "okay";
+			pinctrl-0 = <&i2c0_pins>;
+			pinctrl-names = "default";
+
+			clock-frequency = <100000>;
+
+		};
+
+		i2c1: i2c@c06c0000 {
+			compatible = "renesas,i2c-r8a78000\0renesas,rcar-gen5-i2c";
+			reg = <0x00 0xc06c0000 0x00 0x40>;
+			interrupts = <0x00 0x3bc 0x04>;
+			i2c-scl-internal-delay-ns = <0x6e>;
+			clocks = <&scmi_clk 0xd1>;
+			dmas = <&sys_dmac10 0x93>, <&sys_dmac10 0x92>,
+			       <&sys_dmac11 0x93>, <&sys_dmac11 0x92>,
+			       <&sys_dmac12 0x93>, <&sys_dmac12 0x92>;
+			dma-names = "tx\0rx\0tx\0rx\0tx\0rx";
+			#address-cells = <0x01>;
+			#size-cells = <0x00>;
+			status = "okay";
+			pinctrl-0 = <&i2c1_pins>;
+			pinctrl-names = "default";
+			clock-frequency = <0x61a80>;
+
+		};
+
+		i2c2: i2c@c06c8000 {
+			compatible = "renesas,i2c-r8a78000","renesas,rcar-gen5-i2c";
+			reg = <0 0xc06c8000 0 0x40>;
+			interrupts = <0x00 957 0x04>;
+			i2c-scl-internal-delay-ns = <110>;
+			clocks = <&scmi_clk 0xd2>;
+			dmas = <&sys_dmac10 0x95>, <&sys_dmac10 0x94>,
+			       <&sys_dmac11 0x95>, <&sys_dmac11 0x94>,
+			       <&sys_dmac12 0x95>, <&sys_dmac12 0x94>;
+			dma-names = "tx", "rx", "tx", "rx", "tx", "rx";
+			#address-cells = <1>;
+			#size-cells = <0>;
+			pinctrl-0 = <&i2c2_pins>;
+			pinctrl-names = "default";
+			clock-frequency = <400000>;
+
+			status = "okay";
+
+		};
+
+		i2c3: i2c@c06d0000 {
+			compatible = "renesas,i2c-r8a78000","renesas,rcar-gen5-i2c";
+			reg = <0 0xc06d0000 0 0x40>;
+			interrupts = <0x00 958 0x04>;
+			i2c-scl-internal-delay-ns = <110>;
+			clocks = <&scmi_clk 0xd3>;
+			dmas = <&sys_dmac10 0x97>, <&sys_dmac10 0x96>,
+                   <&sys_dmac11 0x97>, <&sys_dmac11 0x96>,
+			       <&sys_dmac12 0x97>, <&sys_dmac12 0x96>;
+			dma-names = "tx", "rx", "tx", "rx", "tx", "rx";
+			#address-cells = <1>;
+			#size-cells = <0>;
+			status = "okay";
+			pinctrl-0 = <&i2c3_pins>;
+			pinctrl-names = "default";
+			clock-frequency = <400000>;
+
+		};
+
+		i2c4: i2c@c06d8000 {
+			compatible = "renesas,i2c-r8a78000",
+				     "renesas,rcar-gen5-i2c";
+			reg = <0 0xc06d8000 0 0x40>;
+			interrupts = <0x00 959 0x04>;
+			i2c-scl-internal-delay-ns = <110>;
+			clocks = <&scmi_clk 0xd4>;
+			dmas = <&sys_dmac10 0x99>, <&sys_dmac10 0x98>,
+			       <&sys_dmac11 0x99>, <&sys_dmac11 0x98>,
+			       <&sys_dmac12 0x99>, <&sys_dmac12 0x98>;
+			dma-names = "tx", "rx", "tx", "rx", "tx", "rx";
+			#address-cells = <1>;
+			#size-cells = <0>;
+			pinctrl-0 = <&i2c4_pins>;
+			pinctrl-names = "default";
+			clock-frequency = <400000>;
+
+			status = "okay";
+
+		};
+
+		i2c5: i2c@c06e0000 {
+			compatible = "renesas,i2c-r8a78000\0renesas,rcar-gen5-i2c";
+			reg = <0x00 0xc06e0000 0x00 0x40>;
+			// interrupts = <0x00 0x44 0x04>;
+			interrupts = <0x00 45 0x04>;
+			i2c-scl-internal-delay-ns = <0x6e>;
+			clocks = <&scmi_clk 0xd5>;
+			dmas = <&sys_dmac10 0x93>, <&sys_dmac10 0x92>,
+			       <&sys_dmac11 0x93>, <&sys_dmac11 0x92>,
+			       <&sys_dmac12 0x93>, <&sys_dmac12 0x92>;
+			dma-names = "tx\0rx\0tx\0rx\0tx\0rx";
+			#address-cells = <0x01>;
+			#size-cells = <0x00>;
+			status = "okay";
+			pinctrl-0 = <&i2c5_pins>;
+			pinctrl-names = "default";
+
+		};
+
+		i2c6: i2c@c06e8000 {
+			compatible = "renesas,i2c-r8a78000","renesas,rcar-gen5-i2c";
+			reg = <0 0xc06e8000 0 0x40>;
+			// interrupts = <0x00 4065 0x04>;
+			interrupts = <0x00 46 0x04>;
+			i2c-scl-internal-delay-ns = <110>;
+			clocks = <&scmi_clk 0xd6>;
+			dmas = <&sys_dmac10 0x9d>, <&sys_dmac10 0x9c>,
+			       <&sys_dmac11 0x9d>, <&sys_dmac11 0x9c>,
+			       <&sys_dmac12 0x9d>, <&sys_dmac12 0x9c>;
+			dma-names = "tx", "rx", "tx", "rx", "tx", "rx";
+			#address-cells = <1>;
+			#size-cells = <0>;
+			pinctrl-0 = <&i2c6_pins>;
+			pinctrl-names = "default";
+
+			status = "okay";
+			clock-frequency = <400000>;
+
+		};
+
+		i2c7: i2c@c06f0000 {
+			compatible = "renesas,i2c-r8a78000","renesas,rcar-gen5-i2c";
+			reg = <0 0xc06f0000 0 0x40>;
+			// interrupts = <0x00 4066 0x04>;
+			interrupts = <0x00 47 0x04>;
+			i2c-scl-internal-delay-ns = <110>;
+			clocks = <&scmi_clk 0xd7>;
+			dmas = <&sys_dmac10 0x9f>, <&sys_dmac10 0x9e>,
+			       <&sys_dmac11 0x9f>, <&sys_dmac11 0x9e>,
+			       <&sys_dmac12 0x9f>, <&sys_dmac12 0x9e>;
+			dma-names = "tx", "rx", "tx", "rx", "tx", "rx";
+			#address-cells = <1>;
+			#size-cells = <0>;
+			status = "okay";
+		};
+
+		i2c8: i2c@c06f8000 {
+			compatible = "renesas,i2c-r8a78000","renesas,rcar-gen5-i2c";
+			reg = <0 0xc06f8000 0 0x40>;
+			// interrupts = <0x00 4067 0x04>;
+			interrupts = <0x00 48 0x04>;
+			i2c-scl-internal-delay-ns = <110>;
+			clocks = <&scmi_clk 0xd8>;
+			dmas = <&sys_dmac10 0xb1>, <&sys_dmac10 0xb0>,
+			       <&sys_dmac11 0xb1>, <&sys_dmac11 0xb0>,
+			       <&sys_dmac12 0xb1>, <&sys_dmac12 0x9e>;
+			dma-names = "tx", "rx", "tx", "rx", "tx", "rx";
+			#address-cells = <1>;
+			#size-cells = <0>;
+			status = "okay";
+		};
+
+		i3c0: i3c-master@c0788000 {
+			compatible = "renesas,rcar-i3c-master";
+			reg = <0 0xc0788000 0 0x1000>;
+			interrupts = <0x00 4068 0x04>;
+			clocks = <&scmi_clk 0xd9>,
+				 <&scmi_clk 0x678>;
+			clock-names = "tclk", "pclk";
+			resets = <&scmi_reset 217>;
+			#address-cells = <3>;
+			#size-cells = <0>;
+			i2c-scl-hz = <400000>;
+			i3c-scl-hz = <12500000>;
+			pinctrl-0 = <&i3c0_pins>;
+			pinctrl-names = "default";
+
+			status = "disabled";
+
+		};
+
+		i3c1: i3c-master@c0789000 {
+			compatible = "renesas,rcar-i3c-master";
+			reg = <0 0xc0789000 0 0x1000>;
+			interrupts = <0x00 4069 0x04>;
+			clocks = <&scmi_clk 0xda>,<&scmi_clk 0x678>;
+			clock-names = "tclk", "pclk";
+			resets = <&scmi_reset 218>;
+			#address-cells = <3>;
+			#size-cells = <0>;
+			i2c-scl-hz = <400000>;
+			i3c-scl-hz = <12500000>;
+			status = "disabled";
+		};
+
+		i3c2: i3c-master@c078a000 {
+			compatible = "renesas,rcar-i3c-master";
+			reg = <0 0xc078a000 0 0x1000>;
+			interrupts = <0x00 4070 0x04>;
+			clocks = <&scmi_clk 0xdb>,<&scmi_clk 0x678>;
+			clock-names = "tclk", "pclk";
+			resets = <&scmi_reset 219>;
+			#address-cells = <3>;
+			#size-cells = <0>;
+			i2c-scl-hz = <400000>;
+			i3c-scl-hz = <12500000>;
+			status = "disabled";
+		};
+
+		rwdt: watchdog@1c040000 {
+			compatible = "renesas,r8a78000-wdt","renesas,rcar-gen5-wdt";
+			reg = <0 0x1c040000 0 0x0c>;
+			clock = <&dummy_clk_wdt>;
+			status = "disabled";
+			timeout-sec = <60>;
+		};
+
+		wwdt0: watchdog@1c100000 {
+			compatible = "renesas, rcar-gen5-wwdt";
+			reg = <0 0x1c100000 0 0x10000>;
+			interrupts = <0x00 4142 0x04>;
+			interrupt-names = "pretimeout";
+			clocks = <&scmi_clk 389>, <&scmi_clk 403>;
+			clock-names = "cntclk", "busclk";
+			renesas,cntclk = <32800>;
+			resets = <&scmi_reset 389>, <&scmi_reset 403>;
+			reset-names = "rstc1", "rstc2";
+			status = "disabled";
+			interval-time = <7>;
+			error-mode = <1>;
+			wsize = <3>;
+			irq_75p = <1>;
+		};
+
+		wwdt1: watchdog@1c110000 {
+			compatible = "renesas, rcar-gen5-wwdt";
+			reg = <0 0x1c110000 0 0x10000>;
+			interrupts = <0x00 4143 0x04>;
+			interrupt-names = "pretimeout";
+			clocks = <&scmi_clk 390>, <&scmi_clk 404>;
+			clock-names = "cntclk", "busclk";
+			renesas,cntclk = <32800>;
+			resets = <&scmi_reset 390>, <&scmi_reset 404>;
+			reset-names = "rstc1", "rstc2";
+			status = "disabled";
+			interval-time = <7>;
+			error-mode = <1>;
+			wsize = <3>;
+			irq_75p = <1>;
+		};
+
+		wwdt2: watchdog@1c120000 {
+			compatible = "renesas, rcar-gen5-wwdt";
+			reg = <0 0x1c120000 0 0x10000>;
+			interrupts = <0x00 4144 0x04>;
+			interrupt-names = "pretimeout";
+			clocks = <&scmi_clk 391>,<&scmi_clk 405>;
+			clock-names = "cntclk", "busclk";
+			renesas,cntclk = <32800>;
+			resets = <&scmi_reset 391>,<&scmi_reset 405>;
+			reset-names = "rstc1", "rstc2";
+			status = "disabled";
+			interval-time = <7>;
+			error-mode = <1>;
+			wsize = <3>;
+			irq_75p = <1>;
+		};
+
+		wwdt3: watchdog@1c130000 {
+			compatible = "renesas, rcar-gen5-wwdt";
+			reg = <0 0x1c130000 0 0x10000>;
+			interrupts = <0x00 4145 0x04>;
+			interrupt-names = "pretimeout";
+			clocks = <&scmi_clk 392>,<&scmi_clk 406>;
+			clock-names = "cntclk", "busclk";
+			renesas,cntclk = <32800>;
+			resets = <&scmi_reset 392>,<&scmi_reset 406>;
+			reset-names = "rstc1", "rstc2";
+			status = "disabled";
+			interval-time = <7>;
+			error-mode = <1>;
+			wsize = <3>;
+			irq_75p = <1>;
+		};
+
+		wwdt4: watchdog@1c140000 {
+			compatible = "renesas, rcar-gen5-wwdt";
+			reg = <0 0x1c140000 0 0x10000>;
+			interrupts = <0x00 4146 0x04>;
+			interrupt-names = "pretimeout";
+			clocks = <&scmi_clk 393>, <&scmi_clk 407>;
+			clock-names = "cntclk", "busclk";
+			renesas,cntclk = <32800>;
+			resets = <&scmi_reset 393>,<&scmi_reset 407>;
+			reset-names = "rstc1", "rstc2";
+			status = "disabled";
+			interval-time = <7>;
+			error-mode = <1>;
+			wsize = <3>;
+			irq_75p = <1>;
+		};
+
+		wwdt5: watchdog@1c150000 {
+			compatible = "renesas, rcar-gen5-wwdt";
+			reg = <0 0x1c150000 0 0x10000>;
+			interrupts = <0x00 4147 0x04>;
+			interrupt-names = "pretimeout";
+			clocks = <&scmi_clk 394>, <&scmi_clk 408>;
+			clock-names = "cntclk", "busclk";
+			renesas,cntclk = <32800>;
+			resets = <&scmi_reset 394>,<&scmi_reset 408>;
+			reset-names = "rstc1", "rstc2";
+			status = "disabled";
+			interval-time = <7>;
+			error-mode = <1>;
+			wsize = <3>;
+			irq_75p = <1>;
+		};
+
+		wwdt6: watchdog@1c160000 {
+			compatible = "renesas, rcar-gen5-wwdt";
+			reg = <0 0x1c160000 0 0x10000>;
+			interrupts = <0x00 4148 0x04>;
+			interrupt-names = "pretimeout";
+			clocks = <&scmi_clk 395>, <&scmi_clk 409>;
+			clock-names = "cntclk", "busclk";
+			renesas,cntclk = <32800>;
+			resets = <&scmi_reset 395>,<&scmi_reset 409>;
+			reset-names = "rstc1", "rstc2";
+			status = "disabled";
+			interval-time = <7>;
+			error-mode = <1>;
+			wsize = <3>;
+			irq_75p = <1>;
+		};
+
+		wwdt7: watchdog@1c170000 {
+			compatible = "renesas, rcar-gen5-wwdt";
+			reg = <0 0x1c170000 0 0x10000>;
+			interrupts = <0x00 4149 0x04>;
+			interrupt-names = "pretimeout";
+			clocks = <&scmi_clk 396>, <&scmi_clk 410>;
+			clock-names = "cntclk", "busclk";
+			renesas,cntclk = <32800>;
+			resets = <&scmi_reset 396>,<&scmi_reset 410>;
+			reset-names = "rstc1", "rstc2";
+			status = "disabled";
+			interval-time = <7>;
+			error-mode = <1>;
+			wsize = <3>;
+			irq_75p = <1>;
+		};
+
+		wwdt8: watchdog@1c180000 {
+			compatible = "renesas, rcar-gen5-wwdt";
+			reg = <0 0x1c180000 0 0x10000>;
+			interrupts = <0x00 4150 0x04>;
+			interrupt-names = "pretimeout";
+			clocks = <&scmi_clk 397>, <&scmi_clk 411>;
+			clock-names = "cntclk", "busclk";
+			renesas,cntclk = <32800>;
+			resets = <&scmi_reset 397>,<&scmi_reset 411>;
+			reset-names = "rstc1", "rstc2";
+			status = "disabled";
+			interval-time = <7>;
+			error-mode = <1>;
+			wsize = <3>;
+			irq_75p = <1>;
+		};
+
+		wwdt9: watchdog@1c190000 {
+			compatible = "renesas, rcar-gen5-wwdt";
+			reg = <0 0x1c190000 0 0x10000>;
+			interrupts = <0x00 4151 0x04>;
+			interrupt-names = "pretimeout";
+			clocks = <&scmi_clk 398>, <&scmi_clk 412>;
+			clock-names = "cntclk", "busclk";
+			renesas,cntclk = <32800>;
+			resets = <&scmi_reset 398>,<&scmi_reset 412>;
+			reset-names = "rstc1", "rstc2";
+			status = "disabled";
+			interval-time = <7>;
+			error-mode = <1>;
+			wsize = <3>;
+			irq_75p = <1>;
+		};
+
+		wwdt10: watchdog@1c1a0000 {
+			compatible = "renesas, rcar-gen5-wwdt";
+			reg = <0 0x1c1a0000 0 0x10000>;
+			interrupts = <0x00 4152 0x04>;
+			interrupt-names = "pretimeout";
+			clocks = <&scmi_clk 399>, <&scmi_clk 413>;
+			clock-names = "cntclk", "busclk";
+			renesas,cntclk = <32800>;
+			resets = <&scmi_reset 399>,<&scmi_reset 413>;
+			reset-names = "rstc1", "rstc2";
+			status = "disabled";
+			interval-time = <7>;
+			error-mode = <1>;
+			wsize = <3>;
+			irq_75p = <1>;
+		};
+
+		wwdt11: watchdog@1c1b0000 {
+			compatible = "renesas, rcar-gen5-wwdt";
+			reg = <0 0x1c1b0000 0 0x10000>;
+			interrupts = <0x00 4153 0x04>;
+			interrupt-names = "pretimeout";
+			clocks = <&scmi_clk 400>, <&scmi_clk 414>;
+			clock-names = "cntclk", "busclk";
+			renesas,cntclk = <32800>;
+			resets = <&scmi_reset 400>,<&scmi_reset 414>;
+			reset-names = "rstc1", "rstc2";
+			status = "disabled";
+			interval-time = <7>;
+			error-mode = <1>;
+			wsize = <3>;
+			irq_75p = <1>;
+		};
+
+		wwdt12: watchdog@1c1c0000 {
+			compatible = "renesas, rcar-gen5-wwdt";
+			reg = <0 0x1c1c0000 0 0x10000>;
+			interrupts = <0x00 4154 0x04>;
+			interrupt-names = "pretimeout";
+			clocks = <&scmi_clk 401>, <&scmi_clk 415>;
+			clock-names = "cntclk", "busclk";
+			renesas,cntclk = <32800>;
+			resets = <&scmi_reset 401>,<&scmi_reset 415>;
+			reset-names = "rstc1", "rstc2";
+			status = "disabled";
+			interval-time = <7>;
+			error-mode = <1>;
+			wsize = <3>;
+			irq_75p = <1>;
+		};
+
+		wwdt13: watchdog@1c1d0000 {
+			compatible = "renesas, rcar-gen5-wwdt";
+			reg = <0 0x1c1d0000 0 0x10000>;
+			interrupts = <0x00 4155 0x04>;
+			interrupt-names = "pretimeout";
+			clocks = <&scmi_clk 402>, <&scmi_clk 416>;
+			clock-names = "cntclk", "busclk";
+			renesas,cntclk = <32800>;
+			resets = <&scmi_reset 402>,<&scmi_reset 416>;
+			reset-names = "rstc1", "rstc2";
+			status = "disabled";
+			interval-time = <7>;
+			error-mode = <1>;
+			wsize = <3>;
+			irq_75p = <1>;
+		};
+
+		wwdt14: watchdog@1c1e0000 {
+			compatible = "renesas, rcar-gen5-wwdt";
+			reg = <0 0x1c1e0000 0 0x10000>;
+			interrupts = <0x00 4156 0x04>;
+			interrupt-names = "pretimeout";
+			clocks = <&scmi_clk 417>, <&scmi_clk 418>;
+			clock-names = "cntclk", "busclk";
+			renesas,cntclk = <32800>;
+			resets = <&scmi_reset 417>,<&scmi_reset 418>;
+			reset-names = "rstc1", "rstc2";
+			status = "disabled";
+			interval-time = <7>;
+			error-mode = <1>;
+			wsize = <3>;
+			irq_75p = <1>;
+		};
+
+		wwdt15: watchdog@1c1f0000 {
+			compatible = "renesas, rcar-gen5-wwdt";
+			reg = <0 0x1c1f0000 0 0x10000>;
+			interrupts = <0x00 4157 0x04>;
+			interrupt-names = "pretimeout";
+			clocks = <&scmi_clk 419>, <&scmi_clk 420>;
+			clock-names = "cntclk", "busclk";
+			renesas,cntclk = <32800>;
+			resets = <&scmi_reset 419>,<&scmi_reset 420>;
+			reset-names = "rstc1", "rstc2";
+			status = "disabled";
+			interval-time = <7>;
+			error-mode = <1>;
+			wsize = <3>;
+			irq_75p = <1>;
+		};
+
+		wwdt16: watchdog@1c200000 {
+			compatible = "renesas, rcar-gen5-wwdt";
+			reg = <0 0x1c200000 0 0x10000>;
+			interrupts = <0x00 4158 0x04>;
+			interrupt-names = "pretimeout";
+			clocks = <&scmi_clk 421>, <&scmi_clk 422>;
+			clock-names = "cntclk", "busclk";
+			renesas,cntclk = <32800>;
+			resets = <&scmi_reset 421>,<&scmi_reset 422>;
+			reset-names = "rstc1", "rstc2";
+			status = "disabled";
+			interval-time = <7>;
+			error-mode = <1>;
+			wsize = <3>;
+			irq_75p = <1>;
+		};
+
+		wwdt17: watchdog@1c210000 {
+			compatible = "renesas, rcar-gen5-wwdt";
+			reg = <0 0x1c210000 0 0x10000>;
+			interrupts = <0x00 4159 0x04>;
+			interrupt-names = "pretimeout";
+			clocks = <&scmi_clk 423>, <&scmi_clk 424>;
+			clock-names = "cntclk", "busclk";
+			renesas,cntclk = <32800>;
+			resets = <&scmi_reset 423>,<&scmi_reset 424>;
+			reset-names = "rstc1", "rstc2";
+			status = "disabled";
+			interval-time = <7>;
+			error-mode = <1>;
+			wsize = <3>;
+			irq_75p = <1>;
+		};
+
+		wwdt18: watchdog@1c220000 {
+			compatible = "renesas, rcar-gen5-wwdt";
+			reg = <0 0x1c220000 0 0x10000>;
+			interrupts = <0x00 4160 0x04>;
+			interrupt-names = "pretimeout";
+			clocks = <&scmi_clk 425>, <&scmi_clk 426>;
+			clock-names = "cntclk", "busclk";
+			renesas,cntclk = <32800>;
+			resets = <&scmi_reset 425>,<&scmi_reset 426>;
+			reset-names = "rstc1", "rstc2";
+			status = "disabled";
+			interval-time = <7>;
+			error-mode = <1>;
+			wsize = <3>;
+			irq_75p = <1>;
+		};
+
+		wwdt19: watchdog@1c230000 {
+			compatible = "renesas, rcar-gen5-wwdt";
+			reg = <0 0x1c230000 0 0x10000>;
+			interrupts = <0x00 4161 0x04>;
+			interrupt-names = "pretimeout";
+			clocks = <&scmi_clk 427>, <&scmi_clk 428>;
+			clock-names = "cntclk", "busclk";
+			renesas,cntclk = <32800>;
+			resets = <&scmi_reset 427>,<&scmi_reset 428>;
+			reset-names = "rstc1", "rstc2";
+			status = "disabled";
+			interval-time = <7>;
+			error-mode = <1>;
+			wsize = <3>;
+			irq_75p = <1>;
+		};
+
+		wwdt20: watchdog@c1380000 {
+			compatible = "renesas, rcar-gen5-wwdt";
+			reg = <0 0xc1380000 0 0x10000>;
+			clocks = <&scmi_clk 804>, <&scmi_clk 805>;
+			clock-names = "cntclk", "busclk";
+			renesas,cntclk = <240000>;
+			resets = <&scmi_reset 804>, <&scmi_reset 805>;
+			reset-names = "rstc1", "rstc2";
+			status = "disabled";
+			interval-time = <7>;
+			error-mode = <1>;
+			irq_75p = <0>;
+			wsize = <3>;
+		};
+
+		gpio0: gpio@c1080110 {
+			compatible = "renesas,gpio-r8a78000","renesas,rcar-gen5-gpio";
+			reg = <0 0xc1080110 0 0xc0>;
+			interrupts = <0x00 0 0x04>;
+			#gpio-cells = <2>;
+			gpio-controller;
+			gpio-ranges = <&pfc 0 0 28>;
+			#interrupt-cells = <2>;
+			interrupt-controller;
+		};
+
+		gpio1: gpio@c1080910 {
+			compatible = "renesas,gpio-r8a78000","renesas,rcar-gen5-gpio";
+			reg = <0 0xc1080910 0 0xc0>;
+			interrupts = <0x00 4 0x04>;
+			#gpio-cells = <2>;
+			gpio-controller;
+			gpio-ranges = <&pfc 0 32 22>;
+			#interrupt-cells = <2>;
+			interrupt-controller;
+		};
+
+		gpio2: gpio@c1081110 {
+			compatible = "renesas,gpio-r8a78000","renesas,rcar-gen5-gpio";
+			reg = <0 0xc1081110 0 0xc0>;
+			interrupts = <0x00 8 0x04>;
+			#gpio-cells = <2>;
+			gpio-controller;
+			gpio-ranges = <&pfc 0 64 29>;
+			#interrupt-cells = <2>;
+			interrupt-controller;
+		};
+
+		gpio3: gpio@c0800110 {
+			compatible = "renesas,gpio-r8a78000","renesas,rcar-gen5-gpio";
+			reg = <0 0xc0800110 0 0xc0>;
+			interrupts = <0x00 12 0x04>;
+			#gpio-cells = <2>;
+			gpio-controller;
+			gpio-ranges = <&pfc 0 96 17>;
+			#interrupt-cells = <2>;
+			interrupt-controller;
+		};
+
+		gpio4: gpio@c0800910 {
+			compatible = "renesas,gpio-r8a78000","renesas,rcar-gen5-gpio";
+			reg = <0 0xc0800910 0 0xc0>;
+			interrupts = <0x00 16 0x04>;
+			#gpio-cells = <2>;
+			gpio-controller;
+			gpio-ranges = <&pfc 0 128 16>;
+			//#interrupt-cells = <2>;
+			//interrupt-controller;
+
+			pcie60_clkreq {
+				gpio-hog;
+				gpios = <14 1>;
+				output-high;
+			};
+
+			pcie61_clkreq {
+				gpio-hog;
+				gpios = <15 1>;
+				output-high;
+			};
+		};
+
+		gpio5: gpio@c0400110 {
+			compatible = "renesas,gpio-r8a78000","renesas,rcar-gen5-gpio";
+			reg = <0 0xc0400110 0 0xc0>;
+			interrupts = <0x00 20 0x04>;
+			#gpio-cells = <2>;
+			gpio-controller;
+			gpio-ranges = <&pfc 0 160 23>;
+			#interrupt-cells = <2>;
+			interrupt-controller;
+		};
+
+		gpio6: gpio@c0400910 {
+			compatible = "renesas,gpio-r8a78000","renesas,rcar-gen5-gpio";
+			reg = <0 0xc0400910 0 0xc0>;
+			interrupts = <0x00 24 0x04>;
+			#gpio-cells = <2>;
+			gpio-controller;
+			gpio-ranges = <&pfc 0 192 31>;
+			#interrupt-cells = <2>;
+			interrupt-controller;
+
+			audio-power-hog {
+				gpio-hog;
+				gpios = <20 0>;
+				output-high;
+				line-name = "Audio-Power";
+			};
+		};
+
+		gpio7: gpio@c0401110 {
+			compatible = "renesas,gpio-r8a78000","renesas,rcar-gen5-gpio";
+			reg = <0 0xc0401110 0 0xc0>;
+			interrupts = <0x00 28 0x04>;
+			#gpio-cells = <2>;
+			gpio-controller;
+			gpio-ranges = <&pfc 0 224 31>;
+			#interrupt-cells = <2>;
+			interrupt-controller;
+		};
+
+		gpio8: gpio@c0401910 {
+			compatible = "renesas,gpio-r8a78000","renesas,rcar-gen5-gpio";
+			reg = <0 0xc0401910 0 0xc0>;
+			interrupts = <0x00 32 0x04>;
+			#gpio-cells = <2>;
+			gpio-controller;
+			gpio-ranges = <&pfc 0 256 32>;
+			gpio-reserved-ranges = <16 10>;
+			#interrupt-cells = <2>;
+			interrupt-controller;
+		};
+
+		gpio9: gpio@c9b00110 {
+			compatible = "renesas,gpio-r8a78000","renesas,rcar-gen5-gpio";
+			reg = <0 0xc9b00110 0 0xc0>;
+			interrupts = <0x00 36 0x04>;
+			#gpio-cells = <2>;
+			gpio-controller;
+			gpio-ranges = <&pfc 0 288 17>;
+			#interrupt-cells = <2>;
+			interrupt-controller;
+		};
+
+		gpio10: gpio@c9b00910 {
+			compatible = "renesas,gpio-r8a78000","renesas,rcar-gen5-gpio";
+			reg = <0 0xc9b00910 0 0xc0>;
+			interrupts = <0x00 40 0x04>;
+			#gpio-cells = <2>;
+			gpio-controller;
+			gpio-ranges = <&pfc 0 320 14>;
+			#interrupt-cells = <2>;
+			interrupt-controller;
+
+			pcie0_clkreq {
+				gpio-hog;
+				gpios = <12 1>;
+				output-high;
+			};
+		};
+
+		canfd_0: can@c1420000 {
+			compatible = "renesas,r8a78000-canfd";
+			reg = <0 0xc1420000 0 0x8600>;
+			clocks = <&scmi_clk 0x31f>,
+				 <&scmi_clk 0x5B0>,
+				 <&scmi_clk 1450>,
+				 <&can_clk>;
+			clock-names = "fck", "canfd", "ram_clk", "can_clk";
+			assigned-clocks = <&can_clk>;
+			assigned-clock-rates = <80000000>;
+			interrupts = <0x00 4675 0x04>,
+				     <0x00 4677 0x04>,
+				     <0x00 4681 0x04>,
+				     <0x00 4684 0x04>,
+				     <0x00 4687 0x04>,
+				     <0x00 4690 0x04>,
+				     <0x00 4693 0x04>,
+				     <0x00 4696 0x04>,
+				     <0x00 4699 0x04>;
+			status = "disabled";
+			pinctrl-0 = <&canfd0_pins>, <&canfd1_pins>, <&canfd2_pins>,
+					<&canfd3_pins>, <&canfd4_pins>, <&canfd5_pins>,
+					<&canfd6_pins>, <&canfd7_pins>;
+			pinctrl-names = "default";
+
+			channel0 {
+				status = "disabled";
+			};
+
+			channel1 {
+				status = "disabled";
+			};
+
+			channel2 {
+				status = "disabled";
+			};
+
+			channel3 {
+				status = "disabled";
+			};
+
+			channel4 {
+				status = "disabled";
+			};
+
+			channel5 {
+				status = "disabled";
+			};
+
+			channel6 {
+				status = "disabled";
+			};
+
+			channel7 {
+				status = "disabled";
+			};
+		};
+
+		canfd_1: can@c1520000 {
+			compatible = "renesas,r8a78000-canfd";
+			reg = <0 0xc1520000 0 0x8600>;
+			clocks = <&scmi_clk 0x320>,
+				 <&scmi_clk 0x5B0>,
+				 <&scmi_clk 1450>,
+				 <&can_clk>;
+			clock-names = "fck", "canfd", "ram_clk", "can_clk";
+			assigned-clocks = <&can_clk>;
+			assigned-clock-rates = <80000000>;
+			interrupts = <0x00 4725 0x04>,
+				     <0x00 4728 0x04>,
+				     <0x00 4731 0x04>,
+				     <0x00 4734 0x04>,
+				     <0x00 4737 0x04>,
+				     <0x00 4740 0x04>, //can12
+				     <0x00 4743 0x04>, //can13
+				     <0x00 4746 0x04>,
+				     <0x00 4749 0x04>;
+			status = "disabled";
+			pinctrl-0 = <&canfd8_pins>, <&canfd9_pins>, <&canfd10_pins>,
+					<&canfd11_pins>, <&canfd12_pins>, <&canfd13_pins>,
+					<&canfd14_pins>, <&canfd15_pins>;
+			pinctrl-names = "default";
+
+			channel0 {
+				status = "disabled";
+			};
+
+			channel1 {
+				status = "disabled";
+			};
+
+			channel2 {
+				status = "disabled";
+			};
+
+			channel3 {
+				status = "disabled";
+			};
+
+			channel4 {
+				status = "disabled";
+			};
+
+			channel5 {
+				status = "disabled";
+			};
+
+			channel6 {
+				status = "disabled";
+			};
+
+			channel7 {
+				status = "disabled";
+			};
+		};
+
+		crc0: crc@19000000 {
+			compatible = "renesas,rcar-gen5-crc";
+			reg = <0 0x19000000 0 0x00010000>;
+			clocks = <&scmi_clk 0x1ba>;
+			clock-names = "fck";
+			status = "disabled";
+		};
+
+		crc1: crc@19010000 {
+			compatible = "renesas,rcar-gen5-crc";
+			reg = <0 0x19010000 0 0x00010000>;
+			clocks = <&scmi_clk 0x1bb>;
+			clock-names = "fck";
+			status = "disabled";
+		};
+
+		crc2: crc@19020000 {
+			compatible = "renesas,rcar-gen5-crc";
+			reg = <0 0x19020000 0 0x00010000>;
+			clocks = <&scmi_clk 0x1bc>;
+			clock-names = "fck";
+			status = "disabled";
+		};
+
+		crc3: crc@19030000 {
+			compatible = "renesas,rcar-gen5-crc";
+			reg = <0 0x19030000 0 0x00010000>;
+			clocks = <&scmi_clk 0x1bd>;
+			clock-names = "fck";
+			status = "disabled";
+		};
+
+		crc4: crc@19040000 {
+			compatible = "renesas,rcar-gen5-crc";
+			reg = <0 0x19040000 0 0x00010000>;
+			clocks = <&scmi_clk 0x1be>;
+			clock-names = "fck";
+			status = "disabled";
+		};
+
+		crc5: crc@19050000 {
+			compatible = "renesas,rcar-gen5-crc";
+			reg = <0 0x19050000 0 0x00010000>;
+			clocks = <&scmi_clk 0x1bf>;
+			clock-names = "fck";
+			status = "disabled";
+		};
+
+		crc6: crc@19060000 {
+			compatible = "renesas,rcar-gen5-crc";
+			reg = <0 0x19060000 0 0x00010000>;
+			clocks = <&scmi_clk 0x1c0>;
+			clock-names = "fck";
+			status = "disabled";
+		};
+
+		crc7: crc@19070000 {
+			compatible = "renesas,rcar-gen5-crc";
+			reg = <0 0x19070000 0 0x00010000>;
+			clocks = <&scmi_clk 0x1c1>;
+			clock-names = "fck";
+			status = "disabled";
+		};
+
+		crc8: crc@19080000 {
+			compatible = "renesas,rcar-gen5-crc";
+			reg = <0 0x19080000 0 0x00010000>;
+			clocks = <&scmi_clk 0x1c2>;
+			clock-names = "fck";
+			status = "disabled";
+		};
+
+		crc9: crc@19090000 {
+			compatible = "renesas,rcar-gen5-crc";
+			reg = <0 0x19090000 0 0x00010000>;
+			clocks = <&scmi_clk 0x1c3>;
+			clock-names = "fck";
+			status = "disabled";
+		};
+
+		crc10: crc@190a0000 {
+			compatible = "renesas,rcar-gen5-crc";
+			reg = <0 0x190a0000 0 0x00010000>;
+			clocks = <&scmi_clk 0x1c4>;
+			clock-names = "fck";
+			status = "disabled";
+		};
+
+		kcrc0: kcrc@19100000 {
+			compatible = "renesas,rcar-gen5-kcrc";
+			reg = <0 0x19100000 0 0x00010000>;
+			clocks = <&scmi_clk 0x1c5>;
+			clock-names = "fck";
+			status = "disabled";
+		};
+
+		kcrc1: kcrc@19110000 {
+			compatible = "renesas,rcar-gen5-kcrc";
+			reg = <0 0x19110000 0 0x00010000>;
+			clocks = <&scmi_clk 0x1c6>;
+			clock-names = "fck";
+			status = "disabled";
+		};
+
+		kcrc2: kcrc@19120000 {
+			compatible = "renesas,rcar-gen5-kcrc";
+			reg = <0 0x19120000 0 0x00010000>;
+			clocks = <&scmi_clk 0x1c7>;
+			clock-names = "fck";
+			status = "disabled";
+		};
+
+		kcrc3: kcrc@19130000 {
+			compatible = "renesas,rcar-gen5-kcrc";
+			reg = <0 0x19130000 0 0x00010000>;
+			clocks = <&scmi_clk 0x1c8>;
+			clock-names = "fck";
+			status = "disabled";
+		};
+
+		kcrc4: kcrc@19140000 {
+			compatible = "renesas,rcar-gen5-kcrc";
+			reg = <0 0x19140000 0 0x00010000>;
+			clocks = <&scmi_clk 0x1c9>;
+			clock-names = "fck";
+			status = "disabled";
+		};
+
+		kcrc5: kcrc@19150000 {
+			compatible = "renesas,rcar-gen5-kcrc";
+			reg = <0 0x19150000 0 0x00010000>;
+			clocks = <&scmi_clk 0x1ca>;
+			clock-names = "fck";
+			status = "disabled";
+		};
+
+		kcrc6: kcrc@19160000 {
+			compatible = "renesas,rcar-gen5-kcrc";
+			reg = <0 0x19160000 0 0x00010000>;
+			clocks = <&scmi_clk 0x1cb>;
+			clock-names = "fck";
+			status = "disabled";
+		};
+
+		kcrc7: kcrc@19170000 {
+			compatible = "renesas,rcar-gen5-kcrc";
+			reg = <0 0x19170000 0 0x00010000>;
+			clocks = <&scmi_clk 0x1cc>;
+			clock-names = "fck";
+			status = "disabled";
+		};
+
+		kcrc8: kcrc@19180000 {
+			compatible = "renesas,rcar-gen5-kcrc";
+			reg = <0 0x19180000 0 0x00010000>;
+			clocks = <&scmi_clk 0x1cd>;
+			clock-names = "fck";
+			status = "disabled";
+		};
+
+		kcrc9: kcrc@19190000 {
+			compatible = "renesas,rcar-gen5-kcrc";
+			reg = <0 0x19190000 0 0x00010000>;
+			clocks = <&scmi_clk 0x1ce>;
+			clock-names = "fck";
+			status = "disabled";
+		};
+
+		kcrc10: kcrc@191a0000 {
+			compatible = "renesas,rcar-gen5-kcrc";
+			reg = <0 0x191a0000 0 0x00010000>;
+			clocks = <&scmi_clk 0x1cf>;
+			clock-names = "fck";
+			status = "disabled";
+		};
+
+		wcrc0: wcrc@19200000 {
+			compatible = "renesas,rcar-gen5-wcrc";
+			reg = <0 0x19200000 0 0x00010000>,
+				<0 0x19400000 0 0x4000>;
+			reg-names = "wcrc", "fifo";
+			sub-crc = <&crc0>;
+			sub-kcrc = <&kcrc0>;
+			interrupts = <0x00 0x106f 0x04>;
+			clocks = <&scmi_clk 0x1af>;
+			clock-names = "fck";
+			dmas =  <&rt_dmac0 0x18>, <&rt_dmac0 0x19>,
+				<&rt_dmac0 0x1A>, <&rt_dmac0 0x1B>,
+				<&rt_dmac0 0x1C>, <&rt_dmac0 0x1D>,
+				<&rt_dmac0 0x1E>, <&rt_dmac0 0x1F>,
+				<&rt_dmac1 0x18>, <&rt_dmac1 0x19>,
+				<&rt_dmac1 0x1A>, <&rt_dmac1 0x1B>,
+				<&rt_dmac1 0x1C>, <&rt_dmac1 0x1D>,
+				<&rt_dmac1 0x1E>, <&rt_dmac1 0x1F>,
+				<&rt_dmac2 0x18>, <&rt_dmac2 0x19>,
+				<&rt_dmac2 0x1A>, <&rt_dmac2 0x1B>,
+				<&rt_dmac2 0x1C>, <&rt_dmac2 0x1D>,
+				<&rt_dmac2 0x1E>, <&rt_dmac2 0x1F>,
+				<&rt_dmac3 0x18>, <&rt_dmac3 0x19>,
+				<&rt_dmac3 0x1A>, <&rt_dmac3 0x1B>,
+				<&rt_dmac3 0x1C>, <&rt_dmac3 0x1D>,
+				<&rt_dmac3 0x1E>, <&rt_dmac3 0x1F>;
+			dma-names = "crc_rx", "crc_tx", "crc_rx_in", "crc_txrx",
+				"kcrc_rx", "kcrc_tx", "kcrc_rx_in", "kcrc_txrx",
+				"crc_rx", "crc_tx", "crc_rx_in", "crc_txrx",
+				"kcrc_rx", "kcrc_tx", "kcrc_rx_in", "kcrc_txrx",
+				"crc_rx", "crc_tx", "crc_rx_in", "crc_txrx",
+				"kcrc_rx", "kcrc_tx", "kcrc_rx_in", "kcrc_txrx",
+				"crc_rx", "crc_tx", "crc_rx_in", "crc_txrx",
+				"kcrc_rx", "kcrc_tx", "kcrc_rx_in", "kcrc_txrx";
+			status = "disabled";
+		};
+
+		wcrc1: wcrc@19210000 {
+			compatible = "renesas,rcar-gen5-wcrc";
+			reg = <0 0x19210000 0 0x00010000>,
+				<0 0x19404000 0 0x4000>;
+			reg-names = "wcrc", "fifo";
+			sub-crc = <&crc1>;
+			sub-kcrc = <&kcrc1>;
+			interrupts = <0x00 0x1070 0x04>;
+			clocks = <&scmi_clk 0x1b0>;
+			clock-names = "fck";
+			dmas =  <&rt_dmac0 0x28>, <&rt_dmac0 0x29>,
+				<&rt_dmac0 0x2A>, <&rt_dmac0 0x2B>,
+				<&rt_dmac0 0x2C>, <&rt_dmac0 0x2D>,
+				<&rt_dmac0 0x2E>, <&rt_dmac0 0x2F>,
+				<&rt_dmac1 0x28>, <&rt_dmac1 0x29>,
+				<&rt_dmac1 0x2A>, <&rt_dmac1 0x2B>,
+				<&rt_dmac1 0x2C>, <&rt_dmac1 0x2D>,
+				<&rt_dmac1 0x2E>, <&rt_dmac1 0x2F>,
+				<&rt_dmac2 0x28>, <&rt_dmac2 0x29>,
+				<&rt_dmac2 0x2A>, <&rt_dmac2 0x2B>,
+				<&rt_dmac2 0x2C>, <&rt_dmac2 0x2D>,
+				<&rt_dmac2 0x2E>, <&rt_dmac2 0x2F>,
+				<&rt_dmac3 0x28>, <&rt_dmac3 0x29>,
+				<&rt_dmac3 0x2A>, <&rt_dmac3 0x2B>,
+				<&rt_dmac3 0x2C>, <&rt_dmac3 0x2D>,
+				<&rt_dmac3 0x2E>, <&rt_dmac3 0x2F>;
+			dma-names = "crc_rx", "crc_tx", "crc_rx_in", "crc_txrx",
+				"kcrc_rx", "kcrc_tx", "kcrc_rx_in", "kcrc_txrx",
+				"crc_rx", "crc_tx", "crc_rx_in", "crc_txrx",
+				"kcrc_rx", "kcrc_tx", "kcrc_rx_in", "kcrc_txrx",
+				"crc_rx", "crc_tx", "crc_rx_in", "crc_txrx",
+				"kcrc_rx", "kcrc_tx", "kcrc_rx_in", "kcrc_txrx",
+				"crc_rx", "crc_tx", "crc_rx_in", "crc_txrx",
+				"kcrc_rx", "kcrc_tx", "kcrc_rx_in", "kcrc_txrx";
+			status = "disabled";
+		};
+
+		wcrc2: wcrc@19220000 {
+			compatible = "renesas,rcar-gen5-wcrc";
+			reg = <0 0x19220000 0 0x00010000>,
+				<0 0x19408000 0 0x4000>;
+			reg-names = "wcrc", "fifo";
+			sub-crc = <&crc2>;
+			sub-kcrc = <&kcrc2>;
+			interrupts = <0x00 0x1071 0x04>;
+			clocks = <&scmi_clk 0x1b1>;
+			clock-names = "fck";
+			dmas =  <&rt_dmac0 0x38>, <&rt_dmac0 0x39>,
+				<&rt_dmac0 0x3A>, <&rt_dmac0 0x3B>,
+				<&rt_dmac0 0x3C>, <&rt_dmac0 0x3D>,
+				<&rt_dmac0 0x3E>, <&rt_dmac0 0x3F>,
+				<&rt_dmac1 0x38>, <&rt_dmac1 0x39>,
+				<&rt_dmac1 0x3A>, <&rt_dmac1 0x3B>,
+				<&rt_dmac1 0x3C>, <&rt_dmac1 0x3D>,
+				<&rt_dmac1 0x3E>, <&rt_dmac1 0x3F>,
+				<&rt_dmac2 0x38>, <&rt_dmac2 0x39>,
+				<&rt_dmac2 0x3A>, <&rt_dmac2 0x3B>,
+				<&rt_dmac2 0x3C>, <&rt_dmac2 0x3D>,
+				<&rt_dmac2 0x3E>, <&rt_dmac2 0x3F>,
+				<&rt_dmac3 0x38>, <&rt_dmac3 0x39>,
+				<&rt_dmac3 0x3A>, <&rt_dmac3 0x3B>,
+				<&rt_dmac3 0x3C>, <&rt_dmac3 0x3D>,
+				<&rt_dmac3 0x3E>, <&rt_dmac3 0x3F>;
+			dma-names = "crc_rx", "crc_tx", "crc_rx_in", "crc_txrx",
+				"kcrc_rx", "kcrc_tx", "kcrc_rx_in", "kcrc_txrx",
+				"crc_rx", "crc_tx", "crc_rx_in", "crc_txrx",
+				"kcrc_rx", "kcrc_tx", "kcrc_rx_in", "kcrc_txrx",
+				"crc_rx", "crc_tx", "crc_rx_in", "crc_txrx",
+				"kcrc_rx", "kcrc_tx", "kcrc_rx_in", "kcrc_txrx",
+				"crc_rx", "crc_tx", "crc_rx_in", "crc_txrx",
+				"kcrc_rx", "kcrc_tx", "kcrc_rx_in", "kcrc_txrx";
+			status = "disabled";
+		};
+
+		wcrc3: wcrc@19230000 {
+			compatible = "renesas,rcar-gen5-wcrc";
+			reg = <0 0x19230000 0 0x00010000>,
+				<0 0x1940C000 0 0x4000>;
+			reg-names = "wcrc", "fifo";
+			sub-crc = <&crc3>;
+			sub-kcrc = <&kcrc3>;
+			interrupts = <0x00 0x1072 0x04>;
+			clocks = <&scmi_clk 0x1b2>;
+			clock-names = "fck";
+			dmas =  <&rt_dmac0 0x48>, <&rt_dmac0 0x49>,
+				<&rt_dmac0 0x4A>, <&rt_dmac0 0x4B>,
+				<&rt_dmac0 0x4C>, <&rt_dmac0 0x4D>,
+				<&rt_dmac0 0x4E>, <&rt_dmac0 0x4F>,
+				<&rt_dmac1 0x48>, <&rt_dmac1 0x49>,
+				<&rt_dmac1 0x4A>, <&rt_dmac1 0x4B>,
+				<&rt_dmac1 0x4C>, <&rt_dmac1 0x4D>,
+				<&rt_dmac1 0x4E>, <&rt_dmac1 0x4F>,
+				<&rt_dmac2 0x48>, <&rt_dmac2 0x49>,
+				<&rt_dmac2 0x4A>, <&rt_dmac2 0x4B>,
+				<&rt_dmac2 0x4C>, <&rt_dmac2 0x4D>,
+				<&rt_dmac2 0x4E>, <&rt_dmac2 0x4F>,
+				<&rt_dmac3 0x48>, <&rt_dmac3 0x49>,
+				<&rt_dmac3 0x4A>, <&rt_dmac3 0x4B>,
+				<&rt_dmac3 0x4C>, <&rt_dmac3 0x4D>,
+				<&rt_dmac3 0x4E>, <&rt_dmac3 0x4F>;
+			dma-names = "crc_rx", "crc_tx", "crc_rx_in", "crc_txrx",
+				"kcrc_rx", "kcrc_tx", "kcrc_rx_in", "kcrc_txrx",
+				"crc_rx", "crc_tx", "crc_rx_in", "crc_txrx",
+				"kcrc_rx", "kcrc_tx", "kcrc_rx_in", "kcrc_txrx",
+				"crc_rx", "crc_tx", "crc_rx_in", "crc_txrx",
+				"kcrc_rx", "kcrc_tx", "kcrc_rx_in", "kcrc_txrx",
+				"crc_rx", "crc_tx", "crc_rx_in", "crc_txrx",
+				"kcrc_rx", "kcrc_tx", "kcrc_rx_in", "kcrc_txrx";
+			status = "disabled";
+		};
+
+		wcrc4: wcrc@19240000 {
+			compatible = "renesas,rcar-gen5-wcrc";
+			reg = <0 0x19240000 0 0x00010000>,
+				<0 0x19410000 0 0x4000>;
+			reg-names = "wcrc", "fifo";
+			sub-crc = <&crc4>;
+			sub-kcrc = <&kcrc4>;
+			interrupts = <0x00 0x1073 0x04>;
+			clocks = <&scmi_clk 0x1b3>;
+			clock-names = "fck";
+			dmas =  <&rt_dmac0 0x58>, <&rt_dmac0 0x59>,
+				<&rt_dmac0 0x5A>, <&rt_dmac0 0x5B>,
+				<&rt_dmac0 0x5C>, <&rt_dmac0 0x5D>,
+				<&rt_dmac0 0x5E>, <&rt_dmac0 0x5F>,
+				<&rt_dmac1 0x58>, <&rt_dmac1 0x59>,
+				<&rt_dmac1 0x5A>, <&rt_dmac1 0x5B>,
+				<&rt_dmac1 0x5C>, <&rt_dmac1 0x5D>,
+				<&rt_dmac1 0x5E>, <&rt_dmac1 0x5F>,
+				<&rt_dmac2 0x58>, <&rt_dmac2 0x59>,
+				<&rt_dmac2 0x5A>, <&rt_dmac2 0x5B>,
+				<&rt_dmac2 0x5C>, <&rt_dmac2 0x5D>,
+				<&rt_dmac2 0x5E>, <&rt_dmac2 0x5F>,
+				<&rt_dmac3 0x58>, <&rt_dmac3 0x59>,
+				<&rt_dmac3 0x5A>, <&rt_dmac3 0x5B>,
+				<&rt_dmac3 0x5C>, <&rt_dmac3 0x5D>,
+				<&rt_dmac3 0x5E>, <&rt_dmac3 0x5F>;
+			dma-names = "crc_rx", "crc_tx", "crc_rx_in", "crc_txrx",
+				"kcrc_rx", "kcrc_tx", "kcrc_rx_in", "kcrc_txrx",
+				"crc_rx", "crc_tx", "crc_rx_in", "crc_txrx",
+				"kcrc_rx", "kcrc_tx", "kcrc_rx_in", "kcrc_txrx",
+				"crc_rx", "crc_tx", "crc_rx_in", "crc_txrx",
+				"kcrc_rx", "kcrc_tx", "kcrc_rx_in", "kcrc_txrx",
+				"crc_rx", "crc_tx", "crc_rx_in", "crc_txrx",
+				"kcrc_rx", "kcrc_tx", "kcrc_rx_in", "kcrc_txrx";
+			status = "disabled";
+		};
+
+		wcrc5: wcrc@19250000 {
+			compatible = "renesas,rcar-gen5-wcrc";
+			reg = <0 0x19250000 0 0x00010000>,
+				<0 0x19414000 0 0x4000>;
+			reg-names = "wcrc", "fifo";
+			sub-crc = <&crc5>;
+			sub-kcrc = <&kcrc5>;
+			interrupts = <0x00 0x1074 0x04>;
+			clocks = <&scmi_clk 0x1b4>;
+			clock-names = "fck";
+			dmas =  <&rt_dmac0 0x68>, <&rt_dmac0 0x69>,
+				<&rt_dmac0 0x6A>, <&rt_dmac0 0x6B>,
+				<&rt_dmac0 0x6C>, <&rt_dmac0 0x6D>,
+				<&rt_dmac0 0x6E>, <&rt_dmac0 0x6F>,
+				<&rt_dmac1 0x68>, <&rt_dmac1 0x69>,
+				<&rt_dmac1 0x6A>, <&rt_dmac1 0x6B>,
+				<&rt_dmac1 0x6C>, <&rt_dmac1 0x6D>,
+				<&rt_dmac1 0x6E>, <&rt_dmac1 0x6F>,
+				<&rt_dmac2 0x68>, <&rt_dmac2 0x69>,
+				<&rt_dmac2 0x6A>, <&rt_dmac2 0x6B>,
+				<&rt_dmac2 0x6C>, <&rt_dmac2 0x6D>,
+				<&rt_dmac2 0x6E>, <&rt_dmac2 0x6F>,
+				<&rt_dmac3 0x68>, <&rt_dmac3 0x69>,
+				<&rt_dmac3 0x6A>, <&rt_dmac3 0x6B>,
+				<&rt_dmac3 0x6C>, <&rt_dmac3 0x6D>,
+				<&rt_dmac3 0x6E>, <&rt_dmac3 0x6F>;
+			dma-names = "crc_rx", "crc_tx", "crc_rx_in", "crc_txrx",
+				"kcrc_rx", "kcrc_tx", "kcrc_rx_in", "kcrc_txrx",
+				"crc_rx", "crc_tx", "crc_rx_in", "crc_txrx",
+				"kcrc_rx", "kcrc_tx", "kcrc_rx_in", "kcrc_txrx",
+				"crc_rx", "crc_tx", "crc_rx_in", "crc_txrx",
+				"kcrc_rx", "kcrc_tx", "kcrc_rx_in", "kcrc_txrx",
+				"crc_rx", "crc_tx", "crc_rx_in", "crc_txrx",
+				"kcrc_rx", "kcrc_tx", "kcrc_rx_in", "kcrc_txrx";
+			status = "disabled";
+		};
+
+		wcrc6: wcrc@19260000 {
+			compatible = "renesas,rcar-gen5-wcrc";
+			reg = <0 0x19260000 0 0x00010000>,
+				<0 0x19418000 0 0x4000>;
+			reg-names = "wcrc", "fifo";
+			sub-crc = <&crc6>;
+			sub-kcrc = <&kcrc6>;
+			interrupts = <0x00 0x1075 0x04>;
+			clocks = <&scmi_clk 0x1b5>;
+			clock-names = "fck";
+			dmas =  <&rt_dmac0 0x78>, <&rt_dmac0 0x79>,
+				<&rt_dmac0 0x7A>, <&rt_dmac0 0x7B>,
+				<&rt_dmac0 0x7C>, <&rt_dmac0 0x7D>,
+				<&rt_dmac0 0x7E>, <&rt_dmac0 0x7F>,
+				<&rt_dmac1 0x78>, <&rt_dmac1 0x79>,
+				<&rt_dmac1 0x7A>, <&rt_dmac1 0x7B>,
+				<&rt_dmac1 0x7C>, <&rt_dmac1 0x7D>,
+				<&rt_dmac1 0x7E>, <&rt_dmac1 0x7F>,
+				<&rt_dmac2 0x78>, <&rt_dmac2 0x79>,
+				<&rt_dmac2 0x7A>, <&rt_dmac2 0x7B>,
+				<&rt_dmac2 0x7C>, <&rt_dmac2 0x7D>,
+				<&rt_dmac2 0x7E>, <&rt_dmac2 0x7F>,
+				<&rt_dmac3 0x78>, <&rt_dmac3 0x79>,
+				<&rt_dmac3 0x7A>, <&rt_dmac3 0x7B>,
+				<&rt_dmac3 0x7C>, <&rt_dmac3 0x7D>,
+				<&rt_dmac3 0x7E>, <&rt_dmac3 0x7F>;
+			dma-names = "crc_rx", "crc_tx", "crc_rx_in", "crc_txrx",
+				"kcrc_rx", "kcrc_tx", "kcrc_rx_in", "kcrc_txrx",
+				"crc_rx", "crc_tx", "crc_rx_in", "crc_txrx",
+				"kcrc_rx", "kcrc_tx", "kcrc_rx_in", "kcrc_txrx",
+				"crc_rx", "crc_tx", "crc_rx_in", "crc_txrx",
+				"kcrc_rx", "kcrc_tx", "kcrc_rx_in", "kcrc_txrx",
+				"crc_rx", "crc_tx", "crc_rx_in", "crc_txrx",
+				"kcrc_rx", "kcrc_tx", "kcrc_rx_in", "kcrc_txrx";
+			status = "disabled";
+		};
+
+		wcrc7: wcrc@19270000 {
+			compatible = "renesas,rcar-gen5-wcrc";
+			reg = <0 0x19270000 0 0x00010000>,
+				<0 0x1941C000 0 0x4000>;
+			reg-names = "wcrc", "fifo";
+			sub-crc = <&crc7>;
+			sub-kcrc = <&kcrc7>;
+			interrupts = <0x00 0x1076 0x04>;
+			clocks = <&scmi_clk 0x1b6>;
+			clock-names = "fck";
+			dmas =  <&rt_dmac0 0x88>, <&rt_dmac0 0x89>,
+				<&rt_dmac0 0x8A>, <&rt_dmac0 0x8B>,
+				<&rt_dmac0 0x8C>, <&rt_dmac0 0x8D>,
+				<&rt_dmac0 0x8E>, <&rt_dmac0 0x8F>,
+				<&rt_dmac1 0x88>, <&rt_dmac1 0x89>,
+				<&rt_dmac1 0x8A>, <&rt_dmac1 0x8B>,
+				<&rt_dmac1 0x8C>, <&rt_dmac1 0x8D>,
+				<&rt_dmac1 0x8E>, <&rt_dmac1 0x8F>,
+				<&rt_dmac2 0x88>, <&rt_dmac2 0x89>,
+				<&rt_dmac2 0x8A>, <&rt_dmac2 0x8B>,
+				<&rt_dmac2 0x8C>, <&rt_dmac2 0x8D>,
+				<&rt_dmac2 0x8E>, <&rt_dmac2 0x8F>,
+				<&rt_dmac3 0x88>, <&rt_dmac3 0x89>,
+				<&rt_dmac3 0x8A>, <&rt_dmac3 0x8B>,
+				<&rt_dmac3 0x8C>, <&rt_dmac3 0x8D>,
+				<&rt_dmac3 0x8E>, <&rt_dmac3 0x8F>;
+			dma-names = "crc_rx", "crc_tx", "crc_rx_in", "crc_txrx",
+				"kcrc_rx", "kcrc_tx", "kcrc_rx_in", "kcrc_txrx",
+				"crc_rx", "crc_tx", "crc_rx_in", "crc_txrx",
+				"kcrc_rx", "kcrc_tx", "kcrc_rx_in", "kcrc_txrx",
+				"crc_rx", "crc_tx", "crc_rx_in", "crc_txrx",
+				"kcrc_rx", "kcrc_tx", "kcrc_rx_in", "kcrc_txrx",
+				"crc_rx", "crc_tx", "crc_rx_in", "crc_txrx",
+				"kcrc_rx", "kcrc_tx", "kcrc_rx_in", "kcrc_txrx";
+			status = "disabled";
+		};
+
+		wcrc8: wcrc@19280000 {
+			compatible = "renesas,rcar-gen5-wcrc";
+			reg = <0 0x19280000 0 0x00010000>,
+				<0 0x19420000 0 0x4000>;
+			reg-names = "wcrc", "fifo";
+			sub-crc = <&crc8>;
+			sub-kcrc = <&kcrc8>;
+			interrupts = <0x00 0x1077 0x04>;
+			clocks = <&scmi_clk 0x1b7>;
+			clock-names = "fck";
+			dmas =  <&rt_dmac0 0x98>, <&rt_dmac0 0x99>,
+				<&rt_dmac0 0x9A>, <&rt_dmac0 0x9B>,
+				<&rt_dmac0 0x9C>, <&rt_dmac0 0x9D>,
+				<&rt_dmac0 0x9E>, <&rt_dmac0 0x9F>,
+				<&rt_dmac1 0x98>, <&rt_dmac1 0x99>,
+				<&rt_dmac1 0x9A>, <&rt_dmac1 0x9B>,
+				<&rt_dmac1 0x9C>, <&rt_dmac1 0x9D>,
+				<&rt_dmac1 0x9E>, <&rt_dmac1 0x9F>,
+				<&rt_dmac2 0x98>, <&rt_dmac2 0x99>,
+				<&rt_dmac2 0x9A>, <&rt_dmac2 0x9B>,
+				<&rt_dmac2 0x9C>, <&rt_dmac2 0x9D>,
+				<&rt_dmac2 0x9E>, <&rt_dmac2 0x9F>,
+				<&rt_dmac3 0x98>, <&rt_dmac3 0x99>,
+				<&rt_dmac3 0x9A>, <&rt_dmac3 0x9B>,
+				<&rt_dmac3 0x9C>, <&rt_dmac3 0x9D>,
+				<&rt_dmac3 0x9E>, <&rt_dmac3 0x9F>;
+			dma-names = "crc_rx", "crc_tx", "crc_rx_in", "crc_txrx",
+				"kcrc_rx", "kcrc_tx", "kcrc_rx_in", "kcrc_txrx",
+				"crc_rx", "crc_tx", "crc_rx_in", "crc_txrx",
+				"kcrc_rx", "kcrc_tx", "kcrc_rx_in", "kcrc_txrx",
+				"crc_rx", "crc_tx", "crc_rx_in", "crc_txrx",
+				"kcrc_rx", "kcrc_tx", "kcrc_rx_in", "kcrc_txrx",
+				"crc_rx", "crc_tx", "crc_rx_in", "crc_txrx",
+				"kcrc_rx", "kcrc_tx", "kcrc_rx_in", "kcrc_txrx";
+			status = "disabled";
+		};
+
+		wcrc9: wcrc@19290000 {
+			compatible = "renesas,rcar-gen5-wcrc";
+			reg = <0 0x19290000 0 0x00010000>,
+				<0 0x19424000 0 0x4000>;
+			reg-names = "wcrc", "fifo";
+			sub-crc = <&crc9>;
+			sub-kcrc = <&kcrc9>;
+			interrupts = <0x00 0x1078 0x04>;
+			clocks = <&scmi_clk 0x1b8>;
+			clock-names = "fck";
+			dmas =  <&rt_dmac0 0xA8>, <&rt_dmac0 0xA9>,
+				<&rt_dmac0 0xAA>, <&rt_dmac0 0xAB>,
+				<&rt_dmac0 0xAC>, <&rt_dmac0 0xAD>,
+				<&rt_dmac0 0xAE>, <&rt_dmac0 0xAF>,
+				<&rt_dmac1 0xA8>, <&rt_dmac1 0xA9>,
+				<&rt_dmac1 0xAA>, <&rt_dmac1 0xAB>,
+				<&rt_dmac1 0xAC>, <&rt_dmac1 0xAD>,
+				<&rt_dmac1 0xAE>, <&rt_dmac1 0xAF>,
+				<&rt_dmac2 0xA8>, <&rt_dmac2 0xA9>,
+				<&rt_dmac2 0xAA>, <&rt_dmac2 0xAB>,
+				<&rt_dmac2 0xAC>, <&rt_dmac2 0xAD>,
+				<&rt_dmac2 0xAE>, <&rt_dmac2 0xAF>,
+				<&rt_dmac3 0xA8>, <&rt_dmac3 0xA9>,
+				<&rt_dmac3 0xAA>, <&rt_dmac3 0xAB>,
+				<&rt_dmac3 0xAC>, <&rt_dmac3 0xAD>,
+				<&rt_dmac3 0xAE>, <&rt_dmac3 0xAF>;
+			dma-names = "crc_rx", "crc_tx", "crc_rx_in", "crc_txrx",
+				"kcrc_rx", "kcrc_tx", "kcrc_rx_in", "kcrc_txrx",
+				"crc_rx", "crc_tx", "crc_rx_in", "crc_txrx",
+				"kcrc_rx", "kcrc_tx", "kcrc_rx_in", "kcrc_txrx",
+				"crc_rx", "crc_tx", "crc_rx_in", "crc_txrx",
+				"kcrc_rx", "kcrc_tx", "kcrc_rx_in", "kcrc_txrx",
+				"crc_rx", "crc_tx", "crc_rx_in", "crc_txrx",
+				"kcrc_rx", "kcrc_tx", "kcrc_rx_in", "kcrc_txrx";
+			status = "disabled";
+		};
+
+		wcrc10: wcrc@192a0000 {
+			compatible = "renesas,rcar-gen5-wcrc";
+			reg = <0 0x192a0000 0 0x00010000>,
+				<0 0x19428000 0 0x4000>;
+			reg-names = "wcrc", "fifo";
+			sub-crc = <&crc10>;
+			sub-kcrc = <&kcrc10>;
+			interrupts = <0x00 0x1079 0x04>;
+			clocks = <&scmi_clk 0x1b9>;
+			clock-names = "fck";
+			dmas =  <&rt_dmac0 0xB8>, <&rt_dmac0 0xB9>,
+				<&rt_dmac0 0xBA>, <&rt_dmac0 0xBB>,
+				<&rt_dmac0 0xBC>, <&rt_dmac0 0xBD>,
+				<&rt_dmac0 0xBE>, <&rt_dmac0 0xBF>,
+				<&rt_dmac1 0xB8>, <&rt_dmac1 0xB9>,
+				<&rt_dmac1 0xBA>, <&rt_dmac1 0xBB>,
+				<&rt_dmac1 0xBC>, <&rt_dmac1 0xBD>,
+				<&rt_dmac1 0xBE>, <&rt_dmac1 0xBF>,
+				<&rt_dmac2 0xB8>, <&rt_dmac2 0xB9>,
+				<&rt_dmac2 0xBA>, <&rt_dmac2 0xBB>,
+				<&rt_dmac2 0xBC>, <&rt_dmac2 0xBD>,
+				<&rt_dmac2 0xBE>, <&rt_dmac2 0xBF>,
+				<&rt_dmac3 0xB8>, <&rt_dmac3 0xB9>,
+				<&rt_dmac3 0xBA>, <&rt_dmac3 0xBB>,
+				<&rt_dmac3 0xBC>, <&rt_dmac3 0xBD>,
+				<&rt_dmac3 0xBE>, <&rt_dmac3 0xBF>;
+			dma-names = "crc_rx", "crc_tx", "crc_rx_in", "crc_txrx",
+				"kcrc_rx", "kcrc_tx", "kcrc_rx_in", "kcrc_txrx",
+				"crc_rx", "crc_tx", "crc_rx_in", "crc_txrx",
+				"kcrc_rx", "kcrc_tx", "kcrc_rx_in", "kcrc_txrx",
+				"crc_rx", "crc_tx", "crc_rx_in", "crc_txrx",
+				"kcrc_rx", "kcrc_tx", "kcrc_rx_in", "kcrc_txrx",
+				"crc_rx", "crc_tx", "crc_rx_in", "crc_txrx",
+				"kcrc_rx", "kcrc_tx", "kcrc_rx_in", "kcrc_txrx";
+			status = "disabled";
+		};
+
+		pwm0: pwm@c0740000 {
+			compatible = "renesas,pwm-r8a78000", "renesas,pwm-rcar";
+			reg = <0 0xc0740000 0 0x10>;
+			#pwm-cells = <2>;
+			clocks = <&scmi_clk 244>,
+				 <&dummy_clk_sgasyncd16>;
+			clock-names = "bus_clk", "counter_clk";
+			status = "okay";
+		};
+
+		pwm1: pwm@c0741000 {
+			compatible = "renesas,pwm-r8a78000", "renesas,pwm-rcar";
+			reg = <0 0xc0741000 0 0x10>;
+			#pwm-cells = <2>;
+			clocks = <&scmi_clk 244>,
+				 <&dummy_clk_sgasyncd16>;
+			clock-names = "bus_clk", "counter_clk";
+			status = "okay";
+		};
+
+		pwm2: pwm@c0742000 {
+			compatible = "renesas,pwm-r8a78000", "renesas,pwm-rcar";
+			reg = <0 0xc0742000 0 0x10>;
+			#pwm-cells = <2>;
+			clocks = <&scmi_clk 244>,
+				 <&dummy_clk_sgasyncd16>;
+			clock-names = "bus_clk", "counter_clk";
+			status = "okay";
+		};
+
+		pwm3: pwm@c0743000 {
+			compatible = "renesas,pwm-r8a78000", "renesas,pwm-rcar";
+			reg = <0 0xc0743000 0 0x10>;
+			#pwm-cells = <2>;
+			clocks = <&scmi_clk 244>,
+				 <&dummy_clk_sgasyncd16>;
+			clock-names = "bus_clk", "counter_clk";
+			status = "okay";
+		};
+
+		pwm4: pwm@c0780000 {
+			compatible = "renesas,pwm-r8a78000", "renesas,pwm-rcar";
+			reg = <0 0xc0780000 0 0x10>;
+			#pwm-cells = <2>;
+			clocks = <&scmi_clk 244>,
+				 <&dummy_clk_s0asyncd8>;
+			clock-names = "bus_clk", "counter_clk";
+			status = "okay";
+		};
+
+		pwm5: pwm@c0781000 {
+			compatible = "renesas,pwm-r8a78000", "renesas,pwm-rcar";
+			reg = <0 0xc0781000 0 0x10>;
+			#pwm-cells = <2>;
+			clocks = <&scmi_clk 244>,
+				 <&dummy_clk_s0asyncd8>;
+			clock-names = "bus_clk", "counter_clk";
+			status = "okay";
+		};
+
+		pwm6: pwm@c0782000 {
+			compatible = "renesas,pwm-r8a78000", "renesas,pwm-rcar";
+			reg = <0 0xc0782000 0 0x10>;
+			#pwm-cells = <2>;
+			clocks = <&scmi_clk 244>,
+				 <&dummy_clk_s0asyncd8>;
+			clock-names = "bus_clk", "counter_clk";
+			status = "okay";
+		};
+
+		pwm7: pwm@c0783000 {
+			compatible = "renesas,pwm-r8a78000", "renesas,pwm-rcar";
+			reg = <0 0xc0783000 0 0x10>;
+			#pwm-cells = <2>;
+			clocks = <&scmi_clk 244>,
+				 <&dummy_clk_s0asyncd8>;
+			clock-names = "bus_clk", "counter_clk";
+			status = "okay";
+		};
+
+		pwm8: pwm@c0784000 {
+			compatible = "renesas,pwm-r8a78000", "renesas,pwm-rcar";
+			reg = <0 0xc0784000 0 0x10>;
+			#pwm-cells = <2>;
+			clocks = <&scmi_clk 244>,
+				 <&dummy_clk_s0asyncd8>;
+			clock-names = "bus_clk", "counter_clk";
+			status = "okay";
+		};
+
+		pwm9: pwm@c0785000 {
+			compatible = "renesas,pwm-r8a78000", "renesas,pwm-rcar";
+			reg = <0 0xc0785000 0 0x10>;
+			#pwm-cells = <2>;
+			clocks = <&scmi_clk 244>,
+				 <&dummy_clk_s0asyncd8>;
+			clock-names = "bus_clk", "counter_clk";
+			status = "okay";
+		};
+
+		tpu: pwm@c0720000 {
+			compatible = "renesas,tpu-r8a78000", "renesas,tpu";
+			reg = <0 0xc0720000 0 0x148>;
+			// interrupts = <0x00 4087 0x04>;
+			interrupts = <0x00 75 0x04>;
+			clocks = <&scmi_clk 249>,
+				 <&dummy_clk_sgasyncd16>;
+			clock-names = "bus_clk", "counter_clk";
+			#pwm-cells = <3>;
+			status = "disabled";
+		};
+
+		sys_dmac00: dma-controller@c0940000 {
+			compatible = "renesas,rcar-gen5-dmac";
+			reg = <0x00 0xc0940000 0x00 0x1000 0x00 0xc0900000 0x00 0x10000>;
+			interrupts = <0x00 0x182 0x04 0x00 0x189 0x04 0x00 0x18a 0x04 0x00 0x18b 0x04 0x00 0x18c 0x04 0x00 0x18d 0x04 0x00 0x18e 0x04 0x00 0x18f 0x04 0x00 0x190 0x04 0x00 0x191 0x04 0x00 0x192 0x04 0x00 0x193 0x04 0x00 0x194 0x04 0x00 0x195 0x04 0x00 0x196 0x04 0x00 0x197 0x04 0x00 0x198 0x04>;
+			interrupt-names = "error\0ch0\0ch1\0ch2\0ch3\0ch4\0ch5\0ch6\0ch7\0ch8\0ch9\0ch10\0ch11\0ch12\0ch13\0ch14\0ch15";
+			#dma-cells = <0x01>;
+			dma-channels = <0x10>;
+		};
+
+		sys_dmac10: dma-controller@c05c4000 {
+			compatible = "renesas,rcar-gen5-dmac";
+			reg = <0x00 0xc05c4000 0x00 0x1000 0x00 0xc0480000 0x00 0x10000>;
+			interrupts = <0x00 0x184 0x04 0x00 0x199 0x04 0x00 0x19a 0x04 0x00 0x19b 0x04 0x00 0x19c 0x04 0x00 0x19d 0x04 0x00 0x19e 0x04 0x00 0x19f 0x04 0x00 0x1a0 0x04 0x00 0x1a1 0x04 0x00 0x1a2 0x04 0x00 0x1a3 0x04 0x00 0x1a4 0x04 0x00 0x1a5 0x04 0x00 0x1a6 0x04 0x00 0x1a7 0x04 0x00 0x1a8 0x04>;
+			interrupt-names = "error\0ch0\0ch1\0ch2\0ch3\0ch4\0ch5\0ch6\0ch7\0ch8\0ch9\0ch10\0ch11\0ch12\0ch13\0ch14\0ch15";
+			#dma-cells = <0x01>;
+			dma-channels = <0x10>;
+		};
+
+		sys_dmac11: dma-controller@c05c5000 {
+			compatible = "renesas,rcar-gen5-dmac";
+			reg = <0x00 0xc05c5000 0x00 0x1000 0x00 0xc0490000 0x00 0x10000>;
+			interrupts = <0x00 0x166 0x04 0x00 0x1a9 0x04 0x00 0x1aa 0x04 0x00 0x1ab 0x04 0x00 0x1ac 0x04 0x00 0x1ad 0x04 0x00 0x1ae 0x04 0x00 0x1af 0x04 0x00 0x1b0 0x04 0x00 0x1b1 0x04 0x00 0x1b2 0x04 0x00 0x1b3 0x04 0x00 0x1b4 0x04 0x00 0x1b5 0x04 0x00 0x1b6 0x04 0x00 0x1b7 0x04 0x00 0x1b8 0x04>;
+			interrupt-names = "error\0ch0\0ch1\0ch2\0ch3\0ch4\0ch5\0ch6\0ch7\0ch8\0ch9\0ch10\0ch11\0ch12\0ch13\0ch14\0ch15";
+			#dma-cells = <0x01>;
+			dma-channels = <0x10>;
+		};
+
+		sys_dmac12: dma-controller@c05c6000 {
+			compatible = "renesas,rcar-gen5-dmac";
+			reg = <0x00 0xc05c6000 0x00 0x1000 0x00 0xc04a0000 0x00 0x10000>;
+			interrupts = <0x00 0x168 0x04 0x00 0x1b9 0x04 0x00 0x1ba 0x04 0x00 0x1bb 0x04 0x00 0x1bc 0x04 0x00 0x1bd 0x04 0x00 0x1be 0x04 0x00 0x1bf 0x04 0x00 0x1c0 0x04 0x00 0x1c1 0x04 0x00 0x1c2 0x04 0x00 0x1c3 0x04 0x00 0x1c4 0x04 0x00 0x1c5 0x04 0x00 0x1c6 0x04 0x00 0x1c7 0x04 0x00 0x1c8 0x04>;
+			interrupt-names = "error\0ch0\0ch1\0ch2\0ch3\0ch4\0ch5\0ch6\0ch7\0ch8\0ch9\0ch10\0ch11\0ch12\0ch13\0ch14\0ch15";
+			#dma-cells = <0x01>;
+			dma-channels = <0x0e>;
+		};
+
+		rt_dmac0: dma-controller@19438000 {
+			compatible = "renesas,rcar-gen5-dmac";
+			reg = <0x00 0x19438000 0x00 0x1000 0x00 0x18900000 0x00 0x10000>;
+			interrupts = <0x00 0x13a 0x04 0x00 0x141 0x04 0x00 0x142 0x04 0x00 0x143 0x04 0x00 0x144 0x04 0x00 0x145 0x04 0x00 0x146 0x04 0x00 0x147 0x04 0x00 0x148 0x04 0x00 0x149 0x04 0x00 0x14a 0x04 0x00 0x14b 0x04 0x00 0x14c 0x04 0x00 0x14d 0x04 0x00 0x14e 0x04 0x00 0x14f 0x04 0x00 0x150 0x04>;
+			interrupt-names = "error\0ch0\0ch1\0ch2\0ch3\0ch4\0ch5\0ch6\0ch7\0ch8\0ch9\0ch10\0ch11\0ch12\0ch13\0ch14\0ch15";
+			#dma-cells = <0x01>;
+			dma-channels = <0x10>;
+		};
+
+		rt_dmac1: dma-controller@19439000 {
+			compatible = "renesas,rcar-gen5-dmac";
+			reg = <0x00 0x19439000 0x00 0x1000 0x00 0x18910000 0x00 0x10000>;
+			interrupts = <0x00 0x13c 0x04 0x00 0x151 0x04 0x00 0x152 0x04 0x00 0x153 0x04 0x00 0x154 0x04 0x00 0x155 0x04 0x00 0x156 0x04 0x00 0x157 0x04 0x00 0x158 0x04 0x00 0x159 0x04 0x00 0x15a 0x04 0x00 0x15b 0x04 0x00 0x15c 0x04 0x00 0x15d 0x04 0x00 0x15e 0x04 0x00 0x15f 0x04 0x00 0x160 0x04>;
+			interrupt-names = "error\0ch0\0ch1\0ch2\0ch3\0ch4\0ch5\0ch6\0ch7\0ch8\0ch9\0ch10\0ch11\0ch12\0ch13\0ch14\0ch15";
+			#dma-cells = <0x01>;
+			dma-channels = <0x10>;
+		};
+
+		rt_dmac2: dma-controller@1943a000 {
+			compatible = "renesas,rcar-gen5-dmac";
+			reg = <0x00 0x1943a000 0x00 0x1000 0x00 0x18920000 0x00 0x10000>;
+			interrupts = <0x00 0x13e 0x04 0x00 0x161 0x04 0x00 0x162 0x04 0x00 0x163 0x04 0x00 0x164 0x04 0x00 0x165 0x04 0x00 0x166 0x04 0x00 0x167 0x04 0x00 0x168 0x04 0x00 0x169 0x04 0x00 0x16a 0x04 0x00 0x16b 0x04 0x00 0x16c 0x04 0x00 0x16d 0x04 0x00 0x16e 0x04 0x00 0x16f 0x04 0x00 0x170 0x04>;
+			interrupt-names = "error\0ch0\0ch1\0ch2\0ch3\0ch4\0ch5\0ch6\0ch7\0ch8\0ch9\0ch10\0ch11\0ch12\0ch13\0ch14\0ch15";
+			#dma-cells = <0x01>;
+			dma-channels = <0x10>;
+		};
+
+		rt_dmac3: dma-controller@1943b000 {
+			compatible = "renesas,rcar-gen5-dmac";
+			reg = <0x00 0x1943b000 0x00 0x1000 0x00 0x18930000 0x00 0x10000>;
+			interrupts = <0x00 0x140 0x04 0x00 0x171 0x04 0x00 0x172 0x04 0x00 0x173 0x04 0x00 0x174 0x04 0x00 0x175 0x04 0x00 0x176 0x04 0x00 0x177 0x04 0x00 0x178 0x04 0x00 0x179 0x04 0x00 0x17a 0x04 0x00 0x17b 0x04 0x00 0x17c 0x04 0x00 0x17d 0x04 0x00 0x17e 0x04 0x00 0x17f 0x04 0x00 0x180 0x04>;
+			interrupt-names = "error\0ch0\0ch1\0ch2\0ch3\0ch4\0ch5\0ch6\0ch7\0ch8\0ch9\0ch10\0ch11\0ch12\0ch13\0ch14\0ch15";
+			#dma-cells = <0x01>;
+			dma-channels = <0x10>;
+		};
+
+		audio_dmac0:dma-controller@ec720000 {
+			compatible = "renesas,rcar-gen5-dmac";
+			reg = <0x00 0xec720000 0x00 0x1000 0x00 0xec700000 0x00 0x10000>;
+			interrupts = <0x00 0xf2 0x04 0x00 0xf9 0x04 0x00 0xfa 0x04 0x00 0xfb 0x04 0x00 0xfc 0x04 0x00 0xfd 0x04 0x00 0xfe 0x04 0x00 0xff 0x04 0x00 0x100 0x04 0x00 0x101 0x04 0x00 0x102 0x04 0x00 0x103 0x04 0x00 0x104 0x04 0x00 0x105 0x04 0x00 0x106 0x04 0x00 0x107 0x04 0x00 0x108 0x04>;
+			interrupt-names = "error\0ch0\0ch1\0ch2\0ch3\0ch4\0ch5\0ch6\0ch7\0ch8\0ch9\0ch10\0ch11\0ch12\0ch13\0ch14\0ch15";
+			#dma-cells = <0x01>;
+			dma-channels = <0x10>;
+		};
+
+		audio_dmac1: dma-controller@ec721000 {
+			compatible = "renesas,rcar-gen5-dmac";
+			reg = <0x00 0xec721000 0x00 0x1000 0x00 0xec710000 0x00 0x10000>;
+			interrupts = <0x00 0xf4 0x04 0x00 0x109 0x04 0x00 0x10a 0x04 0x00 0x10b 0x04 0x00 0x10c 0x04 0x00 0x10d 0x04 0x00 0x10e 0x04 0x00 0x10f 0x04 0x00 0x110 0x04 0x00 0x111 0x04 0x00 0x112 0x04 0x00 0x113 0x04 0x00 0x114 0x04 0x00 0x115 0x04 0x00 0x116 0x04 0x00 0x117 0x04 0x00 0x118 0x04>;
+			interrupt-names = "error\0ch0\0ch1\0ch2\0ch3\0ch4\0ch5\0ch6\0ch7\0ch8\0ch9\0ch10\0ch11\0ch12\0ch13\0ch14\0ch15";
+			#dma-cells = <0x01>;
+			dma-channels = <0x10>;
+		};
+
+		audio_dmac2: dma-controller@ed720000 {
+			compatible = "renesas,rcar-gen5-dmac";
+			reg = <0x00 0xed720000 0x00 0x1000 0x00 0xed700000 0x00 0x10000>;
+			interrupts = <0x00 0xf6 0x04 0x00 0x119 0x04 0x00 0x11a 0x04 0x00 0x11b 0x04 0x00 0x11c 0x04 0x00 0x11d 0x04 0x00 0x11e 0x04 0x00 0x11f 0x04 0x00 0x120 0x04 0x00 0x121 0x04 0x00 0x122 0x04 0x00 0x123 0x04 0x00 0x124 0x04 0x00 0x125 0x04 0x00 0x126 0x04 0x00 0x127 0x04 0x00 0x128 0x04>;
+			interrupt-names = "error\0ch0\0ch1\0ch2\0ch3\0ch4\0ch5\0ch6\0ch7\0ch8\0ch9\0ch10\0ch11\0ch12\0ch13\0ch14\0ch15";
+			#dma-cells = <0x01>;
+			dma-channels = <0x10>;
+		};
+
+		audio_dmac3: dma-controller@ed721000 {
+			compatible = "renesas,rcar-gen5-dmac";
+			reg = <0x00 0xed721000 0x00 0x1000 0x00 0xed710000 0x00 0x10000>;
+			interrupts = <0x00 0xf8 0x04 0x00 0x129 0x04 0x00 0x12a 0x04 0x00 0x12b 0x04 0x00 0x12c 0x04 0x00 0x12d 0x04 0x00 0x12e 0x04 0x00 0x12f 0x04 0x00 0x130 0x04 0x00 0x131 0x04 0x00 0x132 0x04 0x00 0x133 0x04 0x00 0x134 0x04 0x00 0x135 0x04 0x00 0x136 0x04 0x00 0x137 0x04 0x00 0x138 0x04>;
+			interrupt-names = "error\0ch0\0ch1\0ch2\0ch3\0ch4\0ch5\0ch6\0ch7\0ch8\0ch9\0ch10\0ch11\0ch12\0ch13\0ch14\0ch15";
+			#dma-cells = <0x01>;
+			dma-channels = <0x10>;
+		};
+
+		scp_dmac0: dma-controller@c11e8000 {
+			compatible = "renesas,rcar-gen5-dmac";
+			reg = <0x00 0xc11e8000 0x00 0x1000 0x00 0xc11a0000 0x00 0x10000>;
+			interrupts = <0x00 0x11d7 0x04 0x00 0x11d8 0x04 0x00 0x11d9 0x04 0x00 0x11da 0x04 0x00 0x11db 0x04 0x00 0x11dc 0x04 0x00 0x11dd 0x04 0x00 0x11de 0x04 0x00 0x11df 0x04 0x00 0x11e0 0x04 0x00 0x11e1 0x04 0x00 0x11e2 0x04 0x00 0x11e3 0x04 0x00 0x11e4 0x04 0x00 0x11e5 0x04 0x00 0x11e6 0x04 0x00 0x11e7 0x04>;
+			interrupt-names = "error\0ch0\0ch1\0ch2\0ch3\0ch4\0ch5\0ch6\0ch7\0ch8\0ch9\0ch10\0ch11\0ch12\0ch13\0ch14\0ch15";
+			#dma-cells = <0x01>;
+			dma-channels = <0x10>;
+		};
+
+		scp_dmac1: dma-controller@c11e9000 {
+			compatible = "renesas,rcar-gen5-dmac";
+			reg = <0x00 0xc11e9000 0x00 0x1000 0x00 0xc11b0000 0x00 0x10000>;
+			interrupts = <0x00 0x11e9 0x04 0x00 0x11ea 0x04 0x00 0x11eb 0x04 0x00 0x11ec 0x04 0x00 0x11ed 0x04 0x00 0x11ee 0x04 0x00 0x11ef 0x04 0x00 0x11f0 0x04 0x00 0x11f1 0x04 0x00 0x11f2 0x04 0x00 0x11f3 0x04 0x00 0x11f4 0x04 0x00 0x11f5 0x04 0x00 0x11f6 0x04 0x00 0x11f7 0x04 0x00 0x11f8 0x04 0x00 0x11f9 0x04>;
+			interrupt-names = "error\0ch0\0ch1\0ch2\0ch3\0ch4\0ch5\0ch6\0ch7\0ch8\0ch9\0ch10\0ch11\0ch12\0ch13\0ch14\0ch15";
+			#dma-cells = <0x01>;
+			dma-channels = <0x10>;
+		};
+
+		scif0: serial@c0700000 {
+			compatible = "renesas,rcar-gen5-scif", "renesas,scif";
+			reg = <0 0xc0700000 0 0x40>;
+			interrupts = <0x00 4074 0x04>;
+			clocks = <&dummy_clk_sgasyncd4>, <&dummy_clk_sgasyncd4>, <&scif_clk>;
+			clock-names = "fck", "brg_int", "scif_clk";
+			status = "disabled";
+		};
+
+		scif1: serial@c0704000 {
+			compatible = "renesas,rcar-gen5-scif", "renesas,scif";
+			reg = <0 0xc0704000 0 0x40>;
+			interrupts = <0x00 4075 0x04>;
+			clocks = <&dummy_clk_sgasyncd4>, <&dummy_clk_sgasyncd4>, <&scif_clk>;
+			clock-names = "fck", "brg_int", "scif_clk";
+			status = "disabled";
+		};
+
+		scif3: serial@c0708000 {
+			compatible = "renesas,rcar-gen5-scif", "renesas,scif";
+			reg = <0 0xc0708000 0 0x40>;
+			interrupts = <0x00 4076 0x04>;
+			clocks = <&dummy_clk_sgasyncd4>, <&dummy_clk_sgasyncd4>, <&scif_clk>;
+			clock-names = "fck", "brg_int", "scif_clk";
+			status = "disabled";
+		};
+
+		scif4: serial@c070c000 {
+			compatible = "renesas,rcar-gen5-scif", "renesas,scif";
+			reg = <0 0xc070c000 0 0x40>;
+			interrupts = <0x00 4077 0x04>;
+			clocks = <&dummy_clk_sgasyncd4>, <&dummy_clk_sgasyncd4>, <&scif_clk>;
+			clock-names = "fck", "brg_int", "scif_clk";
+			status = "disabled";
+		};
+
+		hscif0: serial@c0710000 {
+			compatible = "renesas,rcar-gen5-hscif", "renesas,hscif";
+			reg = <0 0xc0710000 0 0x60>;
+			interrupts = <0x00 4078 0x04>;
+			clocks = <&scmi_clk 224>,
+					 <&dummy_clk_sgasyncd4>, <&scif_clk>;
+			clock-names = "fck", "brg_int", "scif_clk";
+			pinctrl-0 = <&hscif0_pins>;
+			pinctrl-names = "default";
+
+			uart-has-rtscts;
+			status = "disabled";
+		};
+
+		hscif1: serial@c0714000 {
+			compatible = "renesas,rcar-gen5-hscif", "renesas,hscif";
+			reg = <0 0xc0714000 0 0x60>;
+			interrupts = <0x00 4079 0x04>;
+			clocks = <&dummy_clk_sgasyncd4>, <&dummy_clk_sgasyncd4>, <&scif_clk>;
+			clock-names = "fck", "brg_int", "scif_clk";
+			status = "disabled";
+		};
+
+		hscif2: serial@c0718000 {
+			compatible = "renesas,rcar-gen5-hscif", "renesas,hscif";
+			reg = <0 0xc0718000 0 0x60>;
+			interrupts = <0x00 4080 0x04>;
+			clocks = <&dummy_clk_sgasyncd4>, <&dummy_clk_sgasyncd4>, <&scif_clk>;
+			clock-names = "fck", "brg_int", "scif_clk";
+			status = "disabled";
+		};
+
+		hscif3: serial@c071c000 {
+			compatible = "renesas,rcar-gen5-hscif", "renesas,hscif";
+			reg = <0 0xc071c000 0 0x60>;
+			interrupts = <0x00 4081 0x04>;
+			clocks = <&dummy_clk_sgasyncd4>, <&dummy_clk_sgasyncd4>, <&scif_clk>;
+			clock-names = "fck", "brg_int", "scif_clk";
+			status = "disabled";
+		};
+
+		rpc: spi@c08c0000 {
+			compatible = "renesas,rcar-gen5-rpc-if";
+			reg =	<0 0xc08c0000 0 0x200>,
+				<0 0x34000000 0 0x04000000>,
+				<0 0xc08c8000 0 0x100>;
+			reg-names = "regs", "dirmap", "wbuf";
+			interrupts = <0x00 895 0x04>;
+			clocks = <&scmi_clk 197>;
+			resets = <&scmi_reset 197>;
+			#address-cells = <1>;
+			#size-cells = <0>;
+			pinctrl-0 = <&rpc_pins>;
+			pinctrl-names = "default";
+
+			status = "disabled";
+
+			flash@0 {
+				compatible = "cypress,hyperflash", "cfi-flash";
+				reg = <0>;
+				spi-max-frequency = <160000000>;
+				spi-rx-bus-width = <4>;
+				spi-tx-bus-width = <1>;
+
+				partitions {
+					compatible = "fixed-partitions";
+					#address-cells = <1>;
+					#size-cells = <1>;
+
+					boot@0 {
+						reg = <0x0 0x1200000>;
+						read-only;
+					};
+
+					user@2780000 {
+						reg = <0x2780000 0x01880000>;
+					};
+				};
+			};
+		};
+
+		ufs0: ufs@c0a80000 {
+			compatible = "renesas,r8a78000-ufs", "renesas,rcar-gen5-ufs";
+			reg = <0 0xc0a80000 0 0x1100>, <0 0xc0a00000 0 0x40000>;
+			reg-names = "hcr", "phy";
+			interrupts = <0x00 4284 0x04>;
+			power-domains = <&scmi_devpd 12>;
+			resets = <&scmi_reset 198>;
+			clocks = <&scmi_clk 198>, <&ufs0_clk>;
+			clock-names = "fck", "ref_clk";
+			freq-table-hz = <200000000 200000000>, <38400000 38400000>;
+			status = "disable";
+		};
+
+		ufs1: ufs@c0a90000 {
+			compatible = "renesas,r8a78000-ufs", "renesas,rcar-gen5-ufs";
+			reg = <0 0xc0a90000 0 0x1100>, <0 0xc0a40000 0 0x40000>;
+			reg-names = "hcr", "phy";
+			interrupts = <0x00 4285 0x04>;
+			power-domains = <&scmi_devpd 13>;
+			resets = <&scmi_reset 199>;
+			clocks = <&scmi_clk 199>, <&ufs1_clk>;
+			clock-names = "fck", "ref_clk";
+			freq-table-hz = <200000000 200000000>, <38400000 38400000>;
+			status = "disable";
+		};
+
+		scp@c1000000 {
+			compatible = "arm,rcar-sram-ns\0mmio-sram";
+			reg = <0x00 0xc1000000 0x00 0x80000>;
+			#address-cells = <0x01>;
+			#size-cells = <0x01>;
+			ranges = <0x00 0x00 0xc1000000 0x80000>;
+
+			cpu_scp_lpri0: scp-shmem@60000 {
+				compatible = "arm,rcar-scp-shmem\0arm,scmi-shmem";
+				reg = <0x61200 0x100>;
+			};
+
+			cpu_scp_hpri0: scp-shmem@60300 {
+				compatible = "arm,rcar-scp-shmem\0arm,scmi-shmem";
+				reg = <0x61300 0x100>;
+			};
+		};
+
+		reset-controller@c1320000 {
+			compatible = "renesas,r8a78000-rst";
+			reg = <0x00 0xc1320000 0x00 0x4000>;
+		};
+
+		rtca: rtca@c1394000 {
+			compatible = "renesas,rtc-r8a78000", "renesas,rtc-rcar";
+			reg = <0 0xc1394000 0 0x70>;
+			clocks = <&scmi_clk 810>, <&dummy_tcki>;
+			clock-names = "pclk", "ref_clk";
+			status = "disabled";
+		};
+
+		msiof0: spi@c1700000 {
+			compatible = "renesas,msiof-r8a78000",
+				     "renesas,rcar-gen5-msiof";
+			reg = <0 0xc1700000 0 0x0064>;
+			interrupts = <0x00 4808 0x04>;
+			dmas = <&scp_dmac0 0x41>, <&scp_dmac0 0x40>,
+				<&scp_dmac1 0x41>, <&scp_dmac1 0x40>;
+			dma-names = "tx", "rx", "tx", "rx";
+			clocks = <&scmi_clk 776>,<&scmi_clk 1459>,<&msiof_clk>;
+			clock-names = "fck", "mso", "msiof_clk";
+			assigned-clocks = <&msiof_clk>;
+			resets = <&scmi_reset 776>;
+			#address-cells = <1>;
+			#size-cells = <0>;
+			status = "disabled";
+		};
+
+		msiof1: spi@c1710000 {
+			compatible = "renesas,msiof-r8a78000",
+					"renesas,rcar-gen5-msiof";
+			reg = <0 0xc1710000 0 0x0064>;
+			interrupts = <0x00 4809 0x04>;
+			dmas = <&scp_dmac0 0x43>, <&scp_dmac0 0x42>,
+				<&scp_dmac1 0x43>, <&scp_dmac1 0x42>;
+			dma-names = "tx", "rx", "tx", "rx";
+			clocks = <&scmi_clk 777>,<&scmi_clk 1459>,<&msiof_clk>;
+			clock-names = "fck", "mso", "msiof_clk";
+			assigned-clocks = <&msiof_clk>;
+			resets = <&scmi_reset 777>;
+			#address-cells = <1>;
+			#size-cells = <0>;
+			status = "disabled";
+		};
+
+		msiof2: spi@c1720000 {
+			compatible = "renesas,msiof-r8a78000",
+					"renesas,rcar-gen5-msiof";
+			reg = <0 0xc1720000 0 0x0064>;
+			interrupts = <0x00 4810 0x04>;
+			dmas = <&scp_dmac0 0x45>, <&scp_dmac0 0x44>,
+				<&scp_dmac1 0x45>, <&scp_dmac1 0x44>;
+			dma-names = "tx", "rx", "tx", "rx";
+			clocks = <&scmi_clk 778>,<&scmi_clk 1459>,<&msiof_clk>;
+			clock-names = "fck", "mso", "msiof_clk";
+			assigned-clocks = <&msiof_clk>;
+			resets = <&scmi_reset 778>;
+			#address-cells = <1>;
+			#size-cells = <0>;
+			status = "disabled";
+		};
+
+		msiof3: spi@c1730000 {
+			compatible = "renesas,msiof-r8a78000",
+					"renesas,rcar-gen5-msiof";
+			reg = <0 0xc1730000 0 0x0064>;
+			interrupts = <0x00 4811 0x04>;
+			dmas = <&scp_dmac0 0x47>, <&scp_dmac0 0x46>,
+				<&scp_dmac1 0x47>, <&scp_dmac1 0x46>;
+			dma-names = "tx", "rx", "tx", "rx";
+			clocks = <&scmi_clk 779>,<&scmi_clk 1459>,<&msiof_clk>;
+			clock-names = "fck", "mso", "msiof_clk";
+			assigned-clocks = <&msiof_clk>;
+			resets = <&scmi_reset 779>;
+			#address-cells = <1>;
+			#size-cells = <0>;
+			status = "disabled";
+		};
+
+		msiof4: spi@c0600000 {
+			compatible = "renesas,msiof-r8a78000",
+				     "renesas,rcar-gen5-msiof";
+			reg = <0 0xc0600000 0 0x0064>;
+			interrupts = <0x00 4082 0x04>;
+			dmas = <&sys_dmac10 0x49>, <&sys_dmac10 0x48>,
+				<&sys_dmac11 0x49>, <&sys_dmac11 0x48>,
+				<&sys_dmac12 0x49>, <&sys_dmac12 0x48>;
+			dma-names = "tx", "rx", "tx", "rx",
+				    "tx", "rx";
+			clocks = <&scmi_clk 220>,<&scmi_clk 1459>,<&msiof_clk>;
+			clock-names = "fck", "mso", "msiof_clk";
+			assigned-clocks = <&msiof_clk>;
+			resets = <&scmi_reset 220>;
+			#address-cells = <1>;
+			#size-cells = <0>;
+			status = "disabled";
+		};
+
+		msiof5: spi@c0608000 {
+			compatible = "renesas,msiof-r8a78000",
+				     "renesas,rcar-gen5-msiof";
+			reg = <0 0xc0608000 0 0x0064>;
+			interrupts = <0x00 4083 0x04>;
+			dmas = <&sys_dmac10 0x4B>, <&sys_dmac10 0x4A>,
+				<&sys_dmac11 0x4B>, <&sys_dmac11 0x4A>,
+				<&sys_dmac12 0x4B>, <&sys_dmac12 0x4A>;
+			dma-names = "tx", "rx", "tx", "rx",
+				    "tx", "rx";
+			clocks = <&scmi_clk 221>,<&scmi_clk 1459>,<&msiof_clk>;
+			clock-names = "fck", "mso", "msiof_clk";
+			assigned-clocks = <&msiof_clk>;
+			resets = <&scmi_reset 221>;
+			#address-cells = <1>;
+			#size-cells = <0>;
+			status = "disabled";
+		};
+
+		msiof6: spi@c0610000 {
+			compatible = "renesas,msiof-r8a78000",
+				     "renesas,rcar-gen5-msiof";
+			reg = <0 0xc0610000 0 0x0064>;
+			interrupts = <0x00 4084 0x04>;
+			dmas = <&sys_dmac10 0x4D>, <&sys_dmac10 0x4C>,
+				<&sys_dmac11 0x4D>, <&sys_dmac11 0x4C>,
+				<&sys_dmac12 0x4D>, <&sys_dmac12 0x4C>;
+			dma-names = "tx", "rx", "tx", "rx",
+				    "tx", "rx";
+			clocks = <&scmi_clk 222>,<&scmi_clk 1459>,<&msiof_clk>;
+			clock-names = "fck", "mso", "msiof_clk";
+			assigned-clocks = <&msiof_clk>;
+			resets = <&scmi_reset 222>;
+			#address-cells = <1>;
+			#size-cells = <0>;
+			status = "disabled";
+		};
+
+		msiof7: spi@c0618000 {
+			compatible = "renesas,msiof-r8a78000",
+				     "renesas,rcar-gen5-msiof";
+			reg = <0 0xc0618000 0 0x0064>;
+			interrupts = <0x00 4085 0x04>;
+			dmas = <&sys_dmac10 0x4F>, <&sys_dmac10 0x4E>,
+				<&sys_dmac11 0x4F>, <&sys_dmac11 0x4E>,
+				<&sys_dmac12 0x4F>, <&sys_dmac12 0x4E>;
+			dma-names = "tx", "rx", "tx", "rx",
+				    "tx", "rx";
+			clocks = <&scmi_clk 223>,<&scmi_clk 1459>,<&msiof_clk>;
+			clock-names = "fck", "mso", "msiof_clk";
+			assigned-clocks = <&msiof_clk>;
+			resets = <&scmi_reset 223>;
+			#address-cells = <1>;
+			#size-cells = <0>;
+			status = "disabled";
+		};
+
+		canxl0: can@c1200000 {
+			compatible = "renesas,r8a78000-canxl",
+				     "renesas,rcar-gen5-canxl";
+			reg = <0 0xc1200000 0 0x20104>;
+			interrupts = <0x00 4602 0x04>,
+				     <0x00 4603 0x04>;
+			clocks = <&scmi_clk 781>,
+				 <&scmi_clk 1460>,
+				 <&can_clk>;
+			clock-names = "fck", "canxl", "can_clk";
+			assigned-clocks = <&canxl_clk>;
+			assigned-clock-rates = <160000000>;
+			resets = <&scmi_reset 781>;
+			channel0;
+			status = "disabled";
+		};
+
+		canxl1: can@c1240000 {
+			compatible = "renesas,r8a78000-canxl",
+				     "renesas,rcar-gen5-canxl";
+			reg = <0 0xc1240000 0 0x20104>;
+			interrupts = <0x00 4604 0x04>,
+				     <0x00 4605 0x04>;
+			clocks = <&scmi_clk 782>,
+				 <&scmi_clk 1460>,
+				 <&can_clk>;
+			clock-names = "fck", "canxl", "can_clk";
+			assigned-clocks = <&canxl_clk>;
+			assigned-clock-rates = <160000000>;
+			resets = <&scmi_reset 782>;
+			channel1;
+			status = "disabled";
+		};
+
+		iommu@fa000000 {
+			compatible = "arm,smmu-v3";
+			reg = <0x00 0xfa000000 0x00 0x20000>;
+			#iommu-cells = <0x01>;
+			status = "disabled";
+		};
+
+		iommu@f8800000 {
+			compatible = "arm,smmu-v3";
+			reg = <0x00 0xf8800000 0x00 0x20000>;
+			#iommu-cells = <0x01>;
+			status = "disabled";
+		};
+
+		iommu@fcc00000 {
+			compatible = "arm,smmu-v3";
+			reg = <0x00 0xfcc00000 0x00 0x20000>;
+			#iommu-cells = <0x01>;
+			status = "disabled";
+		};
+
+		iommu@fce00000 {
+			compatible = "arm,smmu-v3";
+			reg = <0x00 0xfce00000 0x00 0x20000>;
+			#iommu-cells = <0x01>;
+			status = "disabled";
+		};
+
+		iommu@f8000000 {
+			compatible = "arm,smmu-v3";
+			reg = <0x00 0xf8000000 0x00 0x20000>;
+			#iommu-cells = <0x01>;
+			status = "disabled";
+		};
+
+		iommu@fc000000 {
+			compatible = "arm,smmu-v3";
+			reg = <0x00 0xfc000000 0x00 0x20000>;
+			#iommu-cells = <0x01>;
+			status = "disabled";
+		};
+
+		iommu@fe000000 {
+			compatible = "arm,smmu-v3";
+			reg = <0x00 0xfe000000 0x00 0x20000>;
+			#iommu-cells = <0x01>;
+			status = "disabled";
+		};
+
+		iommu@f8400000 {
+			compatible = "arm,smmu-v3";
+			reg = <0x00 0xf8400000 0x00 0x20000>;
+			#iommu-cells = <0x01>;
+			status = "disabled";
+		};
+
+		iommu@fc400000 {
+			compatible = "arm,smmu-v3";
+			reg = <0x00 0xfc400000 0x00 0x20000>;
+			#iommu-cells = <0x01>;
+			status = "disabled";
+		};
+
+		iommu@fd000000 {
+			compatible = "arm,smmu-v3";
+			reg = <0x00 0xfd000000 0x00 0x20000>;
+			#iommu-cells = <0x01>;
+			status = "disabled";
+		};
+
+		iommu@fd800000 {
+			compatible = "arm,smmu-v3";
+			reg = <0x00 0xfd800000 0x00 0x20000>;
+			#iommu-cells = <0x01>;
+			status = "disabled";
+		};
+
+		iommu@f8600000 {
+			compatible = "arm,smmu-v3";
+			reg = <0x00 0xf8600000 0x00 0x20000>;
+			#iommu-cells = <0x01>;
+			status = "disabled";
+		};
+
+		iommu@fb000000 {
+			compatible = "arm,smmu-v3";
+			reg = <0x00 0xfb000000 0x00 0x20000>;
+			#iommu-cells = <0x01>;
+			status = "disabled";
+		};
+
+		iommu@fa800000 {
+			compatible = "arm,smmu-v3";
+			reg = <0x00 0xfa800000 0x00 0x20000>;
+			#iommu-cells = <0x01>;
+			status = "disabled";
+		};
+
+		iommu@f9000000 {
+			compatible = "arm,smmu-v3";
+			reg = <0x00 0xf9000000 0x00 0x20000>;
+			#iommu-cells = <0x01>;
+			status = "disabled";
+		};
+
+		iommu@f9800000 {
+			compatible = "arm,smmu-v3";
+			reg = <0x00 0xf9800000 0x00 0x20000>;
+			#iommu-cells = <0x01>;
+			status = "disabled";
+		};
+
+		iommu@f8200000 {
+			compatible = "arm,smmu-v3";
+			reg = <0x00 0xf8200000 0x00 0x20000>;
+			#iommu-cells = <0x01>;
+			status = "disabled";
+		};
+
+		iommu@fc200000 {
+			compatible = "arm,smmu-v3";
+			reg = <0x00 0xfc200000 0x00 0x20000>;
+			#iommu-cells = <0x01>;
+			status = "disabled";
+		};
+
+		cr52_rproc0: cr52_0 {
+			compatible = "renesas,rcar-gen5-rproc";
+			renesas,mfis-channel = <0>;
+			status = "disabled";
+		};
+
+		cr52_rproc1: cr52_1 {
+			compatible = "renesas,rcar-gen5-rproc";
+			renesas,mfis-channel = <1>;
+			memory-region = <&cr52_ram1>;
+			status = "okay";
+		};
+
+		cr52_rproc2: cr52_2 {
+			compatible = "renesas,rcar-gen5-rproc";
+			renesas,mfis-channel = <2>;
+			status = "disabled";
+		};
+
+		rpmsg_shm0: rpmsg_shm@0 {
+			compatible = "generic-uio";
+			reg = <0x0 0x96600000 0x0 0x50000>;
+			linux,uio-name = "rpmsg_shm0";
+			status = "okay";
+		};
+
+		rpmsg_ipi0: rpmsg_ipi@0 {
+			compatible = "generic-uio";
+			reg = <0x0 0x18800000 0x0 0x1000>;
+			interrupts = <0x00 0x65 0x04>;
+			linux,uio-name = "rpmsg_ipi0";
+			status = "okay";
+		};
+
+		rpmsg_shm1: rpmsg_shm@1 {
+			compatible = "generic-uio";
+			reg = <0x0 0x96650000 0x0 0x50000>;
+			linux,uio-name = "rpmsg_shm1";
+			status = "disabled";
+		};
+
+		rpmsg_ipi1: rpmsg_ipi@1 {
+			compatible = "generic-uio";
+			reg = <0x0 0x18801000 0x0 0x1000>;
+			interrupts = <0x00 0x67 0x04>;
+			linux,uio-name = "rpmsg_ipi1";
+			status = "disabled";
+		};
+
+		rpmsg_shm2: rpmsg_shm@2 {
+			compatible = "generic-uio";
+			reg = <0x0 0x966a0000 0x0 0x50000>;
+			linux,uio-name = "rpmsg_shm2";
+			status = "disabled";
+		};
+
+		rpmsg_ipi2: rpmsg_ipi@2 {
+			compatible = "generic-uio";
+			reg = <0x0 0x18802000 0x0 0x1000>;
+			interrupts = <0x00 0x69 0x04>;
+			linux,uio-name = "rpmsg_ipi2";
+			status = "disabled";
+		};
+
+		mmc0: mmc@c0880000 {
+			compatible = "renesas,rcar-gen5-sdhi";
+			reg = <0 0xc0880000 0 0x2000>;
+			interrupts = <0x00 894 0x04>;
+			clocks = <&scmi_clk 200>,
+				<&scmi_clk 1692>;
+			clock-names = "core", "sd_clk";
+			max-frequency = <200000000>;
+			pinctrl-0 = <&mmc0_pins>;
+			pinctrl-1 = <&mmc0_pins>;
+			pinctrl-names = "default", "state_uhs";
+
+			vmmc-supply = <&reg_3p3v>;
+			vqmmc-supply = <&reg_1p8v>;
+			mmc-hs200-1_8v;
+			mmc-hs400-1_8v;
+			bus-width = <8>;
+			no-sd;
+			no-sdio;
+			non-removable;
+			full-pwr-cycle-in-suspend;
+			status = "disabled";
+		};
+
+		imrlx7_ims00: ims@c1800000{
+			compatible = "generic-uio";
+			reg = <0 0xc1800000 0 0x10000>;
+			interrupts = <0x00 606 0x04>;
+			clocks = <&scmi_clk 544>;
+			power-domains = <&scmi_devpd 35>;
+			resets = <&scmi_reset 544>;
+			linux,uio-name = "ims_00";
+		};
+
+		imrlx7_ims01: ims@c1810000{
+			compatible = "generic-uio";
+			reg = <0 0xc1810000 0 0x10000>;
+			interrupts = <0x00 607 0x04>;
+			clocks = <&scmi_clk 545>;
+			power-domains = <&scmi_devpd 35>;
+			resets = <&scmi_reset 545>;
+			linux,uio-name = "ims_01";
+		};
+
+		imrlx7_ims02: ims@c1820000{
+			compatible = "generic-uio";
+			reg = <0 0xc1820000 0 0x10000>;
+			interrupts = <0x00 608 0x04>;
+			clocks = <&scmi_clk 546>;
+			power-domains = <&scmi_devpd 36>;
+			resets = <&scmi_reset 546>;
+			linux,uio-name = "ims_02";
+		};
+
+		imrlx7_ims03: ims@c1830000{
+			compatible = "generic-uio";
+			reg = <0 0xc1830000 0 0x10000>;
+			interrupts = <0x00 609 0x04>;
+			clocks = <&scmi_clk 547>;
+			power-domains = <&scmi_devpd 36>;
+			resets = <&scmi_reset 547>;
+			linux,uio-name = "ims_03";
+		};
+
+		imrlx7_imr00: imr@c1900000 {
+			compatible = "generic-uio";
+			reg = <0 0xc1900000 0 0x10000>;
+			interrupts = <0x00 614 0x04>;
+			clocks = <&scmi_clk 542>;
+			power-domains = <&scmi_devpd 35>;
+			resets = <&scmi_reset 542>;
+			linux,uio-name = "imr_00";
+		};
+
+		imrlx7_imr01: imr@c1910000 {
+			compatible = "generic-uio";
+			reg = <0 0xc1910000 0 0x10000>;
+			interrupts = <0x00 615 0x04>;
+			clocks = <&scmi_clk 543>;
+			power-domains = <&scmi_devpd 36>;
+			resets = <&scmi_reset 543>;
+			linux,uio-name = "imr_01";
+		};
+
+		imrlx7_ims10: ims@c1c00000 {
+			compatible = "generic-uio";
+			reg = <0 0xc1c00000 0 0x10000>;
+			interrupts = <0x00 610 0x04>;
+			clocks = <&scmi_clk 550>;
+			power-domains = <&scmi_devpd 36>;
+			resets = <&scmi_reset 550>;
+			linux,uio-name = "ims_10";
+		};
+
+		imrlx7_ims11: ims@c1c10000 {
+			compatible = "generic-uio";
+			reg = <0 0xc1c10000 0 0x10000>;
+			interrupts = <0x00 611 0x04>;
+			clocks = <&scmi_clk 551>;
+			power-domains = <&scmi_devpd 37>;
+			resets = <&scmi_reset 551>;
+			linux,uio-name = "ims_11";
+		};
+
+		imrlx7_ims12: ims@c1c20000 {
+			compatible = "generic-uio";
+			reg = <0 0xc1c20000 0 0x10000>;
+			interrupts = <0x00 612 0x04>;
+			clocks = <&scmi_clk 552>;
+			power-domains = <&scmi_devpd 38>;
+			resets = <&scmi_reset 552>;
+			linux,uio-name = "ims_12";
+		};
+
+		imrlx7_ims13: ims@c1c30000 {
+			compatible = "generic-uio";
+			reg = <0 0xc1c30000 0 0x10000>;
+			interrupts = <0x00 613 0x04>;
+			clocks = <&scmi_clk 553>;
+			power-domains = <&scmi_devpd 38>;
+			resets = <&scmi_reset 553>;
+			linux,uio-name = "ims_13";
+		};
+
+		imrlx7_imr10: imr@c1d00000 {
+			compatible = "generic-uio";
+			reg = <0 0xc1d00000 0 0x10000>;
+			interrupts = <0x00 616 0x04>;
+			clocks = <&scmi_clk 548>;
+			power-domains = <&scmi_devpd 37>;
+			resets = <&scmi_reset 548>;
+			linux,uio-name = "imr_10";
+		};
+
+		imrlx7_imr11: imr@c1d10000 {
+			compatible = "generic-uio";
+			reg = <0 0xc1d10000 0 0x10000>;
+			interrupts = <0x00 617 0x04>;
+			clocks = <&scmi_clk 549>;
+			power-domains = <&scmi_devpd 38>;
+			resets = <&scmi_reset 549>;
+			linux,uio-name = "imr_11";
+		};
+
+		cisp0: cisp@c4000000 {
+			compatible = "generic-uio";
+			reg = <0 0xc4000000 0 0x100000>;
+			interrupts = <0x00 502 0x04>;
+			clocks = <&scmi_clk 11>;
+			power-domains = <&scmi_devpd 4>;
+			linux,uio-name = "cisp_00";
+		};
+
+		cisp1: cisp@c4100000 {
+			compatible = "generic-uio";
+			reg = <0 0xc4100000 0 0x100000>;
+			interrupts = <0x00 503 0x04>;
+			clocks = <&scmi_clk 12>;
+			power-domains = <&scmi_devpd 5>;
+			linux,uio-name = "cisp_01";
+		};
+
+		cisp2: cisp@c4200000 {
+			compatible = "generic-uio";
+			reg = <0 0xc4200000 0 0x100000>;
+			interrupts = <0x00 504 0x04>;
+			clocks = <&scmi_clk 13>;
+			power-domains = <&scmi_devpd 6>;
+			linux,uio-name = "cisp_02";
+		};
+
+		cisp3: cisp@c4300000 {
+			compatible = "generic-uio";
+			reg = <0 0xc4300000 0 0x100000>;
+			interrupts = <0x00 505 0x04>;
+			clocks = <&scmi_clk 14>;
+			power-domains = <&scmi_devpd 7>;
+			linux,uio-name = "cisp_03";
+		};
+
+		tisp0: tisp@c4700000 {
+			compatible = "generic-uio";
+			reg = <0 0xc4700000 0 0x20000>;
+			interrupts = <0x00 506 0x04>;
+			clocks = <&scmi_clk 15>;
+			power-domains = <&scmi_devpd 4>;
+			linux,uio-name = "tisp_00";
+		};
+
+		tisp1: tisp@c4720000 {
+			compatible = "generic-uio";
+			reg = <0 0xc4720000 0 0x20000>;
+			interrupts = <0x00 507 0x04>;
+			clocks = <&scmi_clk 16>;
+			power-domains = <&scmi_devpd 5>;
+			linux,uio-name = "tisp_01";
+		};
+
+		tisp2: tisp@c4740000 {
+			compatible = "generic-uio";
+			reg = <0 0xc4740000 0 0x20000>;
+			interrupts = <0x00 508 0x04>;
+			clocks = <&scmi_clk 17>;
+			power-domains = <&scmi_devpd 6>;
+			linux,uio-name = "tisp_02";
+		};
+
+		tisp3: tisp@c4760000 {
+			compatible = "generic-uio";
+			reg = <0 0xc4760000 0 0x20000>;
+			interrupts = <0x00 509 0x04>;
+			clocks = <&scmi_clk 18>;
+			power-domains = <&scmi_devpd 7>;
+			linux,uio-name = "tisp_03";
+		};
+		vspx0: vspx@c4880000 {
+			compatible = "generic-uio";
+			reg = <0 0xc4880000 0 0x4000>;
+			interrupts = <0x00 647 0x04>;
+			clocks = <&scmi_clk 36>;
+			power-domains = <&scmi_devpd 4>;
+			linux,uio-name = "vspx_00";
+		};
+
+		vspx1: vspx@c4884000 {
+			compatible = "generic-uio";
+			reg = <0 0xc4884000 0 0x4000>;
+			interrupts = <0x00 648 0x04>;
+			clocks = <&scmi_clk 37>;
+			power-domains = <&scmi_devpd 5>;
+			linux,uio-name = "vspx_01";
+		};
+
+		vspx2: vspx@c4888000 {
+			compatible = "generic-uio";
+			reg = <0 0xc4888000 0 0x4000>;
+			interrupts = <0x00 649 0x04>;
+			clocks = <&scmi_clk 38>;
+			power-domains = <&scmi_devpd 6>;
+			linux,uio-name = "vspx_02";
+		};
+
+		vspx3: vspx@c488c000 {
+			compatible = "generic-uio";
+			reg = <0 0xc488c000 0 0x4000>;
+			interrupts = <0x00 650 0x04>;
+			clocks = <&scmi_clk 39>;
+			power-domains = <&scmi_devpd 7>;
+			linux,uio-name = "vspx_03";
+		};
+
+		fcpvx0: fcpvx@c48a4000 {
+			compatible = "generic-uio";
+			reg = <0 0xc48a4000 0 0x1000>;
+			clocks = <&scmi_clk 52>;
+			power-domains = <&scmi_devpd 4>;
+			linux,uio-name = "fcpvx_00";
+		};
+
+		fcpvx1: fcpvx@c48a5000 {
+			compatible = "generic-uio";
+			reg = <0 0xc48a5000 0 0x1000>;
+			clocks = <&scmi_clk 53>;
+			power-domains = <&scmi_devpd 5>;
+			linux,uio-name = "fcpvx_01";
+		};
+
+		fcpvx2: fcpvx@c48a6000 {
+			compatible = "generic-uio";
+			reg = <0 0xc48a6000 0 0x1000>;
+			clocks = <&scmi_clk 54>;
+			power-domains = <&scmi_devpd 6>;
+			linux,uio-name = "fcpvx_02";
+		};
+
+		fcpvx3: fcpvx@c48a7000 {
+			compatible = "generic-uio";
+			reg = <0 0xc48a7000 0 0x1000>;
+			clocks = <&scmi_clk 55>;
+			power-domains = <&scmi_devpd 7>;
+			linux,uio-name = "fcpvx_03";
+		};
+
+		vcp5_0: dspss@c3000000 {
+			compatible = "generic-uio";
+			reg = <0 0xc3000000 0 0x10000>;
+			interrupts = <0x00 651 0x04>;
+			clocks = <&scmi_clk 2>;
+			power-domains = <&scmi_devpd 1>;
+			linux,uio-name = "vcp5_00";
+		};
+
+		vcp5_00_01 {
+			compatible = "generic-uio";
+			reg = <0 0xc3000000 0 0x10000>;
+			interrupts = <0x00 655 0x04>;
+			clocks = <&scmi_clk 2>;
+			power-domains = <&scmi_devpd 1>;
+			linux,uio-name = "irq_vcp5_00_01";
+		};
+
+		vcp5_1: dspss@c3002000 {
+			compatible = "generic-uio";
+			reg = <0 0xc3002000 0 0x10000>;
+			interrupts = <0x00 652 0x04>;
+			clocks = <&scmi_clk 2>;
+			power-domains = <&scmi_devpd 1>;
+			linux,uio-name = "vcp5_01";
+		};
+
+		vcp5_01_01 {
+			compatible = "generic-uio";
+			reg = <0 0xc3002000 0 0x10000>;
+			interrupts = <0x00 656 0x04>;
+			clocks = <&scmi_clk 2>;
+			power-domains = <&scmi_devpd 1>;
+			linux,uio-name = "irq_vcp5_01_01";
+		};
+
+		vcp5_2: dspss@c3400000 {
+			compatible = "generic-uio";
+			reg = <0 0xc3400000 0 0x10000>;
+			interrupts = <0x00 653 0x04>;
+			clocks = <&scmi_clk 3>;
+			power-domains = <&scmi_devpd 3>;
+			linux,uio-name = "vcp5_02";
+		};
+
+		vcp5_02_01 {
+			compatible = "generic-uio";
+			reg = <0 0xc3400000 0 0x10000>;
+			interrupts = <0x00 657 0x04>;
+			clocks = <&scmi_clk 3>;
+			power-domains = <&scmi_devpd 3>;
+			linux,uio-name = "irq_vcp5_02_01";
+		};
+
+		vcp5_3: dspss@c3402000 {
+			compatible = "generic-uio";
+			reg = <0 0xc3402000 0 0x10000>;
+			interrupts = <0x00 654 0x04>;
+			clocks = <&scmi_clk 3>;
+			power-domains = <&scmi_devpd 3>;
+			linux,uio-name = "vcp5_03";
+		};
+
+		vcp5_03_01 {
+			compatible = "generic-uio";
+			reg = <0 0xc3402000 0 0x10000>;
+			interrupts = <0x00 658 0x04>;
+			clocks = <&scmi_clk 3>;
+			power-domains = <&scmi_devpd 3>;
+			linux,uio-name = "irq_vcp5_03_01";
+		};
+
+		fcpc0: fcpc@c3008000 {
+			compatible = "generic-uio";
+			reg = <0 0xc3008000 0 0x1000>;
+			clocks = <&scmi_clk 0>;
+			power-domains = <&scmi_devpd 1>;
+			linux,uio-name = "fcpc_00";
+		};
+
+		fcpc1: fcpc@c3009000 {
+			compatible = "generic-uio";
+			reg = <0 0xc3009000 0 0x1000>;
+			clocks = <&scmi_clk 0>;
+			power-domains = <&scmi_devpd 1>;
+			linux,uio-name = "fcpc_01";
+		};
+
+		fcpc2: fcpc@c3408000 {
+			compatible = "generic-uio";
+			reg = <0 0xc3408000 0 0x1000>;
+			clocks = <&scmi_clk 1>;
+			power-domains = <&scmi_devpd 3>;
+			linux,uio-name = "fcpc_02";
+		};
+
+		fcpc3: fcpc@c3409000 {
+			compatible = "generic-uio";
+			reg = <0 0xc3409000 0 0x1000>;
+			clocks = <&scmi_clk 1>;
+			power-domains = <&scmi_devpd 3>;
+			linux,uio-name = "fcpc_03";
+		};
+
+		rsipe0: rsipe@19300000 {
+			compatible = "generic-uio";
+			reg = <0 0x19300000 0 0x8000>;
+			// interrupts = <0x00 4187 0x04>;
+			interrupts = <0x00 49 0x04>;
+			clocks = <&scmi_clk 474>;
+			//power-domains = <&scmi_devpd X5H_POWER_DOMAIN_ID_PD_APL>;
+			resets = <&scmi_reset 474>;
+			linux,uio-name = "rsip_e_00";
+		};
+
+		rsipe1: rsipe@19308000 {
+			compatible = "generic-uio";
+			reg = <0 0x19308000 0 0x8000>;
+			// interrupts = <0x00 4188 0x04>;
+			interrupts = <0x00 50 0x04>;
+			clocks = <&scmi_clk 475>;
+			//power-domains = <&scmi_devpd X5H_POWER_DOMAIN_ID_PD_APL>;
+			resets = <&scmi_reset 475>;
+			linux,uio-name = "rsip_e_01";
+		};
+
+		rsipe2: rsipe@19310000 {
+			compatible = "generic-uio";
+			reg = <0 0x19310000 0 0x8000>;
+			// interrupts = <0x00 4189 0x04>;
+			interrupts = <0x00 51 0x04>;
+			clocks = <&scmi_clk 476>;
+			//power-domains = <&scmi_devpd X5H_POWER_DOMAIN_ID_PD_APL>;
+			resets = <&scmi_reset 476>;
+			linux,uio-name = "rsip_e_02";
+		};
+
+		rsipe3: rsipe@19318000 {
+			compatible = "generic-uio";
+			reg = <0 0x19318000 0 0x8000>;
+			// interrupts = <0x00 4190 0x04>;
+			interrupts = <0x00 52 0x04>;
+			clocks = <&scmi_clk 477>;
+			//power-domains = <&scmi_devpd X5H_POWER_DOMAIN_ID_PD_APL>;
+			resets = <&scmi_reset 477>;
+			linux,uio-name = "rsip_e_03";
+		};
+
+		rsipe4: rsipe@19320000 {
+			compatible = "generic-uio";
+			reg = <0 0x19320000 0 0x8000>;
+			// interrupts = <0x00 4191 0x04>;
+			interrupts = <0x00 53 0x04>;
+			clocks = <&scmi_clk 478>;
+			//power-domains = <&scmi_devpd X5H_POWER_DOMAIN_ID_PD_APL>;
+			resets = <&scmi_reset 478>;
+			linux,uio-name = "rsip_e_04";
+		};
+
+		rsipe5: rsipe@19328000 {
+			compatible = "generic-uio";
+			reg = <0 0x19328000 0 0x8000>;
+			// interrupts = <0x00 4192 0x04>;
+			interrupts = <0x00 54 0x04>;
+			clocks = <&scmi_clk 479>;
+			//power-domains = <&scmi_devpd X5H_POWER_DOMAIN_ID_PD_APL>;
+			resets = <&scmi_reset 479>;
+			linux,uio-name = "rsip_e_05";
+		};
+
+		rsipe6: rsipe@19330000 {
+			compatible = "generic-uio";
+			reg = <0 0x19330000 0 0x8000>;
+			// interrupts = <0x00 4193 0x04>;
+			interrupts = <0x00 55 0x04>;
+			clocks = <&scmi_clk 480>;
+			//power-domains = <&scmi_devpd X5H_POWER_DOMAIN_ID_PD_APL>;
+			resets = <&scmi_reset 480>;
+			linux,uio-name = "rsip_e_06";
+		};
+
+		rsipe7: rsipe@19338000 {
+			compatible = "generic-uio";
+			reg = <0 0x19338000 0 0x8000>;
+			// interrupts = <0x00 4194 0x04>;
+			interrupts = <0x00 56 0x04>;
+			clocks = <&scmi_clk 481>;
+			//power-domains = <&scmi_devpd X5H_POWER_DOMAIN_ID_PD_APL>;
+			resets = <&scmi_reset 481>;
+			linux,uio-name = "rsip_e_07";
+		};
+
+		rsipe8: rsipe@19340000 {
+			compatible = "generic-uio";
+			reg = <0 0x19340000 0 0x8000>;
+			// interrupts = <0x00 4195 0x04>;
+			interrupts = <0x00 57 0x04>;
+			clocks = <&scmi_clk 482>;
+			//power-domains = <&scmi_devpd X5H_POWER_DOMAIN_ID_PD_APL>;
+			resets = <&scmi_reset 482>;
+			linux,uio-name = "rsip_e_08";
+		};
+
+		rsipe9: rsipe@19348000 {
+			compatible = "generic-uio";
+			reg = <0 0x19348000 0 0x8000>;
+			// interrupts = <0x00 4196 0x04>;
+			interrupts = <0x00 58 0x04>;
+			clocks = <&scmi_clk 483>;
+			//power-domains = <&scmi_devpd X5H_POWER_DOMAIN_ID_PD_APL>;
+			resets = <&scmi_reset 483>;
+			linux,uio-name = "rsip_e_09";
+		};
+
+		rsipe10: rsipe@19350000 {
+			compatible = "generic-uio";
+			reg = <0 0x19350000 0 0x8000>;
+			// interrupts = <0x00 4197 0x04>;
+			interrupts = <0x00 59 0x04>;
+			clocks = <&scmi_clk 484>;
+			//power-domains = <&scmi_devpd X5H_POWER_DOMAIN_ID_PD_APL>;
+			resets = <&scmi_reset 484>;
+			linux,uio-name = "rsip_e_10";
+		};
+
+		rsipe11: rsipe@19358000 {
+			compatible = "generic-uio";
+			reg = <0 0x19358000 0 0x8000>;
+			// interrupts = <0x00 4198 0x04>;
+			interrupts = <0x00 60 0x04>;
+			clocks = <&scmi_clk 485>;
+			//power-domains = <&scmi_devpd X5H_POWER_DOMAIN_ID_PD_APL>;
+			resets = <&scmi_reset 485>;
+			linux,uio-name = "rsip_e_11";
+		};
+
+		rsipe12: rsipe@19360000 {
+			compatible = "generic-uio";
+			reg = <0 0x19360000 0 0x8000>;
+			// interrupts = <0x00 4199 0x04>;
+			interrupts = <0x00 61 0x04>;
+			clocks = <&scmi_clk 486>;
+			//power-domains = <&scmi_devpd X5H_POWER_DOMAIN_ID_PD_APL>;
+			resets = <&scmi_reset 486>;
+			linux,uio-name = "rsip_e_12";
+		};
+
+		rsipe13: rsipe@19368000 {
+			compatible = "generic-uio";
+			reg = <0 0x19368000 0 0x8000>;
+			// interrupts = <0x00 4200 0x04>;
+			interrupts = <0x00 62 0x04>;
+			clocks = <&scmi_clk 487>;
+			//power-domains = <&scmi_devpd X5H_POWER_DOMAIN_ID_PD_APL>;
+			resets = <&scmi_reset 487>;
+			linux,uio-name = "rsip_e_13";
+		};
+
+		rsipe14: rsipe@19370000 {
+			compatible = "generic-uio";
+			reg = <0 0x19370000 0 0x8000>;
+			// interrupts = <0x00 4201 0x04>;
+			interrupts = <0x00 63 0x04>;
+			clocks = <&scmi_clk 488>;
+			//power-domains = <&scmi_devpd X5H_POWER_DOMAIN_ID_PD_APL>;
+			resets = <&scmi_reset 488>;
+			linux,uio-name = "rsip_e_14";
+		};
+
+		rsipe15: rsipe@19378000 {
+			compatible = "generic-uio";
+			reg = <0 0x19378000 0 0x8000>;
+			// interrupts = <0x00 4202 0x04>;
+			interrupts = <0x00 64 0x04>;
+			clocks = <&scmi_clk 489>;
+			//power-domains = <&scmi_devpd X5H_POWER_DOMAIN_ID_PD_APL>;
+			resets = <&scmi_reset 489>;
+			linux,uio-name = "rsip_e_15";
+		};
+
+		rsipe16: rsipe@19380000 {
+			compatible = "generic-uio";
+			reg = <0 0x19380000 0 0x8000>;
+			// interrupts = <0x00 4203 0x04>;
+			interrupts = <0x00 65 0x04>;
+			clocks = <&scmi_clk 490>;
+			//power-domains = <&scmi_devpd X5H_POWER_DOMAIN_ID_PD_APL>;
+			resets = <&scmi_reset 490>;
+			linux,uio-name = "rsip_e_16";
+		};
+
+		rsipe17: rsipe@19388000 {
+			compatible = "generic-uio";
+			reg = <0 0x19388000 0 0x8000>;
+			// interrupts = <0x00 4204 0x04>;
+			interrupts = <0x00 66 0x04>;
+			clocks = <&scmi_clk 491>;
+			//power-domains = <&scmi_devpd X5H_POWER_DOMAIN_ID_PD_APL>;
+			resets = <&scmi_reset 491>;
+			linux,uio-name = "rsip_e_17";
+		};
+
+		rsipe18: rsipe@19390000 {
+			compatible = "generic-uio";
+			reg = <0 0x19390000 0 0x8000>;
+			// interrupts = <0x00 4205 0x04>;
+			interrupts = <0x00 67 0x04>;
+			clocks = <&scmi_clk 492>;
+			//power-domains = <&scmi_devpd X5H_POWER_DOMAIN_ID_PD_APL>;
+			resets = <&scmi_reset 492>;
+			linux,uio-name = "rsip_e_18";
+		};
+
+		rsipe19: rsipe@19398000 {
+			compatible = "generic-uio";
+			reg = <0 0x19398000 0 0x8000>;
+			// interrupts = <0x00 4206 0x04>;
+			interrupts = <0x00 68 0x04>;
+			clocks = <&scmi_clk 493>;
+			//power-domains = <&scmi_devpd X5H_POWER_DOMAIN_ID_PD_APL>;
+			resets = <&scmi_reset 493>;
+			linux,uio-name = "rsip_e_19";
+		};
+
+		rsipm: rsipm@18980000 {
+			compatible = "generic-uio";
+			reg = <0 0x18980000 0 0x10000>;
+			linux,uio-name = "rsip_m_ts_cmd_00";
+		};
+
+		rsipm_reserved_mem1: rsipm@10100000 {
+			compatible = "generic-uio";
+			reg = <0 0x10100000 0 0x100000>;
+			linux,uio-name = "rsip_m_shared_01";
+		};
+
+		rsipm_reserved_mem2: rsipm@4d000000 {
+			compatible = "generic-uio";
+			reg = <0 0x4d000000 0 0x600000>;
+			linux,uio-name = "rsip_m_shared_02";
+		};
+
+		rsipe00: rsipe@19440000 {
+			compatible = "generic-uio";
+			reg = <0 0x19440000 0 0x1000>;
+			linux,uio-name = "rsip_e_stb_00";
+		};
+
+		ostm0: ostm@1c060000 {
+			compatible = "generic-uio";
+			reg = <0 0x1c060000 0 0x1000>;
+			// interrupts = <0x00 4135 0x04>;
+			interrupts = <0x00 69 0x04>;
+			clocks = <&scmi_clk 380>;
+			//power-domains = <&scmi_devpd X5H_POWER_DOMAIN_ID_PD_APL>;
+			resets = <&scmi_reset 380>;
+			linux,uio-name = "ostm_00";
+		};
+
+		ostm1: ostm@1c061000 {
+			compatible = "generic-uio";
+			reg = <0 0x1c061000 0 0x1000>;
+			// interrupts = <0x00 4136 0x04>;
+			interrupts = <0x00 70 0x04>;
+			clocks = <&scmi_clk 381>;
+			//power-domains = <&scmi_devpd X5H_POWER_DOMAIN_ID_PD_APL>;
+			resets = <&scmi_reset 381>;
+			linux,uio-name = "ostm_01";
+		};
+
+		ostm2: ostm@1c062000 {
+			compatible = "generic-uio";
+			reg = <0 0x1c062000 0 0x1000>;
+			// interrupts = <0x00 4137 0x04>;
+			interrupts = <0x00 71 0x04>;
+			clocks = <&scmi_clk 382>;
+			//power-domains = <&scmi_devpd X5H_POWER_DOMAIN_ID_PD_APL>;
+			resets = <&scmi_reset 382>;
+			linux,uio-name = "ostm_02";
+		};
+
+		ostm3: ostm@1c063000 {
+			compatible = "generic-uio";
+			reg = <0 0x1c063000 0 0x1000>;
+			// interrupts = <0x00 4138 0x04>;
+			interrupts = <0x00 72 0x04>;
+			clocks = <&scmi_clk 383>;
+			//power-domains = <&scmi_devpd X5H_POWER_DOMAIN_ID_PD_APL>;
+			resets = <&scmi_reset 383>;
+			linux,uio-name = "ostm_03";
+		};
+
+		ostm4: ostm@1c064000 {
+			compatible = "generic-uio";
+			reg = <0 0x1c064000 0 0x1000>;
+			// interrupts = <0x00 4139 0x04>;
+			interrupts = <0x00 73 0x04>;
+			clocks = <&scmi_clk 384>;
+			//power-domains = <&scmi_devpd X5H_POWER_DOMAIN_ID_PD_APL>;
+			resets = <&scmi_reset 384>;
+			linux,uio-name = "ostm_04";
+		};
+
+		ostm5: ostm@1c065000 {
+			compatible = "generic-uio";
+			reg = <0 0x1c065000 0 0x1000>;
+			// interrupts = <0x00 4140 0x04>;
+			interrupts = <0x00 74 0x04>;
+			clocks = <&scmi_clk 385>;
+			//power-domains = <&scmi_devpd X5H_POWER_DOMAIN_ID_PD_APL>;
+			resets = <&scmi_reset 385>;
+			linux,uio-name = "ostm_05";
+		};
+
+		vin_00: video@c4900000 {
+			compatible = "generic-uio";
+			reg = <0 0xc4900000 0 0x1000>;
+			interrupts = <0x00 510 0x04>;
+			power-domains = <&scmi_devpd 4>;
+			clocks = <&scmi_clk 56>;
+			resets = <&scmi_reset 56>;
+			linux,uio-name = "vin_00";
+		};
+
+		vin_01: video@c4901000 {
+			compatible = "generic-uio";
+			reg = <0 0xc4901000 0 0x1000>;
+			interrupts = <0x00 511 0x04>;
+			power-domains = <&scmi_devpd 4>;
+			clocks = <&scmi_clk 57>;
+			resets = <&scmi_reset 57>;
+			linux,uio-name = "vin_01";
+		};
+
+		vin_02: video@c4902000 {
+			compatible = "generic-uio";
+			reg = <0 0xc4902000 0 0x1000>;
+			interrupts = <0x00 512 0x04>;
+			power-domains = <&scmi_devpd 4>;
+			clocks = <&scmi_clk 58>;
+			resets = <&scmi_reset 58>;
+			linux,uio-name = "vin_02";
+		};
+
+		vin_03: video@c4903000 {
+			compatible = "generic-uio";
+			reg = <0 0xc4903000 0 0x1000>;
+			interrupts = <0x00 513 0x04>;
+			power-domains = <&scmi_devpd 4>;
+			clocks = <&scmi_clk 59>;
+			resets = <&scmi_reset 59>;
+			linux,uio-name = "vin_03";
+		};
+
+		vin_04: video@c4904000 {
+			compatible = "generic-uio";
+			reg = <0 0xc4904000 0 0x1000>;
+			interrupts = <0x00 514 0x04>;
+			power-domains = <&scmi_devpd 4>;
+			clocks = <&scmi_clk 60>;
+			resets = <&scmi_reset 60>;
+			linux,uio-name = "vin_04";
+		};
+
+		vin_05: video@c4905000 {
+			compatible = "generic-uio";
+			reg = <0 0xc4905000 0 0x1000>;
+			interrupts = <0x00 515 0x04>;
+			power-domains = <&scmi_devpd 4>;
+			clocks = <&scmi_clk 61>;
+			resets = <&scmi_reset 61>;
+			linux,uio-name = "vin_05";
+		};
+
+		vin_06: video@c4906000 {
+			compatible = "generic-uio";
+			reg = <0 0xc4906000 0 0x1000>;
+			interrupts = <0x00 516 0x04>;
+			power-domains = <&scmi_devpd 4>;
+			clocks = <&scmi_clk 62>;
+			resets = <&scmi_reset 62>;
+			linux,uio-name = "vin_06";
+		};
+
+		vin_07: video@c4907000 {
+			compatible = "generic-uio";
+			reg = <0 0xc4907000 0 0x1000>;
+			interrupts = <0x00 517 0x04>;
+			power-domains = <&scmi_devpd 4>;
+			clocks = <&scmi_clk 63>;
+			resets = <&scmi_reset 63>;
+			linux,uio-name = "vin_07";
+		};
+
+		vin_10: video@c4908000 {
+			compatible = "generic-uio";
+			reg = <0 0xc4908000 0 0x1000>;
+			interrupts = <0x00 518 0x04>;
+			power-domains = <&scmi_devpd 4>;
+			clocks = <&scmi_clk 64>;
+			resets = <&scmi_reset 64>;
+			linux,uio-name = "vin_10";
+		};
+
+		vin_11: video@c4909000 {
+			compatible = "generic-uio";
+			reg = <0 0xc4909000 0 0x1000>;
+			interrupts = <0x00 519 0x04>;
+			power-domains = <&scmi_devpd 4>;
+			clocks = <&scmi_clk 65>;
+			resets = <&scmi_reset 65>;
+			linux,uio-name = "vin_11";
+		};
+
+		vin_12: video@c490a000 {
+			compatible = "generic-uio";
+			reg = <0 0xc490a000 0 0x1000>;
+			interrupts = <0x00 520 0x04>;
+			power-domains = <&scmi_devpd 4>;
+			clocks = <&scmi_clk 66>;
+			resets = <&scmi_reset 66>;
+			linux,uio-name = "vin_12";
+		};
+
+		vin_13: video@c490b000 {
+			compatible = "generic-uio";
+			reg = <0 0xc490b000 0 0x1000>;
+			interrupts = <0x00 521 0x04>;
+			power-domains = <&scmi_devpd 4>;
+			clocks = <&scmi_clk 67>;
+			resets = <&scmi_reset 67>;
+			linux,uio-name = "vin_13";
+		};
+
+		vin_14: video@c490c000 {
+			compatible = "generic-uio";
+			reg = <0 0xc490c000 0 0x1000>;
+			interrupts = <0x00 522 0x04>;
+			power-domains = <&scmi_devpd 4>;
+			clocks = <&scmi_clk 68>;
+			resets = <&scmi_reset 68>;
+			linux,uio-name = "vin_14";
+		};
+
+		vin_15: video@c490d000 {
+			compatible = "generic-uio";
+			reg = <0 0xc490d000 0 0x1000>;
+			interrupts = <0x00 523 0x04>;
+			power-domains = <&scmi_devpd 4>;
+			clocks = <&scmi_clk 69>;
+			resets = <&scmi_reset 69>;
+			linux,uio-name = "vin_15";
+		};
+
+		vin_16: video@c490e000 {
+			compatible = "generic-uio";
+			reg = <0 0xc490e000 0 0x1000>;
+			interrupts = <0x00 524 0x04>;
+			power-domains = <&scmi_devpd 4>;
+			clocks = <&scmi_clk 70>;
+			resets = <&scmi_reset 70>;
+			linux,uio-name = "vin_16";
+		};
+
+		vin_17: video@c490f000 {
+			compatible = "generic-uio";
+			reg = <0 0xc490f000 0 0x1000>;
+			interrupts = <0x00 525 0x04>;
+			power-domains = <&scmi_devpd 4>;
+			clocks = <&scmi_clk 71>;
+			resets = <&scmi_reset 71>;
+			linux,uio-name = "vin_17";
+		};
+
+		vin_20: video@c4910000 {
+			compatible = "generic-uio";
+			reg = <0 0xc4910000 0 0x1000>;
+			interrupts = <0x00 526 0x04>;
+			power-domains = <&scmi_devpd 4>;
+			clocks = <&scmi_clk 72>;
+			resets = <&scmi_reset 72>;
+			linux,uio-name = "vin_20";
+		};
+
+		vin_21: video@c4911000 {
+			compatible = "generic-uio";
+			reg = <0 0xc4911000 0 0x1000>;
+			interrupts = <0x00 527 0x04>;
+			power-domains = <&scmi_devpd 4>;
+			clocks = <&scmi_clk 73>;
+			resets = <&scmi_reset 73>;
+			linux,uio-name = "vin_21";
+		};
+
+		vin_22: video@c4912000 {
+			compatible = "generic-uio";
+			reg = <0 0xc4912000 0 0x1000>;
+			interrupts = <0x00 528 0x04>;
+			power-domains = <&scmi_devpd 4>;
+			clocks = <&scmi_clk 74>;
+			resets = <&scmi_reset 74>;
+			linux,uio-name = "vin_22";
+		};
+
+		vin_23: video@c4913000 {
+			compatible = "generic-uio";
+			reg = <0 0xc4913000 0 0x1000>;
+			interrupts = <0x00 529 0x04>;
+			power-domains = <&scmi_devpd 4>;
+			clocks = <&scmi_clk 75>;
+			resets = <&scmi_reset 75>;
+			linux,uio-name = "vin_23";
+		};
+
+		vin_24: video@c4914000 {
+			compatible = "generic-uio";
+			reg = <0 0xc4914000 0 0x1000>;
+			interrupts = <0x00 530 0x04>;
+			power-domains = <&scmi_devpd 4>;
+			clocks = <&scmi_clk 76>;
+			resets = <&scmi_reset 76>;
+			linux,uio-name = "vin_24";
+		};
+
+		vin_25: video@c4915000 {
+			compatible = "generic-uio";
+			reg = <0 0xc4915000 0 0x1000>;
+			interrupts = <0x00 531 0x04>;
+			power-domains = <&scmi_devpd 4>;
+			clocks = <&scmi_clk 77>;
+			resets = <&scmi_reset 77>;
+			linux,uio-name = "vin_25";
+		};
+
+		vin_26: video@c4916000 {
+			compatible = "generic-uio";
+			reg = <0 0xc4916000 0 0x1000>;
+			interrupts = <0x00 532 0x04>;
+			power-domains = <&scmi_devpd 4>;
+			clocks = <&scmi_clk 78>;
+			resets = <&scmi_reset 78>;
+			linux,uio-name = "vin_26";
+		};
+
+		vin_27: video@c4917000 {
+			compatible = "generic-uio";
+			reg = <0 0xc4917000 0 0x1000>;
+			interrupts = <0x00 533 0x04>;
+			power-domains = <&scmi_devpd 4>;
+			clocks = <&scmi_clk 79>;
+			resets = <&scmi_reset 79>;
+			linux,uio-name = "vin_27";
+		};
+
+		vin_30: video@c4918000 {
+			compatible = "generic-uio";
+			reg = <0 0xc4918000 0 0x1000>;
+			interrupts = <0x00 534 0x04>;
+			power-domains = <&scmi_devpd 5>;
+			clocks = <&scmi_clk 80>;
+			resets = <&scmi_reset 80>;
+			linux,uio-name = "vin_30";
+		};
+
+		vin_31: video@c4919000 {
+			compatible = "generic-uio";
+			reg = <0 0xc4919000 0 0x1000>;
+			interrupts = <0x00 535 0x04>;
+			power-domains = <&scmi_devpd 5>;
+			clocks = <&scmi_clk 81>;
+			resets = <&scmi_reset 81>;
+			linux,uio-name = "vin_31";
+		};
+
+		vin_32: video@c491a000 {
+			compatible = "generic-uio";
+			reg = <0 0xc491a000 0 0x1000>;
+			interrupts = <0x00 536 0x04>;
+			power-domains = <&scmi_devpd 5>;
+			clocks = <&scmi_clk 82>;
+			resets = <&scmi_reset 82>;
+			linux,uio-name = "vin_32";
+		};
+
+		vin_33: video@c491b000 {
+			compatible = "generic-uio";
+			reg = <0 0xc491b000 0 0x1000>;
+			interrupts = <0x00 537 0x04>;
+			power-domains = <&scmi_devpd 5>;
+			clocks = <&scmi_clk 83>;
+			resets = <&scmi_reset 83>;
+			linux,uio-name = "vin_33";
+		};
+
+		vin_34: video@c491c000 {
+			compatible = "generic-uio";
+			reg = <0 0xc491c000 0 0x1000>;
+			interrupts = <0x00 538 0x04>;
+			power-domains = <&scmi_devpd 5>;
+			clocks = <&scmi_clk 84>;
+			resets = <&scmi_reset 84>;
+			linux,uio-name = "vin_34";
+		};
+
+		vin_35: video@c491d000 {
+			compatible = "generic-uio";
+			reg = <0 0xc491d000 0 0x1000>;
+			interrupts = <0x00 539 0x04>;
+			power-domains = <&scmi_devpd 5>;
+			clocks = <&scmi_clk 85>;
+			resets = <&scmi_reset 85>;
+			linux,uio-name = "vin_35";
+		};
+
+		vin_36: video@c491e000 {
+			compatible = "generic-uio";
+			reg = <0 0xc491e000 0 0x1000>;
+			interrupts = <0x00 540 0x04>;
+			power-domains = <&scmi_devpd 5>;
+			clocks = <&scmi_clk 86>;
+			resets = <&scmi_reset 86>;
+			linux,uio-name = "vin_36";
+		};
+
+		vin_37: video@c491f000 {
+			compatible = "generic-uio";
+			reg = <0 0xc491f000 0 0x1000>;
+			interrupts = <0x00 541 0x04>;
+			power-domains = <&scmi_devpd 5>;
+			clocks = <&scmi_clk 87>;
+			resets = <&scmi_reset 87>;
+			linux,uio-name = "vin_37";
+		};
+
+		vin_40: video@c4920000 {
+			compatible = "generic-uio";
+			reg = <0 0xc4920000 0 0x1000>;
+			interrupts = <0x00 542 0x04>;
+			power-domains = <&scmi_devpd 5>;
+			clocks = <&scmi_clk 88>;
+			resets = <&scmi_reset 88>;
+			linux,uio-name = "vin_40";
+		};
+
+		vin_41: video@c4921000 {
+			compatible = "generic-uio";
+			reg = <0 0xc4921000 0 0x1000>;
+			interrupts = <0x00 543 0x04>;
+			power-domains = <&scmi_devpd 5>;
+			clocks = <&scmi_clk 89>;
+			resets = <&scmi_reset 89>;
+			linux,uio-name = "vin_41";
+		};
+
+		vin_42: video@c4922000 {
+			compatible = "generic-uio";
+			reg = <0 0xc4922000 0 0x1000>;
+			interrupts = <0x00 544 0x04>;
+			power-domains = <&scmi_devpd 5>;
+			clocks = <&scmi_clk 90>;
+			resets = <&scmi_reset 90>;
+			linux,uio-name = "vin_42";
+		};
+
+		vin_43: video@c4923000 {
+			compatible = "generic-uio";
+			reg = <0 0xc4923000 0 0x1000>;
+			interrupts = <0x00 545 0x04>;
+			power-domains = <&scmi_devpd 5>;
+			clocks = <&scmi_clk 91>;
+			resets = <&scmi_reset 91>;
+			linux,uio-name = "vin_43";
+		};
+
+		vin_44: video@c4924000 {
+			compatible = "generic-uio";
+			reg = <0 0xc4924000 0 0x1000>;
+			interrupts = <0x00 546 0x04>;
+			power-domains = <&scmi_devpd 5>;
+			clocks = <&scmi_clk 92>;
+			resets = <&scmi_reset 92>;
+			linux,uio-name = "vin_44";
+		};
+
+		vin_45: video@c4925000 {
+			compatible = "generic-uio";
+			reg = <0 0xc4925000 0 0x1000>;
+			interrupts = <0x00 547 0x04>;
+			power-domains = <&scmi_devpd 5>;
+			clocks = <&scmi_clk 93>;
+			resets = <&scmi_reset 93>;
+			linux,uio-name = "vin_45";
+		};
+
+		vin_46: video@c4926000 {
+			compatible = "generic-uio";
+			reg = <0 0xc4926000 0 0x1000>;
+			interrupts = <0x00 548 0x04>;
+			power-domains = <&scmi_devpd 5>;
+			clocks = <&scmi_clk 94>;
+			resets = <&scmi_reset 94>;
+			linux,uio-name = "vin_46";
+		};
+
+		vin_47: video@c4927000 {
+			compatible = "generic-uio";
+			reg = <0 0xc4927000 0 0x1000>;
+			interrupts = <0x00 549 0x04>;
+			power-domains = <&scmi_devpd 5>;
+			clocks = <&scmi_clk 95>;
+			resets = <&scmi_reset 95>;
+			linux,uio-name = "vin_47";
+		};
+
+		vin_50: video@c4928000 {
+			compatible = "generic-uio";
+			reg = <0 0xc4928000 0 0x1000>;
+			interrupts = <0x00 550 0x04>;
+			power-domains = <&scmi_devpd 6>;
+			clocks = <&scmi_clk 96>;
+			resets = <&scmi_reset 96>;
+			linux,uio-name = "vin_50";
+		};
+
+		vin_51: video@c4929000 {
+			compatible = "generic-uio";
+			reg = <0 0xc4929000 0 0x1000>;
+			interrupts = <0x00 551 0x04>;
+			power-domains = <&scmi_devpd 6>;
+			clocks = <&scmi_clk 97>;
+			resets = <&scmi_reset 97>;
+			linux,uio-name = "vin_51";
+		};
+
+		vin_52: video@c492a000 {
+			compatible = "generic-uio";
+			reg = <0 0xc492a000 0 0x1000>;
+			interrupts = <0x00 552 0x04>;
+			power-domains = <&scmi_devpd 6>;
+			clocks = <&scmi_clk 98>;
+			resets = <&scmi_reset 98>;
+			linux,uio-name = "vin_52";
+		};
+
+		vin_53: video@c492b000 {
+			compatible = "generic-uio";
+			reg = <0 0xc492b000 0 0x1000>;
+			interrupts = <0x00 553 0x04>;
+			power-domains = <&scmi_devpd 6>;
+			clocks = <&scmi_clk 99>;
+			resets = <&scmi_reset 99>;
+			linux,uio-name = "vin_53";
+		};
+
+		vin_54: video@c492c000 {
+			compatible = "generic-uio";
+			reg = <0 0xc492c000 0 0x1000>;
+			interrupts = <0x00 554 0x04>;
+			power-domains = <&scmi_devpd 6>;
+			clocks = <&scmi_clk 100>;
+			resets = <&scmi_reset 100>;
+			linux,uio-name = "vin_54";
+		};
+
+		vin_55: video@c492d000 {
+			compatible = "generic-uio";
+			reg = <0 0xc492d000 0 0x1000>;
+			interrupts = <0x00 555 0x04>;
+			power-domains = <&scmi_devpd 6>;
+			clocks = <&scmi_clk 101>;
+			resets = <&scmi_reset 101>;
+			linux,uio-name = "vin_55";
+		};
+
+		vin_56: video@c492e000 {
+			compatible = "generic-uio";
+			reg = <0 0xc492e000 0 0x1000>;
+			interrupts = <0x00 556 0x04>;
+			power-domains = <&scmi_devpd 6>;
+			clocks = <&scmi_clk 102>;
+			resets = <&scmi_reset 102>;
+			linux,uio-name = "vin_56";
+		};
+
+		vin_57: video@c492f000 {
+			compatible = "generic-uio";
+			reg = <0 0xc492f000 0 0x1000>;
+			interrupts = <0x00 557 0x04>;
+			power-domains = <&scmi_devpd 6>;
+			clocks = <&scmi_clk 103>;
+			resets = <&scmi_reset 103>;
+			linux,uio-name = "vin_57";
+		};
+
+		vin_60: video@c4930000 {
+			compatible = "generic-uio";
+			reg = <0 0xc4930000 0 0x1000>;
+			interrupts = <0x00 558 0x04>;
+			power-domains = <&scmi_devpd 6>;
+			clocks = <&scmi_clk 104>;
+			resets = <&scmi_reset 104>;
+			linux,uio-name = "vin_60";
+		};
+
+		vin_61: video@c4931000 {
+			compatible = "generic-uio";
+			reg = <0 0xc4931000 0 0x1000>;
+			interrupts = <0x00 559 0x04>;
+			power-domains = <&scmi_devpd 6>;
+			clocks = <&scmi_clk 105>;
+			resets = <&scmi_reset 105>;
+			linux,uio-name = "vin_61";
+		};
+
+		vin_62: video@c4932000 {
+			compatible = "generic-uio";
+			reg = <0 0xc4932000 0 0x1000>;
+			interrupts = <0x00 560 0x04>;
+			power-domains = <&scmi_devpd 6>;
+			clocks = <&scmi_clk 106>;
+			resets = <&scmi_reset 106>;
+			linux,uio-name = "vin_62";
+		};
+
+		vin_63: video@c4933000 {
+			compatible = "generic-uio";
+			reg = <0 0xc4933000 0 0x1000>;
+			interrupts = <0x00 561 0x04>;
+			power-domains = <&scmi_devpd 6>;
+			clocks = <&scmi_clk 107>;
+			resets = <&scmi_reset 107>;
+			linux,uio-name = "vin_63";
+		};
+
+		vin_64: video@c4934000 {
+			compatible = "generic-uio";
+			reg = <0 0xc4934000 0 0x1000>;
+			interrupts = <0x00 562 0x04>;
+			power-domains = <&scmi_devpd 6>;
+			clocks = <&scmi_clk 108>;
+			resets = <&scmi_reset 108>;
+			linux,uio-name = "vin_64";
+		};
+
+		vin_65: video@c4935000 {
+			compatible = "generic-uio";
+			reg = <0 0xc4935000 0 0x1000>;
+			interrupts = <0x00 563 0x04>;
+			power-domains = <&scmi_devpd 6>;
+			clocks = <&scmi_clk 109>;
+			resets = <&scmi_reset 109>;
+			linux,uio-name = "vin_65";
+		};
+
+		vin_66: video@c4936000 {
+			compatible = "generic-uio";
+			reg = <0 0xc4936000 0 0x1000>;
+			interrupts = <0x00 564 0x04>;
+			power-domains = <&scmi_devpd 6>;
+			clocks = <&scmi_clk 110>;
+			resets = <&scmi_reset 110>;
+			linux,uio-name = "vin_66";
+		};
+
+		vin_67: video@c4937000 {
+			compatible = "generic-uio";
+			reg = <0 0xc4937000 0 0x1000>;
+			interrupts = <0x00 565 0x04>;
+			power-domains = <&scmi_devpd 6>;
+			clocks = <&scmi_clk 111>;
+			resets = <&scmi_reset 111>;
+			linux,uio-name = "vin_67";
+		};
+
+		vin_70: video@c4938000 {
+			compatible = "generic-uio";
+			reg = <0 0xc4938000 0 0x1000>;
+			interrupts = <0x00 566 0x04>;
+			power-domains = <&scmi_devpd 6>;
+			clocks = <&scmi_clk 112>;
+			resets = <&scmi_reset 112>;
+			linux,uio-name = "vin_70";
+		};
+
+		vin_71: video@c4939000 {
+			compatible = "generic-uio";
+			reg = <0 0xc4939000 0 0x1000>;
+			interrupts = <0x00 567 0x04>;
+			power-domains = <&scmi_devpd 6>;
+			clocks = <&scmi_clk 113>;
+			resets = <&scmi_reset 113>;
+			linux,uio-name = "vin_71";
+		};
+
+		vin_72: video@c493a000 {
+			compatible = "generic-uio";
+			reg = <0 0xc493a000 0 0x1000>;
+			interrupts = <0x00 568 0x04>;
+			power-domains = <&scmi_devpd 6>;
+			clocks = <&scmi_clk 114>;
+			resets = <&scmi_reset 114>;
+			linux,uio-name = "vin_72";
+		};
+
+		vin_73: video@c493b000 {
+			compatible = "generic-uio";
+			reg = <0 0xc493b000 0 0x1000>;
+			interrupts = <0x00 569 0x04>;
+			power-domains = <&scmi_devpd 6>;
+			clocks = <&scmi_clk 115>;
+			resets = <&scmi_reset 115>;
+			linux,uio-name = "vin_73";
+		};
+
+		vin_74: video@c493c000 {
+			compatible = "generic-uio";
+			reg = <0 0xc493c000 0 0x1000>;
+			interrupts = <0x00 570 0x04>;
+			power-domains = <&scmi_devpd 6>;
+			clocks = <&scmi_clk 116>;
+			resets = <&scmi_reset 116>;
+			linux,uio-name = "vin_74";
+		};
+
+		vin_75: video@c493d000 {
+			compatible = "generic-uio";
+			reg = <0 0xc493d000 0 0x1000>;
+			interrupts = <0x00 571 0x04>;
+			power-domains = <&scmi_devpd 6>;
+			clocks = <&scmi_clk 117>;
+			resets = <&scmi_reset 117>;
+			linux,uio-name = "vin_75";
+		};
+
+		vin_76: video@c493e000 {
+			compatible = "generic-uio";
+			reg = <0 0xc493e000 0 0x1000>;
+			interrupts = <0x00 572 0x04>;
+			power-domains = <&scmi_devpd 6>;
+			clocks = <&scmi_clk 118>;
+			resets = <&scmi_reset 118>;
+			linux,uio-name = "vin_76";
+		};
+
+		vin_77: video@c493f000 {
+			compatible = "generic-uio";
+			reg = <0 0xc493f000 0 0x1000>;
+			interrupts = <0x00 573 0x04>;
+			power-domains = <&scmi_devpd 6>;
+			clocks = <&scmi_clk 119>;
+			resets = <&scmi_reset 119>;
+			linux,uio-name = "vin_77";
+		};
+
+		vin_80: video@c4940000 {
+			compatible = "generic-uio";
+			reg = <0 0xc4940000 0 0x1000>;
+			interrupts = <0x00 574 0x04>;
+			power-domains = <&scmi_devpd 6>;
+			clocks = <&scmi_clk 120>;
+			resets = <&scmi_reset 120>;
+			linux,uio-name = "vin_80";
+		};
+
+		vin_81: video@c4941000 {
+			compatible = "generic-uio";
+			reg = <0 0xc4941000 0 0x1000>;
+			interrupts = <0x00 575 0x04>;
+			power-domains = <&scmi_devpd 6>;
+			clocks = <&scmi_clk 121>;
+			resets = <&scmi_reset 121>;
+			linux,uio-name = "vin_81";
+		};
+
+		vin_82: video@c4942000 {
+			compatible = "generic-uio";
+			reg = <0 0xc4942000 0 0x1000>;
+			interrupts = <0x00 576 0x04>;
+			power-domains = <&scmi_devpd 6>;
+			clocks = <&scmi_clk 122>;
+			resets = <&scmi_reset 122>;
+			linux,uio-name = "vin_82";
+		};
+
+		vin_83: video@c4943000 {
+			compatible = "generic-uio";
+			reg = <0 0xc4943000 0 0x1000>;
+			interrupts = <0x00 577 0x04>;
+			power-domains = <&scmi_devpd 6>;
+			clocks = <&scmi_clk 123>;
+			resets = <&scmi_reset 123>;
+			linux,uio-name = "vin_83";
+		};
+
+		vin_84: video@c4944000 {
+			compatible = "generic-uio";
+			reg = <0 0xc4944000 0 0x1000>;
+			interrupts = <0x00 578 0x04>;
+			power-domains = <&scmi_devpd 6>;
+			clocks = <&scmi_clk 124>;
+			resets = <&scmi_reset 124>;
+			linux,uio-name = "vin_84";
+		};
+
+		vin_85: video@c4945000 {
+			compatible = "generic-uio";
+			reg = <0 0xc4945000 0 0x1000>;
+			interrupts = <0x00 579 0x04>;
+			power-domains = <&scmi_devpd 6>;
+			clocks = <&scmi_clk 125>;
+			resets = <&scmi_reset 125>;
+			linux,uio-name = "vin_85";
+		};
+
+		vin_86: video@c4946000 {
+			compatible = "generic-uio";
+			reg = <0 0xc4946000 0 0x1000>;
+			interrupts = <0x00 580 0x04>;
+			power-domains = <&scmi_devpd 6>;
+			clocks = <&scmi_clk 126>;
+			resets = <&scmi_reset 126>;
+			linux,uio-name = "vin_86";
+		};
+
+		vin_87: video@c4947000 {
+			compatible = "generic-uio";
+			reg = <0 0xc4947000 0 0x1000>;
+			interrupts = <0x00 581 0x04>;
+			power-domains = <&scmi_devpd 6>;
+			clocks = <&scmi_clk 127>;
+			resets = <&scmi_reset 127>;
+			linux,uio-name = "vin_87";
+		};
+
+		vin_90: video@c4948000 {
+			compatible = "generic-uio";
+			reg = <0 0xc4948000 0 0x1000>;
+			interrupts = <0x00 582 0x04>;
+			power-domains = <&scmi_devpd 7>;
+			clocks = <&scmi_clk 128>;
+			resets = <&scmi_reset 128>;
+			linux,uio-name = "vin_90";
+		};
+
+		vin_91: video@c4949000 {
+			compatible = "generic-uio";
+			reg = <0 0xc4949000 0 0x1000>;
+			interrupts = <0x00 583 0x04>;
+			power-domains = <&scmi_devpd 7>;
+			clocks = <&scmi_clk 129>;
+			resets = <&scmi_reset 129>;
+			linux,uio-name = "vin_91";
+		};
+
+		vin_92: video@c494a000 {
+			compatible = "generic-uio";
+			reg = <0 0xc494a000 0 0x1000>;
+			interrupts = <0x00 584 0x04>;
+			power-domains = <&scmi_devpd 7>;
+			clocks = <&scmi_clk 130>;
+			resets = <&scmi_reset 130>;
+			linux,uio-name = "vin_92";
+		};
+
+		vin_93: video@c494b000 {
+			compatible = "generic-uio";
+			reg = <0 0xc494b000 0 0x1000>;
+			interrupts = <0x00 585 0x04>;
+			power-domains = <&scmi_devpd 7>;
+			clocks = <&scmi_clk 131>;
+			resets = <&scmi_reset 131>;
+			linux,uio-name = "vin_93";
+		};
+
+		vin_94: video@c494c000 {
+			compatible = "generic-uio";
+			reg = <0 0xc494c000 0 0x1000>;
+			interrupts = <0x00 586 0x04>;
+			power-domains = <&scmi_devpd 7>;
+			clocks = <&scmi_clk 132>;
+			resets = <&scmi_reset 132>;
+			linux,uio-name = "vin_94";
+		};
+
+		vin_95: video@c494d000 {
+			compatible = "generic-uio";
+			reg = <0 0xc494d000 0 0x1000>;
+			interrupts = <0x00 587 0x04>;
+			power-domains = <&scmi_devpd 7>;
+			clocks = <&scmi_clk 133>;
+			resets = <&scmi_reset 133>;
+			linux,uio-name = "vin_95";
+		};
+
+		vin_96: video@c494e000 {
+			compatible = "generic-uio";
+			reg = <0 0xc494e000 0 0x1000>;
+			interrupts = <0x00 588 0x04>;
+			power-domains = <&scmi_devpd 7>;
+			clocks = <&scmi_clk 134>;
+			resets = <&scmi_reset 134>;
+			linux,uio-name = "vin_96";
+		};
+
+		vin_97: video@c494f000 {
+			compatible = "generic-uio";
+			reg = <0 0xc494f000 0 0x1000>;
+			interrupts = <0x00 589 0x04>;
+			power-domains = <&scmi_devpd 7>;
+			clocks = <&scmi_clk 135>;
+			resets = <&scmi_reset 135>;
+			linux,uio-name = "vin_97";
+		};
+
+		vin_100: video@c4950000 {
+			compatible = "generic-uio";
+			reg = <0 0xc4950000 0 0x1000>;
+			interrupts = <0x00 590 0x04>;
+			power-domains = <&scmi_devpd 7>;
+			clocks = <&scmi_clk 136>;
+			resets = <&scmi_reset 136>;
+			linux,uio-name = "vin_100";
+		};
+
+		vin_101: video@c4951000 {
+			compatible = "generic-uio";
+			reg = <0 0xc4951000 0 0x1000>;
+			interrupts = <0x00 591 0x04>;
+			power-domains = <&scmi_devpd 7>;
+			clocks = <&scmi_clk 137>;
+			resets = <&scmi_reset 137>;
+			linux,uio-name = "vin_101";
+		};
+
+		vin_102: video@c4952000 {
+			compatible = "generic-uio";
+			reg = <0 0xc4952000 0 0x1000>;
+			interrupts = <0x00 592 0x04>;
+			power-domains = <&scmi_devpd 7>;
+			clocks = <&scmi_clk 138>;
+			resets = <&scmi_reset 138>;
+			linux,uio-name = "vin_102";
+		};
+
+		vin_103: video@c4953000 {
+			compatible = "generic-uio";
+			reg = <0 0xc4953000 0 0x1000>;
+			interrupts = <0x00 593 0x04>;
+			power-domains = <&scmi_devpd 7>;
+			clocks = <&scmi_clk 139>;
+			resets = <&scmi_reset 139>;
+			linux,uio-name = "vin_103";
+		};
+
+		vin_104: video@c4954000 {
+			compatible = "generic-uio";
+			reg = <0 0xc4954000 0 0x1000>;
+			interrupts = <0x00 594 0x04>;
+			power-domains = <&scmi_devpd 7>;
+			clocks = <&scmi_clk 140>;
+			resets = <&scmi_reset 140>;
+			linux,uio-name = "vin_104";
+		};
+
+		vin_105: video@c4955000 {
+			compatible = "generic-uio";
+			reg = <0 0xc4955000 0 0x1000>;
+			interrupts = <0x00 595 0x04>;
+			power-domains = <&scmi_devpd 7>;
+			clocks = <&scmi_clk 141>;
+			resets = <&scmi_reset 141>;
+			linux,uio-name = "vin_105";
+		};
+
+		vin_106: video@c4956000 {
+			compatible = "generic-uio";
+			reg = <0 0xc4956000 0 0x1000>;
+			interrupts = <0x00 596 0x04>;
+			power-domains = <&scmi_devpd 7>;
+			clocks = <&scmi_clk 142>;
+			resets = <&scmi_reset 142>;
+			linux,uio-name = "vin_106";
+		};
+
+		vin_107: video@c4957000 {
+			compatible = "generic-uio";
+			reg = <0 0xc4957000 0 0x1000>;
+			interrupts = <0x00 597 0x04>;
+			power-domains = <&scmi_devpd 7>;
+			clocks = <&scmi_clk 143>;
+			resets = <&scmi_reset 143>;
+			linux,uio-name = "vin_107";
+		};
+
+		vin_110: video@c4958000 {
+			compatible = "generic-uio";
+			reg = <0 0xc4958000 0 0x1000>;
+			interrupts = <0x00 598 0x04>;
+			power-domains = <&scmi_devpd 7>;
+			clocks = <&scmi_clk 144>;
+			resets = <&scmi_reset 144>;
+			linux,uio-name = "vin_110";
+		};
+
+		vin_111: video@c4959000 {
+			compatible = "generic-uio";
+			reg = <0 0xc4959000 0 0x1000>;
+			interrupts = <0x00 599 0x04>;
+			power-domains = <&scmi_devpd 7>;
+			clocks = <&scmi_clk 145>;
+			resets = <&scmi_reset 145>;
+			linux,uio-name = "vin_111";
+		};
+
+		vin_112: video@c495a000 {
+			compatible = "generic-uio";
+			reg = <0 0xc495a000 0 0x1000>;
+			interrupts = <0x00 600 0x04>;
+			power-domains = <&scmi_devpd 7>;
+			clocks = <&scmi_clk 146>;
+			resets = <&scmi_reset 146>;
+			linux,uio-name = "vin_112";
+		};
+
+		vin_113: video@c495b000 {
+			compatible = "generic-uio";
+			reg = <0 0xc495b000 0 0x1000>;
+			interrupts = <0x00 601 0x04>;
+			power-domains = <&scmi_devpd 7>;
+			clocks = <&scmi_clk 147>;
+			resets = <&scmi_reset 147>;
+			linux,uio-name = "vin_113";
+		};
+
+		vin_114: video@c495c000 {
+			compatible = "generic-uio";
+			reg = <0 0xc495c000 0 0x1000>;
+			interrupts = <0x00 602 0x04>;
+			power-domains = <&scmi_devpd 7>;
+			clocks = <&scmi_clk 148>;
+			resets = <&scmi_reset 148>;
+			linux,uio-name = "vin_114";
+		};
+
+		vin_115: video@c495d000 {
+			compatible = "generic-uio";
+			reg = <0 0xc495d000 0 0x1000>;
+			interrupts = <0x00 603 0x04>;
+			power-domains = <&scmi_devpd 7>;
+			clocks = <&scmi_clk 149>;
+			resets = <&scmi_reset 149>;
+			linux,uio-name = "vin_115";
+		};
+
+		vin_116: video@c495e000 {
+			compatible = "generic-uio";
+			reg = <0 0xc495e000 0 0x1000>;
+			interrupts = <0x00 604 0x04>;
+			power-domains = <&scmi_devpd 7>;
+			clocks = <&scmi_clk 150>;
+			resets = <&scmi_reset 150>;
+			linux,uio-name = "vin_116";
+		};
+
+		vin_117: video@c495f000 {
+			compatible = "generic-uio";
+			reg = <0 0xc495f000 0 0x1000>;
+			interrupts = <0x00 605 0x04>;
+			power-domains = <&scmi_devpd 7>;
+			clocks = <&scmi_clk 151>;
+			resets = <&scmi_reset 151>;
+			linux,uio-name = "vin_117";
+		};
+
+		csi0: video@c4400000 {
+			compatible = "generic-uio";
+			reg = <0 0xc4400000 0 0x80000>;
+			interrupts = <0x00 498 0x04>;
+			power-domains = <&scmi_devpd 4>;
+			clocks = <&scmi_clk 19>;
+			resets = <&scmi_reset 19>;
+			linux,uio-name = "csi_00";
+		};
+
+		csi1: video@c4480000 {
+			compatible = "generic-uio";
+			reg = <0 0xc4480000 0 0x80000>;
+			interrupts = <0x00 499 0x04>;
+			power-domains = <&scmi_devpd 5>;
+			clocks = <&scmi_clk 20>;
+			resets = <&scmi_reset 20>;
+			linux,uio-name = "csi_01";
+		};
+
+		csi2: video@c4500000 {
+			compatible = "generic-uio";
+			reg = <0 0xc4500000 0 0x80000>;
+			interrupts = <0x00 500 0x04>;
+			power-domains = <&scmi_devpd 6>;
+			clocks = <&scmi_clk 21>;
+			resets = <&scmi_reset 21>;
+			linux,uio-name = "csi_02";
+		};
+
+		csi3: video@c4580000 {
+			compatible = "generic-uio";
+			reg = <0 0xc4580000 0 0x80000>;
+			interrupts = <0x00 501 0x04>;
+			power-domains = <&scmi_devpd 7>;
+			clocks = <&scmi_clk 22>;
+			resets = <&scmi_reset 22>;
+			linux,uio-name = "csi_03";
+		};
+
+		rfso0: rfso@c05e0000 {
+			compatible="generic-uio";
+			reg=<0 0xc05e0000 0 0x1000>;
+			linux,uio-name="rfso_00";
+		};
+
+		rfso1: rfso@c05e1000 {
+			compatible="generic-uio";
+			reg=<0 0xc05e1000 0 0x1000>;
+			linux,uio-name="rfso_01";
+		};
+
+		rfso2: rfso@c05e2000 {
+			compatible="generic-uio";
+			reg=<0 0xc05e2000 0 0x1000>;
+			linux,uio-name="rfso_02";
+		};
+
+		rfso3: rfso@c05e3000 {
+			compatible="generic-uio";
+			reg=<0 0xc05e3000 0 0x1000>;
+			linux,uio-name="rfso_03";
+		};
+
+		rfso4: rfso@c05e4000 {
+			compatible="generic-uio";
+			reg=<0 0xc05e4000 0 0x1000>;
+			linux,uio-name="rfso_04";
+		};
+
+		rfso5: rfso@c05e5000 {
+			compatible="generic-uio";
+			reg=<0 0xc05e5000 0 0x1000>;
+			linux,uio-name="rfso_05";
+		};
+
+		rfso6: rfso@c05e6000 {
+			compatible="generic-uio";
+			reg=<0 0xc05e6000 0 0x1000>;
+			linux,uio-name="rfso_06";
+		};
+
+		rfso7: rfso@c05e7000 {
+			compatible="generic-uio";
+			reg=<0 0xc05e7000 0 0x1000>;
+			linux,uio-name="rfso_07";
+		};
+
+		rfso8: rfso@c05e8000 {
+			compatible="generic-uio";
+			reg=<0 0xc05e8000 0 0x1000>;
+			linux,uio-name="rfso_08";
+		};
+
+		rfso9: rfso@c05e9000 {
+			compatible="generic-uio";
+			reg=<0 0xc05e9000 0 0x1000>;
+			linux,uio-name="rfso_09";
+		};
+
+		rfso10: rfso@c05ea000 {
+			compatible="generic-uio";
+			reg=<0 0xc05ea000 0 0x1000>;
+			linux,uio-name="rfso_10";
+		};
+
+		rfso11: rfso@c05eb000 {
+			compatible="generic-uio";
+			reg=<0 0xc05eb000 0 0x1000>;
+			linux,uio-name="rfso_11";
+		};
+
+		rfso12: rfso@c05ec000 {
+			compatible="generic-uio";
+			reg=<0 0xc05ec000 0 0x1000>;
+			linux,uio-name="rfso_12";
+		};
+
+		rfso13: rfso@c05ed000 {
+			compatible="generic-uio";
+			reg=<0 0xc05ed000 0 0x1000>;
+			linux,uio-name="rfso_13";
+		};
+
+		rfso14: rfso@c05ee000 {
+			compatible="generic-uio";
+			reg=<0 0xc05ee000 0 0x1000>;
+			linux,uio-name="rfso_14";
+		};
+
+		rfso15: rfso@c05ef000 {
+			compatible="generic-uio";
+			reg=<0 0xc05ef000 0 0x1000>;
+			linux,uio-name="rfso_15";
+		};
+
+		rfso16: rfso@c05f0000 {
+			compatible="generic-uio";
+			reg=<0 0xc05f0000 0 0x1000>;
+			linux,uio-name="rfso_16";
+		};
+
+		rfso17: rfso@c05f1000 {
+			compatible="generic-uio";
+			reg=<0 0xc05f1000 0 0x1000>;
+			linux,uio-name="rfso_17";
+		};
+
+		rfso18: rfso@c05f2000 {
+			compatible="generic-uio";
+			reg=<0 0xc05f2000 0 0x1000>;
+			linux,uio-name="rfso_18";
+		};
+
+		rfso19: rfso@c05f3000 {
+			compatible="generic-uio";
+			reg=<0 0xc05f3000 0 0x1000>;
+			linux,uio-name="rfso_19";
+		};
+
+		rfso_common {
+			compatible="generic-uio";
+			reg=<0 0x0 0 0x0>;
+			//interrupts=<0x00 4086 0x04>;
+			interrupts=<0x00 75 0x04>;
+			linux,uio-name="rfso_common_00";
+		};
+
+	};
+
+	ufs0_clk: ufs0-clk {
+		compatible = "fixed-clock";
+		#clock-cells = <0x00>;
+		clock-frequency = <0x249f000>;
+	};
+
+	ufs1_clk: ufs1-clk {
+		compatible = "fixed-clock";
+		#clock-cells = <0x00>;
+		clock-frequency = <0x249f000>;
+	};
+
+	aliases {
+		i2c0 = "/soc/i2c@c11d0000";
+		i2c1 = "/soc/i2c@c06c0000";
+		i2c2 = "/soc/i2c@c06c8000";
+		i2c3 = "/soc/i2c@c06d0000";
+		i2c4 = "/soc/i2c@c06d8000";
+		i2c5 = "/soc/i2c@c06e0000";
+		i2c6 = "/soc/i2c@c06e8000";
+		i2c7 = "/soc/i2c@c06f0000";
+		i2c8 = "/soc/i2c@c06f8000";
+	};
+
+	chosen {
+		stdout-path = "serial0:1843200n8";
+	};
+
+	reg_1p8v: regulator-1p8v {
+		compatible = "regulator-fixed";
+		regulator-name = "fixed-1.8V";
+		regulator-min-microvolt = <1800000>;
+		regulator-max-microvolt = <1800000>;
+		regulator-boot-on;
+		regulator-always-on;
+	};
+
+	reg_3p3v: regulator-3p3v {
+		compatible = "regulator-fixed";
+		regulator-name = "fixed-3.3V";
+		regulator-min-microvolt = <3300000>;
+		regulator-max-microvolt = <3300000>;
+		regulator-boot-on;
+		regulator-always-on;
+	};
+
+	reserved-memory {
+		#address-cells = <2>;
+		#size-cells = <2>;
+		ranges;
+
+		ipl0: ipl0@40000000 {
+			no-map;
+			reg = <0x0 0x40000000 0x0 0x2b800000>;
+		};
+
+		frtos_app: frtos_app@6b800000 {
+			no-map;
+			reg = <0x0 0x6b800000 0x0 0x1f800000>;
+		};
+
+		ipl1: ipl1@8b000000 {
+			no-map;
+			reg = <0x0 0x8b000000 0x0 0x3200000>;
+		};
+
+		ldr: ldr@8e200000 {
+			no-map;
+			reg = <0x0 0x8e200000 0x0 0x100000>;
+		};
+
+		cr52_ram0: cr52_ram0@96600000 {
+			no-map;
+			reg = <0x0 0x96600000 0x0 0x50000>;
+		};
+
+		cr52_ram1: cr52_ram1@96650000 {
+			no-map;
+			reg = <0x0 0x96650000 0x0 0x50000>;
+		};
+
+		cr52_ram2: cr52_ram2@966a0000 {
+			no-map;
+			reg = <0x0 0x966a0000 0x0 0x50000>;
+		};
+
+		cr52_ca720_share: cr52_ca720_share@966f0000 {
+			no-map;
+			reg = <0x0 0x966f0000 0x0 0x7f10000>;
+		};
+
+		linux,cma@a2600000 {
+			compatible = "shared-dma-pool";
+			reusable;
+			reg = <0x00 0xa2600000 0x00 0x1da00000>;
+			linux,cma-default;
+		};
+
+		linux,cma@1c00000000 {
+			compatible = "shared-dma-pool";
+			reusable;
+			reg = <0x1c 0x0 0x0 0x40000000>;
+		};
+
+		ecc_data_region@10cccc0000 {
+			no-map;
+			reg = <0x10 0xcccd0000 0x0 0x33330000>;
+		};
+
+		rt_vram: rt_vram@1200000000 {
+			no-map;
+			reg = <0x12 0x00000000 0x0 0x18000000>;
+		};
+
+		ecc_data_region@12cccc0000 {
+			no-map;
+			reg = <0x12 0xcccd0000 0x0 0x33330000>;
+		};
+
+		ecc_data_region@14cccc0000 {
+			no-map;
+			reg = <0x14 0xcccd0000 0x0 0x33330000>;
+		};
+
+		ecc_data_region@16cccc0000 {
+			no-map;
+			reg = <0x16 0xcccd0000 0x0 0x33330000>;
+		};
+
+		gsx_lma_heap@1800000000 {
+			no-map;
+			reg = <0x18 0x00000000 0x0 0xcccd0000>;
+		};
+
+		ecc_data_region@18cccc0000 {
+			no-map;
+			reg = <0x18 0xcccd0000 0x0 0x33330000>;
+		};
+
+		ecc_data_region@1acccc0000 {
+			no-map;
+			reg = <0x1a 0xcccd0000 0x0 0x33330000>;
+		};
+
+		ecc_data_region@1ccccc0000 {
+			no-map;
+			reg = <0x1c 0xcccd0000 0x0 0x33330000>;
+		};
+
+		ecc_data_region@1ecccc0000 {
+			no-map;
+			reg = <0x1e 0xcccd0000 0x0 0x33330000>;
+		};
+	};
+};
+	
+&i2c1 {
+	status = "disabled";
+};
+
+&i2c2 {
+	status = "disabled";
+};
+
+&i2c3 {
+	status = "disabled";
+};
+
+&i2c4 {
+	status = "disabled";
+};
+
+&rpmsg_shm2 {
+	status = "okay";
+};
+
+&rpmsg_ipi2 {
+	status = "okay";
+};
