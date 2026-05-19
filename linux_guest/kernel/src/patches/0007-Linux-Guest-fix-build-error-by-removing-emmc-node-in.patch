@@ -1,4 +1,4 @@
-From c6fe7ed7cb5e4576f5ed2353e9934f1fdccbe248 Mon Sep 17 00:00:00 2001
+From 566dadd399a3f97c7156cb9a02f74f61ec6ec687 Mon Sep 17 00:00:00 2001
 From: Renesas Electronics Corporation <someone@renesas.com>
 Date: Sat, 29 Jul 2023 14:31:38 +0700
 Subject: [PATCH 07/14] Linux Guest: fix build error by removing emmc node in
@@ -34,5 +34,5 @@ index f841f65e09f0..88b73322d0db 100755
  /************************ ETHERNET ************************/
  #ifndef NATIVE
 -- 
-2.26.0
+2.34.1
 

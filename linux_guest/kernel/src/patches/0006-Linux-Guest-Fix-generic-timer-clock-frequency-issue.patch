@@ -1,4 +1,4 @@
-From be4f1a5633b85f6bd47755d5e68b23b4b739ee39 Mon Sep 17 00:00:00 2001
+From 40c83c8e4f004bd44f35e0efa4cf6df9cbd88d19 Mon Sep 17 00:00:00 2001
 From: Renesas Electronics Corporation <someone@renesas.com>
 Date: Sat, 29 Jul 2023 14:30:29 +0700
 Subject: [PATCH 06/14] Linux Guest: Fix generic timer clock frequency issue
@@ -166,5 +166,5 @@ index 8fa0256d3827..f841f65e09f0 100755
  #ifndef NATIVE
  	/delete-property/ power-domains;
 -- 
-2.26.0
+2.34.1
 

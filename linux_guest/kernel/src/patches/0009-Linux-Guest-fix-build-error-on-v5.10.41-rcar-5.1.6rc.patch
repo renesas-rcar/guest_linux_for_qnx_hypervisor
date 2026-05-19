@@ -1,4 +1,4 @@
-From e076ad515163a03300c93b659e5bb31378538a36 Mon Sep 17 00:00:00 2001
+From cde4d32fa56d4acbdd8995e3b760ca2d7d0bac36 Mon Sep 17 00:00:00 2001
 From: Renesas Electronics Corporation <someone@renesas.com>
 Date: Sat, 29 Jul 2023 14:32:51 +0700
 Subject: [PATCH 09/14] Linux Guest: fix build error on v5.10.41/rcar-5.1.6rc3
@@ -30,5 +30,5 @@ index b3c4268b8242..26af03214020 100755
  #ifndef NATIVE
  	/delete-property/ power-domains;
 -- 
-2.26.0
+2.34.1
 

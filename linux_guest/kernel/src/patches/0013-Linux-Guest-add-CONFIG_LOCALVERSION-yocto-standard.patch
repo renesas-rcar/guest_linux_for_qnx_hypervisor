@@ -9,16 +9,16 @@ Change-Id: Ib520221e67d8a73a5c0cc120e774fe37ae99dd2c
  1 file changed, 1 insertion(+)
 
 diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 31fd802a585a..aae687f6bfad 100644
+index c013b2645b8c..71a3159c3ba2 100644
 --- a/arch/arm64/configs/defconfig
 +++ b/arch/arm64/configs/defconfig
-@@ -1107,5 +1107,6 @@ CONFIG_DEBUG_KERNEL=y
- # CONFIG_FTRACE is not set
+@@ -1373,5 +1373,6 @@ CONFIG_CORESIGHT_CPU_DEBUG=m
+ CONFIG_CORESIGHT_CTI=m
  CONFIG_MEMTEST=y
  # CONFIG_LOCALVERSION_AUTO is not set
 +CONFIG_LOCALVERSION="-yocto-standard"
  CONFIG_ARM_SCMI_PROTOCOL=y
  CONFIG_RCAR_MFIS_MBOX=y
 -- 
-2.26.0
+2.34.1
 

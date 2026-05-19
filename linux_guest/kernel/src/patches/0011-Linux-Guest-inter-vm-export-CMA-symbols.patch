@@ -1,4 +1,4 @@
-From 329e2d1b8b243ddaa59223f41bbda9fcb2859206 Mon Sep 17 00:00:00 2001
+From c763fe3f0f9fa2429dee5b3150d5a1213f826375 Mon Sep 17 00:00:00 2001
 From: Renesas Electronics Corporation <someone@renesas.com>
 Date: Sat, 29 Jul 2023 14:33:40 +0700
 Subject: [PATCH 11/14] Linux Guest: inter-vm: export CMA symbols
@@ -9,10 +9,10 @@ Change-Id: I5a1ef26ae7906489d7eb6c9fd5f3770ff877fc62
  1 file changed, 3 insertions(+)
 
 diff --git a/mm/cma.c b/mm/cma.c
-index 7f415d7cda9f..bfbd48e113b5 100644
+index 01e9d0b2d875..8f54247f7efc 100644
 --- a/mm/cma.c
 +++ b/mm/cma.c
-@@ -44,11 +44,13 @@ phys_addr_t cma_get_base(const struct cma *cma)
+@@ -43,11 +43,13 @@ phys_addr_t cma_get_base(const struct cma *cma)
  {
  	return PFN_PHYS(cma->base_pfn);
  }
@@ -26,11 +26,11 @@ index 7f415d7cda9f..bfbd48e113b5 100644
  
  const char *cma_get_name(const struct cma *cma)
  {
-@@ -541,3 +543,4 @@ int cma_for_each_area(int (*it)(struct cma *cma, void *data), void *data)
+@@ -582,3 +584,4 @@ int cma_for_each_area(int (*it)(struct cma *cma, void *data), void *data)
  
  	return 0;
  }
 +EXPORT_SYMBOL_GPL(cma_for_each_area);
 -- 
-2.26.0
+2.34.1
 

@@ -1,0 +1,26 @@
+From d954cdc3c3ef4bca5cc2afa81918c6f3180f54ff Mon Sep 17 00:00:00 2001
+From: Lam Le <lam.le.yk@renesas.com>
+Date: Mon, 18 May 2026 15:36:35 +0700
+Subject: [PATCH] Linux Guest: Correct the power domain node
+
+Signed-off-by: Lam Le <lam.le.yk@renesas.com>
+---
+ arch/arm64/boot/dts/renesas/qnxhyp-r8a779f0-spider.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm64/boot/dts/renesas/qnxhyp-r8a779f0-spider.dts b/arch/arm64/boot/dts/renesas/qnxhyp-r8a779f0-spider.dts
+index 673eea788950..100705a91dc9 100755
+--- a/arch/arm64/boot/dts/renesas/qnxhyp-r8a779f0-spider.dts
++++ b/arch/arm64/boot/dts/renesas/qnxhyp-r8a779f0-spider.dts
+@@ -43,7 +43,7 @@ aliases {
+ /************************ CPU CORES ************************/
+ #ifndef NATIVE
+ 	/delete-node/ cpus;
+-	/delete-node/ pmu_a76;
++	/delete-node/ pmu_a55;
+ 	/delete-node/ timer;
+ 
+ 	vgic: vgic@0 {
+-- 
+2.34.1
+

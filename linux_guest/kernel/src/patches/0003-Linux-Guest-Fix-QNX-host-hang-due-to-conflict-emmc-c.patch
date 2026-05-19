@@ -6,29 +6,24 @@ Subject: [PATCH 03/14] Linux Guest: Fix QNX host hang due to conflict emmc
 
 Change-Id: Id2490dc5f5f023e8c8bd08381397949c28728c3e
 ---
- drivers/clk/renesas/rcar-gen4-cpg.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
- mode change 100644 => 100755 drivers/clk/renesas/rcar-gen4-cpg.c
+ drivers/clk/renesas/rcar-gen4-cpg.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/clk/renesas/rcar-gen4-cpg.c b/drivers/clk/renesas/rcar-gen4-cpg.c
-old mode 100644
-new mode 100755
-index 75ea58279035..6dc16b1f7218
+index e27832e5114f..16b2338f4593 100644
 --- a/drivers/clk/renesas/rcar-gen4-cpg.c
 +++ b/drivers/clk/renesas/rcar-gen4-cpg.c
-@@ -244,9 +244,9 @@ struct clk * __init rcar_gen4_cpg_clk_register(struct device *dev,
- 		break;
+@@ -248,8 +248,8 @@ struct clk * __init rcar_gen4_cpg_clk_register(struct device *dev,
+ 					   __clk_get_name(parent), notifiers);
  
  	case CLK_TYPE_GEN4_SD:
--		return cpg_sd_clk_register(core->name, base, core->offset,
--					   __clk_get_name(parent), notifiers,
--					   false, false);
-+		//return cpg_sd_clk_register(core->name, base, core->offset,
-+		//			   __clk_get_name(parent), notifiers,
-+		//			   false, false);
+-		return cpg_sd_clk_register(core->name, base + core->offset,
+-					   __clk_get_name(parent));
++		// return cpg_sd_clk_register(core->name, base + core->offset,
++		// 			   __clk_get_name(parent));
  
  	case CLK_TYPE_GEN4_MDSEL:
  		/*
 -- 
-2.26.0
+2.34.1
 

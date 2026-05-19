@@ -1,4 +1,4 @@
-From aa81b12426d71ce170cec07dec5b2bb96e384042 Mon Sep 17 00:00:00 2001
+From 21b9e5f16b065e7157c4892f01540a4f20def329 Mon Sep 17 00:00:00 2001
 From: Renesas Electronics Corporation <someone@renesas.com>
 Date: Sat, 29 Jul 2023 14:32:17 +0700
 Subject: [PATCH 08/14] Linux Guest: Delete highmem node in DT
@@ -22,5 +22,5 @@ index 88b73322d0db..b3c4268b8242 100755
  /************************ CPU CORES ************************/
  #ifndef NATIVE
 -- 
-2.26.0
+2.34.1
 
